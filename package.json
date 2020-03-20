@@ -1,0 +1,16 @@
+{
+  "name": "roguejs2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "Qazzian@gmail.com",
+  "license": "ISC",
+  "private": true,
+  "devDependencies": {
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
+  }
+}

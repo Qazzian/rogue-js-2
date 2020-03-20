@@ -1,0 +1,27 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = tab
+insert_final_newline = true
+max_line_length = 120
+tab_width = 2
+trim_trailing_whitespace = true
+
+[*.css]
+indent_size = 2
+tab_width = 2
+
+[*.sass]
+tab_width = 2
+
+[*.scss]
+tab_width = 2
+
+[{*.cjs,*.js}]
+indent_style = tab
+
+[{.prettierrc,.stylelintrc,.eslintrc,.babelrc,jest.config,bowerrc,*.json,*.jsb3,*.jsb2}]
+indent_style = tab
