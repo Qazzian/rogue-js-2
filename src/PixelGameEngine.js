@@ -168,4 +168,19 @@ export default class PixelGameEngine {
 		}
 	}
 
+	/**
+	 *
+	 * @param image{Image}
+	 * @param sourcePosition{[x, y, width, height]} The position of the sprite in the source image
+	 * @param destinationPosition{[x, y]} Position to place the sprite in the final image
+	 */
+	drawSprite(image, sourcePosition, destinationPosition) {
+		const [sx, sy, sw, sh] = sourcePosition;
+		const dx = destinationPosition[0] * this.pixelWidth;
+		const dy = destinationPosition[1] * this.pixelHeight;
+		const [dw, dh] = [this.pixelWidth, this.pixelHeight];
+
+		this.context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+	}
+
 }

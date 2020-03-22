@@ -1,5 +1,5 @@
 import PixelGameEngine, {COLORS} from "./PixelGameEngine";
-
+import {loadSpriteSheet, sprites} from "./ImageLoader_Arial10x10";
 
 class Game {
 	constructor(canvasElement, width, height) {
@@ -11,7 +11,14 @@ class Game {
 		this.gameEngine = new PixelGameEngine(this.canvas, 80, 60, 10, 10);
 		this.gameEngine.clear();
 
+		this.spriteSheet = null;
+
 		this.drawTests();
+	}
+
+	async start() {
+		this.spriteSheet = await loadSpriteSheet();
+		this.gameEngine.drawSprite(this.spriteSheet, sprites['@'], [50, 50]);
 	}
 
 	drawTests() {
@@ -35,13 +42,10 @@ class Game {
 		engine.drawLine(35, 7, 22, 21, COLORS.RED);
 		engine.drawLine(7, 35, 21, 23, COLORS.RED);
 		engine.drawLine(35, 35, 22, 23, COLORS.RED);
-		for(let x=0; x<80; x+=2) {
-			this.gameEngine.draw(x,2,COLORS.WHITE);
-		}
-
 	}
 
 }
 
 const screen = document.getElementById('game_screen');
 const game = new Game(screen);
+game.start();
