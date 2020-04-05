@@ -1,4 +1,4 @@
-const imgUrl = '../images/arial10x10.png';
+import imgUrl from '../images/arial10x10.png';
 
 
 const spriteWidth = 10;
