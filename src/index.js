@@ -1,33 +1,104 @@
-import PixelGameEngine, {COLORS} from "./PixelGameEngine";
-import {loadSpriteSheet, sprites} from "./ImageLoader_Arial10x10";
+import PixelGameEngine, { COLORS } from "./PixelGameEngine";
+import { loadSpriteSheet, sprites } from "./ImageLoader_Arial10x10";
+import Entity from "./Entity";
 
 import './index.css';
 
 class Game {
-	constructor(canvasElement, width, height) {
+	constructor(canvasElement, statsElement) {
+		this.statsElement = statsElement;
 		this.canvas = canvasElement;
-		canvasElement.width = width;
-		canvasElement.height = height;
-
-		this.context = this.canvas.getContext('2d');
 		this.gameEngine = new PixelGameEngine(this.canvas, 80, 60, 10, 10);
-		this.gameEngine.clear();
 
 		this.spriteSheet = null;
+		this.isGameActive = false;
+		this.playerStart = {x: 50, y: 50};
+		this.player = null;
 
 		this.drawTests();
 	}
 
 	async start() {
+		try {
+
+			await this.preloadAssets();
+			this.bindEvents();
+			this.isGameActive = true;
+
+			this.player = new Entity(this.playerStart.x, this.playerStart.y, sprites['@']);
+			this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
+		} catch (error) {
+			this.isGameActive = false;
+			console.info('Game error: ', error);
+		}
+	}
+
+	pause() {
+		this.isGameActive = false;
+	}
+
+	unpause() {
+		this.isGameActive = true;
+		this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
+	}
+
+	update(timePassed, timeStats) {
+		this.printStats(timeStats);
+		this.drawTests();
+		this.gameEngine.drawSprite(this.spriteSheet, this.player.sprite, [this.player.x, this.player.y]);
+
+		return this.isGameActive;
+	}
+
+	async preloadAssets() {
+
 		this.spriteSheet = await loadSpriteSheet();
-		this.gameEngine.drawSprite(this.spriteSheet, sprites['@'], [50, 50]);
+	}
+
+	bindEvents() {
+		window.addEventListener("keydown", (eventDescription) => {
+			this.handleKeyEvent(eventDescription);
+		});
+	}
+
+	handleKeyEvent(event) {
+		if (!this.isGameActive){
+			return;
+		}
+		switch (event.key) {
+			case 'ArrowUp':
+				this.player.move(0, -1);
+				break;
+			case 'ArrowDown':
+				this.player.move(0, +1);
+				break;
+			case 'ArrowLeft':
+				this.player.move(-1, 0);
+				break;
+			case 'ArrowRight':
+				this.player.move(+1, 0);
+				break;
+		}
+
+	}
+
+	printStats(timeStats) {
+		const {timestamp, timePassed, fps} = timeStats;
+		if (this.isGameActive) {
+			this.statsElement.innerText = `FPS: ${fps}`;
+		}
+		else {
+			this.statsElement.innerText = `FPS: PAUSED`;
+		}
+
 	}
 
 	drawTests() {
 		const engine = this.gameEngine;
+		engine.clear();
 
-		for(let x=0; x<80; x+=2) {
-			engine.draw(x,2,COLORS.WHITE);
+		for (let x = 0; x < 80; x += 2) {
+			engine.draw(x, 2, COLORS.WHITE);
 		}
 
 		engine.fillRect(4, 4, 35, 40, COLORS.BLUE);
@@ -49,5 +120,9 @@ class Game {
 }
 
 const screen = document.getElementById('game_screen');
-const game = new Game(screen);
+const stats = document.getElementById('stats');
+const game = new Game(screen, stats);
+document.getElementById('pause').addEventListener("click", () => game.pause());
+document.getElementById('unpause').addEventListener("click", () => game.unpause());
 game.start();
+

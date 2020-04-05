@@ -56,11 +56,38 @@ export default class PixelGameEngine {
 
 		canvas.width = width * pixelWidth;
 		canvas.height = height * pixelHeight;
+
+
+	}
+
+	/**
+	 * Start listening to the animation frames
+	 * @param onUpdate{function}
+	 */
+	start(onUpdate) {
+		this.lastTimestamp = 0;
+		this.onUpdate = onUpdate;
+		window.requestAnimationFrame(timestamp => this.step(timestamp));
+	}
+
+	step(timestamp) {
+		const timePassed = timestamp - this.lastTimestamp;
+		this.lastTimestamp = timestamp;
+		const fps = Math.round(1000 / timePassed);
+		const timeStats = {
+			timePassed,
+			timestamp,
+			fps,
+		};
+		const doAnotherStep = this.onUpdate(timePassed, timeStats);
+
+		if (doAnotherStep) {
+			window.requestAnimationFrame(timestamp => this.step(timestamp));
+		}
 	}
 
 
 	clear(backgroundColor = COLOURS.BLACK) {
-		console.info('Clear screen', backgroundColor);
 		this.context.fillStyle = backgroundColor.stringify();
 		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 	}
