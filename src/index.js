@@ -1,6 +1,8 @@
 import PixelGameEngine, {COLORS} from "./PixelGameEngine";
 import {loadSpriteSheet, sprites} from "./ImageLoader_Arial10x10";
 
+import './index.css';
+
 class Game {
 	constructor(canvasElement, width, height) {
 		this.canvas = canvasElement;
