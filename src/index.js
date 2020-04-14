@@ -4,19 +4,21 @@ import { loadSpriteSheet, sprites } from "./ImageLoader_Arial10x10";
 import Entity from "./RogueEngine/Entity";
 
 import './index.css';
+import GameMap from "./RogueEngine/GameMap";
 
 class Game {
 	constructor(canvasElement, statsElement) {
 		this.statsElement = statsElement;
 		this.canvas = canvasElement;
-		this.gameEngine = new PixelGameEngine(this.canvas, 80, 60, 10, 10);
+		this.gameEngine = new PixelGameEngine(this.canvas, 60, 40, 15, 15);
 
 		this.spriteSheet = null;
 		this.isGameActive = false;
-		this.playerStart = {x: 50, y: 50};
+
+		this.playerStart = {x: 30, y: 39};
 		this.player = null;
 
-		this.drawTests();
+		this.map = null ;
 		this.entities = [];
 	}
 
@@ -25,6 +27,9 @@ class Game {
 
 			await this.preloadAssets();
 			this.bindEvents();
+			this.map = new GameMap(30, 30);
+			console.info('MAP:', this.map);
+
 			this.isGameActive = true;
 
 			// this.player = new Entity(this.playerStart.x, this.playerStart.y, {sprite: sprites['@']});
@@ -102,7 +107,17 @@ class Game {
 		else {
 			this.statsElement.innerText = `FPS: PAUSED`;
 		}
+	}
 
+	printMap() {
+		this.map.tiles.forEach((col, y) => {
+			col.forEach((tile, x) => {
+
+				if (!tile.allowsMovement) {
+					this.gameEngine.draw(x, y, COLOURS.WHITE);
+				}
+			})
+		})
 	}
 
 	drawTests() {
