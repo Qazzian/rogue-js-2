@@ -43,15 +43,6 @@ class Game {
 		}
 	}
 
-	pause() {
-		this.isGameActive = false;
-	}
-
-	unpause() {
-		this.isGameActive = true;
-		this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
-	}
-
 	update(timePassed, timeStats) {
 		const engine = this.gameEngine;
 		engine.clear();
@@ -118,6 +109,15 @@ class Game {
 				}
 			})
 		})
+	}
+
+	pause() {
+		this.isGameActive = false;
+	}
+
+	unpause() {
+		this.isGameActive = true;
+		this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
 	}
 
 	drawTests() {
