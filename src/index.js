@@ -1,4 +1,5 @@
-import PixelGameEngine, { COLORS } from "./PixelGameEngine";
+import PixelGameEngine  from "./PixelGameEngine/PixelGameEngine";
+import {COLOURS} from "./PixelGameEngine/Colour";
 import { loadSpriteSheet, sprites } from "./ImageLoader_Arial10x10";
 import Entity from "./Entity";
 
@@ -98,23 +99,23 @@ class Game {
 		engine.clear();
 
 		for (let x = 0; x < 80; x += 2) {
-			engine.draw(x, 2, COLORS.WHITE);
+			engine.draw(x, 2, COLOURS.WHITE);
 		}
 
-		engine.fillRect(4, 4, 35, 40, COLORS.BLUE);
-		engine.drawRect(6, 6, 30, 30, COLORS.YELLOW);
+		engine.fillRect(4, 4, 35, 40, COLOURS.BLUE);
+		engine.drawRect(6, 6, 30, 30, COLOURS.YELLOW);
 
 		// vertical
-		engine.drawLine(1, 4, 1, 43, COLORS.YELLOW);
-		engine.drawLine(78, 43, 78, 4, COLORS.YELLOW);
+		engine.drawLine(1, 4, 1, 43, COLOURS.YELLOW);
+		engine.drawLine(78, 43, 78, 4, COLOURS.YELLOW);
 		// horizontal
-		engine.drawLine(1, 45, 10, 45, COLORS.YELLOW);
-		engine.drawLine(30, 45, 20, 45, COLORS.YELLOW);
+		engine.drawLine(1, 45, 10, 45, COLOURS.YELLOW);
+		engine.drawLine(30, 45, 20, 45, COLOURS.YELLOW);
 		// angled
-		engine.drawLine(7, 7, 21, 21, COLORS.RED);
-		engine.drawLine(35, 7, 22, 21, COLORS.RED);
-		engine.drawLine(7, 35, 21, 23, COLORS.RED);
-		engine.drawLine(35, 35, 22, 23, COLORS.RED);
+		engine.drawLine(7, 7, 21, 21, COLOURS.RED);
+		engine.drawLine(35, 7, 22, 21, COLOURS.RED);
+		engine.drawLine(7, 35, 21, 23, COLOURS.RED);
+		engine.drawLine(35, 35, 22, 23, COLOURS.RED);
 	}
 
 }
