@@ -1,7 +1,7 @@
 import PixelGameEngine  from "./PixelGameEngine/PixelGameEngine";
 import {COLOURS} from "./PixelGameEngine/Colour";
 import { loadSpriteSheet, sprites } from "./ImageLoader_Arial10x10";
-import Entity from "./Entity";
+import Entity from "./RogueEngine/Entity";
 
 import './index.css';
 
@@ -17,6 +17,7 @@ class Game {
 		this.player = null;
 
 		this.drawTests();
+		this.entities = [];
 	}
 
 	async start() {
@@ -26,7 +27,10 @@ class Game {
 			this.bindEvents();
 			this.isGameActive = true;
 
-			this.player = new Entity(this.playerStart.x, this.playerStart.y, sprites['@']);
+			// this.player = new Entity(this.playerStart.x, this.playerStart.y, {sprite: sprites['@']});
+			this.player = new Entity(this.playerStart.x, this.playerStart.y, {character: '@', colour: COLOURS.WHITE});
+			this.entities.push(this.player);
+			this.entities.push(new Entity(this.playerStart.x+10, this.playerStart.y-10, {character: '@', colour: COLOURS.CYAN}));
 			this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
 		} catch (error) {
 			this.isGameActive = false;
@@ -44,9 +48,16 @@ class Game {
 	}
 
 	update(timePassed, timeStats) {
+		const engine = this.gameEngine;
+		engine.clear();
+
 		this.printStats(timeStats);
-		this.drawTests();
-		this.gameEngine.drawSprite(this.spriteSheet, this.player.sprite, [this.player.x, this.player.y]);
+		this.printMap();
+
+		this.entities.forEach((entity) => {
+			const {x, y, character, colour} = entity;
+			this.gameEngine.drawCharacter(x, y, character, colour);
+		});
 
 		return this.isGameActive;
 	}
