@@ -154,6 +154,24 @@ export default class PixelGameEngine {
 	}
 
 	/**
+	 * Draw a single utf-8 character onto the canvas
+	 * @param x {Number}
+	 * @param y {Number}
+	 * @param character {String}
+	 * @param colour {Colour}
+	 */
+	drawCharacter(x, y, character, colour) {
+		this.context.font = `${this.pixelHeight}px monospace`;
+		this.context.fillStyle = colour.stringify();
+		this.context.textAlign = 'center';
+		this.context.textBaseline = "middle";
+
+		const charX = x * this.pixelWidth - (this.pixelWidth / 2);
+		const charY = y * this.pixelHeight - (this.pixelHeight / 2);
+		this.context.fillText(character, charX, charY);
+	}
+
+	/**
 	 *
 	 * @param image{Image}
 	 * @param sourcePosition{[x, y, width, height]} The position of the sprite in the source image

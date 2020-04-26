@@ -10,7 +10,7 @@ class Game {
 	constructor(canvasElement, statsElement) {
 		this.statsElement = statsElement;
 		this.canvas = canvasElement;
-		this.gameEngine = new PixelGameEngine(this.canvas, 60, 40, 15, 15);
+		this.gameEngine = new PixelGameEngine(this.canvas, 60, 40, 16, 16);
 
 		this.spriteSheet = null;
 		this.isGameActive = false;
@@ -33,7 +33,7 @@ class Game {
 			this.isGameActive = true;
 
 			// this.player = new Entity(this.playerStart.x, this.playerStart.y, {sprite: sprites['@']});
-			this.player = new Entity(this.playerStart.x, this.playerStart.y, {character: '@', colour: COLOURS.WHITE});
+			this.player = new Entity(this.playerStart.x, this.playerStart.y, {character: '@', colour: COLOURS.RED});
 			this.entities.push(this.player);
 			this.entities.push(new Entity(this.playerStart.x+10, this.playerStart.y-10, {character: '@', colour: COLOURS.CYAN}));
 			this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
