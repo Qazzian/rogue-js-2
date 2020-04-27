@@ -2,6 +2,7 @@ import PixelGameEngine  from "./PixelGameEngine/PixelGameEngine";
 import {COLOURS} from "./PixelGameEngine/Colour";
 import { loadSpriteSheet, sprites } from "./ImageLoader_Arial10x10";
 import Entity from "./RogueEngine/Entity";
+import Theme from "./RogueEngine/GameTheme";
 
 import './index.css';
 import GameMap from "./RogueEngine/GameMap";
@@ -33,9 +34,9 @@ class Game {
 			this.isGameActive = true;
 
 			// this.player = new Entity(this.playerStart.x, this.playerStart.y, {sprite: sprites['@']});
-			this.player = new Entity(this.playerStart.x, this.playerStart.y, {character: '@', colour: COLOURS.RED});
+			this.player = new Entity(this.playerStart.x, this.playerStart.y, 'player', Theme.entities.player);
 			this.entities.push(this.player);
-			this.entities.push(new Entity(this.playerStart.x+10, this.playerStart.y-10, {character: '@', colour: COLOURS.CYAN}));
+			this.entities.push(new Entity(this.playerStart.x+10, this.playerStart.y-10, 'npc', Theme.entities.npc));
 			this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
 		} catch (error) {
 			this.isGameActive = false;
@@ -51,8 +52,8 @@ class Game {
 		this.printMap();
 
 		this.entities.forEach((entity) => {
-			const {x, y, character, colour} = entity;
-			this.gameEngine.drawCharacter(x, y, character, colour);
+			const {x, y, theme: {char, light}} = entity;
+			this.gameEngine.drawCharacter(x, y, char, light);
 		});
 
 		return this.isGameActive;
@@ -101,14 +102,22 @@ class Game {
 	}
 
 	printMap() {
-		this.map.tiles.forEach((col, y) => {
-			col.forEach((tile, x) => {
+		this.map.tiles.forEach((row, x) => {
+			row.forEach((tile, y) => {
+				this.printTile(x, y, tile);
+			});
+		});
+	}
 
-				if (!tile.allowsMovement) {
-					this.gameEngine.draw(x, y, COLOURS.WHITE);
-				}
-			})
-		})
+	printTile(x, y, tile) {
+		const tileTheme = tile.type && Theme.tiles[tile.type] ? Theme.tiles[tile.type] : Theme.tiles.ground;
+		if (tileTheme.char) {
+			this.gameEngine.drawCharacter(x, y, tileTheme.char, tileTheme.light);
+			this.charDraws++;
+		}
+		else {
+			this.gameEngine.draw(x, y, tileTheme.light);
+		}
 	}
 
 	pause() {
