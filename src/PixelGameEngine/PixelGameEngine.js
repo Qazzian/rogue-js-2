@@ -15,7 +15,9 @@ export default class PixelGameEngine {
 		canvas.width = width * pixelWidth;
 		canvas.height = height * pixelHeight;
 
-
+		this.context.font = `${this.pixelHeight}px monospace`;
+		this.context.textAlign = 'center';
+		this.context.textBaseline = "middle";
 	}
 
 	/**
@@ -161,13 +163,10 @@ export default class PixelGameEngine {
 	 * @param colour {Colour}
 	 */
 	drawCharacter(x, y, character, colour) {
-		this.context.font = `${this.pixelHeight}px monospace`;
 		this.context.fillStyle = colour.stringify();
-		this.context.textAlign = 'center';
-		this.context.textBaseline = "middle";
 
-		const charX = x * this.pixelWidth - (this.pixelWidth / 2);
-		const charY = y * this.pixelHeight - (this.pixelHeight / 2);
+		const charX = x * this.pixelWidth + (this.pixelWidth / 2);
+		const charY = y * this.pixelHeight + (this.pixelHeight / 2);
 		this.context.fillText(character, charX, charY);
 	}
 
