@@ -16,7 +16,7 @@ class Game {
 		this.spriteSheet = null;
 		this.isGameActive = false;
 
-		this.playerStart = {x: 30, y: 39};
+		this.playerStart = {x: 30, y: 38};
 		this.player = null;
 
 		this.map = null ;
@@ -28,7 +28,7 @@ class Game {
 
 			await this.preloadAssets();
 			this.bindEvents();
-			this.map = new GameMap(30, 30);
+			this.map = new GameMap(60, 40);
 			console.info('MAP:', this.map);
 
 			this.isGameActive = true;
@@ -76,19 +76,25 @@ class Game {
 		}
 		switch (event.key) {
 			case 'ArrowUp':
-				this.player.move(0, -1);
+				this.moveEntity(this.player, 0, -1);
 				break;
 			case 'ArrowDown':
-				this.player.move(0, +1);
+				this.moveEntity(this.player, 0, +1);
 				break;
 			case 'ArrowLeft':
-				this.player.move(-1, 0);
+				this.moveEntity(this.player, -1, 0);
 				break;
 			case 'ArrowRight':
-				this.player.move(+1, 0);
+				this.moveEntity(this.player, +1, 0);
 				break;
 		}
+	}
 
+	moveEntity(entity, dx, dy) {
+		const [newX, newY] = [entity.x + dx, entity.y + dy];
+		if (this.map.canMoveTo(newX, newY)) {
+			entity.move(dx, dy);
+		}
 	}
 
 	printStats(timeStats) {
