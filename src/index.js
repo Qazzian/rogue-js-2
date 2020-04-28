@@ -16,7 +16,7 @@ class Game {
 		this.spriteSheet = null;
 		this.isGameActive = false;
 
-		this.playerStart = {x: 30, y: 38};
+		this.playerStart = {x: 25, y: 20};
 		this.player = null;
 
 		this.map = null ;
