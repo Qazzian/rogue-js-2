@@ -50,11 +50,7 @@ class Game {
 
 		this.printStats(timeStats);
 		this.printMap();
-
-		this.entities.forEach((entity) => {
-			const {x, y, theme: {char, light}} = entity;
-			this.gameEngine.drawCharacter(x, y, char, light);
-		});
+		this.printEntities();
 
 		return this.isGameActive;
 	}
@@ -126,6 +122,13 @@ class Game {
 		}
 	}
 
+	printEntities() {
+		for (let i = this.entities.length - 1; i >= 0; i--) {
+			const {x, y, theme: {char, light}} = this.entities[i];
+			this.gameEngine.drawCharacter(x, y, char, light);
+		}
+	}
+
 	pause() {
 		this.isGameActive = false;
 	}
@@ -158,7 +161,6 @@ class Game {
 		engine.drawLine(7, 35, 21, 23, COLOURS.RED);
 		engine.drawLine(35, 35, 22, 23, COLOURS.RED);
 	}
-
 }
 
 const screen = document.getElementById('game_screen');
