@@ -1,5 +1,6 @@
 import PixelGameEngine  from "./PixelGameEngine/PixelGameEngine";
 import {COLOURS} from "./PixelGameEngine/Colour";
+import {fetchSeed} from './PixelGameEngine/util';
 import { loadSpriteSheet, sprites } from "./ImageLoader_Arial10x10";
 import Entity from "./RogueEngine/Entity";
 import Theme from "./RogueEngine/GameTheme";
@@ -16,10 +17,8 @@ class Game {
 		this.spriteSheet = null;
 		this.isGameActive = false;
 
-		this.playerStart = {x: 25, y: 20};
-		this.player = null;
-
 		this.map = null ;
+		this.player = null;
 		this.entities = [];
 	}
 
@@ -29,14 +28,19 @@ class Game {
 			await this.preloadAssets();
 			this.bindEvents();
 			this.map = new GameMap(60, 40);
+			const seed = await fetchSeed();
+			console.info('MAP SEED = ', seed);
+
+			this.map.generateMap(seed);
 			console.info('MAP:', this.map);
 
 			this.isGameActive = true;
 
-			// this.player = new Entity(this.playerStart.x, this.playerStart.y, {sprite: sprites['@']});
-			this.player = new Entity(this.playerStart.x, this.playerStart.y, 'player', Theme.entities.player);
+			const [px, py] = this.map.getPlayerStart();
+			this.player = new Entity(px, py, 'player', Theme.entities.player);
 			this.entities.push(this.player);
-			this.entities.push(new Entity(this.playerStart.x+10, this.playerStart.y-10, 'npc', Theme.entities.npc));
+			const [ox, oy] = this.map.rooms[3].center();
+			this.entities.push(new Entity(ox, oy, 'npc', Theme.entities.npc));
 			this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
 		} catch (error) {
 			this.isGameActive = false;
