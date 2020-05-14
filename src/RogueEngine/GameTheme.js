@@ -2,8 +2,8 @@ import {COLOURS} from '../PixelGameEngine/Colour';
 
 export default {
 	entities: {
-		player: { char: '@', dark: COLOURS.DARK_RED, light: COLOURS.RED},
-		npc: {char: '@', dark: COLOURS.DARK_CYAN, light: COLOURS.CYAN},
+		player: { char: '@', dark: COLOURS.DARK_RED, light: COLOURS.CYAN},
+		npc: {char: '@', dark: COLOURS.DARK_CYAN, light: COLOURS.RED},
 	},
 
 	tiles: {
