@@ -54,6 +54,7 @@ class Game {
 
 		this.printStats(timeStats);
 		this.printMap();
+		this.printMapDebug();
 		this.printEntities();
 
 		return this.isGameActive;
@@ -126,6 +127,16 @@ class Game {
 		}
 	}
 
+	printMapDebug() {
+		if (!this.debugFlag) {
+			return;
+		}
+		this.map.rooms.forEach((room, index) => {
+			const {x1, y1} = room;
+			this.gameEngine.drawCharacter(x1+1, y1+1, ''+index, COLOURS.DARK_RED);
+		});
+	}
+
 	printEntities() {
 		for (let i = this.entities.length - 1; i >= 0; i--) {
 			const {x, y, theme: {char, light}} = this.entities[i];
@@ -142,28 +153,9 @@ class Game {
 		this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
 	}
 
-	drawTests() {
-		const engine = this.gameEngine;
-		engine.clear();
-
-		for (let x = 0; x < 80; x += 2) {
-			engine.draw(x, 2, COLOURS.WHITE);
-		}
-
-		engine.fillRect(4, 4, 35, 40, COLOURS.BLUE);
-		engine.drawRect(6, 6, 30, 30, COLOURS.YELLOW);
-
-		// vertical
-		engine.drawLine(1, 4, 1, 43, COLOURS.YELLOW);
-		engine.drawLine(78, 43, 78, 4, COLOURS.YELLOW);
-		// horizontal
-		engine.drawLine(1, 45, 10, 45, COLOURS.YELLOW);
-		engine.drawLine(30, 45, 20, 45, COLOURS.YELLOW);
-		// angled
-		engine.drawLine(7, 7, 21, 21, COLOURS.RED);
-		engine.drawLine(35, 7, 22, 21, COLOURS.RED);
-		engine.drawLine(7, 35, 21, 23, COLOURS.RED);
-		engine.drawLine(35, 35, 22, 23, COLOURS.RED);
+	setDebugFlag(flag) {
+		console.info('setDebugFlag', flag);
+		this.debugFlag = flag;
 	}
 }
 
@@ -172,5 +164,10 @@ const stats = document.getElementById('stats');
 const game = new Game(screen, stats);
 document.getElementById('pause').addEventListener("click", () => game.pause());
 document.getElementById('unpause').addEventListener("click", () => game.unpause());
+document.getElementById('DebugFlag').addEventListener("change", (event) => {
+	const value = event.target.checked;
+
+	game.setDebugFlag(value);
+});
 game.start();
 
