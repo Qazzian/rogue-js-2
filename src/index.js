@@ -6,7 +6,7 @@ import Entity from "./RogueEngine/Entity";
 import Theme from "./RogueEngine/GameTheme";
 
 import './index.css';
-import GameMap from "./RogueEngine/GameMap";
+import GameMap from "./RogueEngine/mapGenerators/TutorialMap";
 
 class Game {
 	constructor(canvasElement, statsElement) {

@@ -12,4 +12,12 @@ export default class MapTile {
 		this.allowsMovement = allowsMovement;
 		this.allowsSight = allowsSight === undefined ? allowsMovement : allowsSight;
 	}
+
+	canMoveTo() {
+		return this.allowsMovement;
+	}
+
+	canSeeThrough() {
+		return this.allowsSight;
+	}
 }

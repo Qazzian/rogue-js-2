@@ -1,4 +1,4 @@
-import { Room } from './GameMap';
+import { Room } from './Room';
 
 describe('Room Tests', () => {
 	test('Create Rooms', () => {
@@ -17,5 +17,5 @@ describe('Room Tests', () => {
 		expect(room1.hasIntersect(new Room(21, 10, 4, 4))).toBe(false);
 		expect(room1.hasIntersect(new Room(10, 5, 4, 4))).toBe(false);
 		expect(room1.hasIntersect(new Room(10, 21, 4, 4))).toBe(false);
-	})
+	});
 });
