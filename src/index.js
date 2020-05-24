@@ -1,167 +1,24 @@
-import PixelGameEngine  from "./PixelGameEngine/PixelGameEngine";
-import {COLOURS} from "./PixelGameEngine/Colour";
-import {fetchSeed} from './PixelGameEngine/util';
-import { loadSpriteSheet, sprites } from "./ImageLoader_Arial10x10";
-import Entity from "./RogueEngine/Entity";
-import Theme from "./RogueEngine/GameTheme";
+import rand from 'random-seed';
+
+import Game from './RogueEngine/Game';
 
 import './index.css';
-import GameMap from "./RogueEngine/mapGenerators/TutorialMap";
 
-class Game {
-	constructor(canvasElement, statsElement) {
-		this.statsElement = statsElement;
-		this.canvas = canvasElement;
-		this.gameEngine = new PixelGameEngine(this.canvas, 60, 40, 16, 16);
-
-		this.spriteSheet = null;
-		this.isGameActive = false;
-
-		this.map = null ;
-		this.player = null;
-		this.entities = [];
-	}
-
-	async start() {
-		try {
-
-			await this.preloadAssets();
-			this.bindEvents();
-			this.map = new GameMap(60, 40);
-			const seed = await fetchSeed();
-			console.info('MAP SEED = ', seed);
-
-			this.map.generateMap(seed);
-			console.info('MAP:', this.map);
-
-			this.isGameActive = true;
-
-			const [px, py] = this.map.getPlayerStart();
-			this.player = new Entity(px, py, 'player', Theme.entities.player);
-			this.entities.push(this.player);
-			const [ox, oy] = this.map.rooms[3].center();
-			this.entities.push(new Entity(ox, oy, 'npc', Theme.entities.npc));
-			this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
-		} catch (error) {
-			this.isGameActive = false;
-			console.info('Game error: ', error);
-		}
-	}
-
-	update(timePassed, timeStats) {
-		const engine = this.gameEngine;
-		engine.clear();
-
-		this.printStats(timeStats);
-		this.printMap();
-		this.printMapDebug();
-		this.printEntities();
-
-		return this.isGameActive;
-	}
-
-	async preloadAssets() {
-
-		this.spriteSheet = await loadSpriteSheet();
-	}
-
-	bindEvents() {
-		window.addEventListener("keydown", (eventDescription) => {
-			this.handleKeyEvent(eventDescription);
-		});
-	}
-
-	handleKeyEvent(event) {
-		if (!this.isGameActive){
-			return;
-		}
-		switch (event.key) {
-			case 'ArrowUp':
-				this.moveEntity(this.player, 0, -1);
-				break;
-			case 'ArrowDown':
-				this.moveEntity(this.player, 0, +1);
-				break;
-			case 'ArrowLeft':
-				this.moveEntity(this.player, -1, 0);
-				break;
-			case 'ArrowRight':
-				this.moveEntity(this.player, +1, 0);
-				break;
-		}
-	}
-
-	moveEntity(entity, dx, dy) {
-		const [newX, newY] = [entity.x + dx, entity.y + dy];
-		if (this.map.canMoveTo(newX, newY)) {
-			entity.move(dx, dy);
-		}
-	}
-
-	printStats(timeStats) {
-		const {timestamp, timePassed, fps} = timeStats;
-		if (this.isGameActive) {
-			this.statsElement.innerText = `FPS: ${fps}`;
-		}
-		else {
-			this.statsElement.innerText = `FPS: PAUSED`;
-		}
-	}
-
-	printMap() {
-		this.map.tiles.forEach((row, x) => {
-			row.forEach((tile, y) => {
-				this.printTile(x, y, tile);
-			});
-		});
-	}
-
-	printTile(x, y, tile) {
-		const tileTheme = tile.type && Theme.tiles[tile.type] ? Theme.tiles[tile.type] : Theme.tiles.ground;
-		if (tileTheme.char) {
-			this.gameEngine.drawCharacter(x, y, tileTheme.char, tileTheme.light);
-			this.charDraws++;
-		}
-		else {
-			this.gameEngine.draw(x, y, tileTheme.light);
-		}
-	}
-
-	printMapDebug() {
-		if (!this.debugFlag) {
-			return;
-		}
-		this.map.rooms.forEach((room, index) => {
-			const {x1, y1} = room;
-			this.gameEngine.drawCharacter(x1+1, y1+1, ''+index, COLOURS.DARK_RED);
-		});
-	}
-
-	printEntities() {
-		for (let i = this.entities.length - 1; i >= 0; i--) {
-			const {x, y, theme: {char, light}} = this.entities[i];
-			this.gameEngine.drawCharacter(x, y, char, light);
-		}
-	}
-
-	pause() {
-		this.isGameActive = false;
-	}
-
-	unpause() {
-		this.isGameActive = true;
-		this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
-	}
-
-	setDebugFlag(flag) {
-		console.info('setDebugFlag', flag);
-		this.debugFlag = flag;
-	}
-}
 
 const screen = document.getElementById('game_screen');
 const stats = document.getElementById('stats');
 const game = new Game(screen, stats);
+
+
+
+window.addEventListener("keydown", (eventDescription) => {
+	game.handleKeyEvent(eventDescription);
+});
+
+document.getElementById('newMapButton').addEventListener('click', () => {
+	game.pause();
+	game.start();
+});
 document.getElementById('pause').addEventListener("click", () => game.pause());
 document.getElementById('unpause').addEventListener("click", () => game.unpause());
 document.getElementById('DebugFlag').addEventListener("change", (event) => {

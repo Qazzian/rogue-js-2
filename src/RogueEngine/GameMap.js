@@ -19,12 +19,16 @@ export default class GameMap {
 		this.tiles = [];
 	}
 
-	generateMap(seed) {
+	generateMap() {
 		throw Error('Abstract method GameMap.generateMap. Overload this method in a sub class');
 	}
 
 	getPlayerStart() {
-		throw Error('Abstract method GameMap.generateMap. Overload this method in a sub class');
+		throw Error('Abstract method GameMap.getPlayerStart. Overload this method in a sub class');
+	}
+
+	getTilesInRange({x1, x2, y1, y2}) {
+		throw Error('Abstract method GameMap.getTiles. Overload this method in a sub class');
 	}
 
 	getTile(x, y) {

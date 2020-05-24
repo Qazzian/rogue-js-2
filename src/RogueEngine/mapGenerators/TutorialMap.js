@@ -1,6 +1,5 @@
 import GameMap from '../GameMap';
 import Room from '../Room';
-import rand from 'random-seed';
 import MapTile from '../MapTile';
 
 export default class TutorialMap extends GameMap {
@@ -8,13 +7,12 @@ export default class TutorialMap extends GameMap {
 		super(width, height);
 
 		this.rand = null;
-		this.seed = null;
 		this.rooms = [];
+		this.tiles = [];
 	}
 
-	generateMap(seed) {
-		this.seed = seed;
-		this.rand = new rand(seed);
+	generateMap(randomGenerator) {
+		this.rand = randomGenerator;
 
 		const rooms = [];
 		const maxAttempts = 300;
@@ -38,10 +36,11 @@ export default class TutorialMap extends GameMap {
 		this.rooms = rooms;
 		console.info('Generated rooms:', rooms);
 
-		this.tiles = this.initTiles();
+		this.initTiles();
 
 		rooms.forEach((room) => this.createRoom(room));
 		this.joinRooms(rooms);
+		// console.info('Generated map tiles:', this.tiles);
 	}
 
 	getPlayerStart() {
@@ -50,6 +49,36 @@ export default class TutorialMap extends GameMap {
 		}
 		return this.rooms[0].center();
 	}
+
+	getTilesInRange({x, y, width, height}) {
+		const tilesInRange = [];
+		const [x1, x2] = [x, x + width];
+		const [y1, y2] = [Math.max(y, 0), Math.min(y + height, this.height)];
+		let yPreFill = [];
+		let yPostFill = [];
+		if (y<0) { yPreFill = fillerTiles(Math.abs(y)); }
+		if (y+height > this.height) { yPostFill = fillerTiles(y + height - this.height); }
+
+		for (let mx = x1; mx < x2; mx++) {
+			if (mx < 0 || mx >= this.width) {
+				tilesInRange.push(fillerTiles(height));
+			}
+			else {
+				tilesInRange.push([
+					...yPreFill,
+					...(this.tiles[mx].slice(y1, y2)),
+					...yPostFill,
+				]);
+			}
+		}
+		// console.info(`getTilesInRange {${x1}, ${x2}, ${y1}, ${y2}}: `, tilesInRange);
+		return tilesInRange;
+
+		function fillerTiles(length) {
+			return Array.from({length}, (v, i) => new MapTile('empty', false));
+		}
+	}
+
 
 	initTiles() {
 		const tiles = [];
@@ -60,7 +89,7 @@ export default class TutorialMap extends GameMap {
 			}
 		}
 
-		return tiles;
+		this.tiles = tiles;
 	}
 
 	/**
