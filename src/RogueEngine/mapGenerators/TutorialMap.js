@@ -18,8 +18,8 @@ export default class TutorialMap extends GameMap {
 		const maxAttempts = 300;
 
 		for (let a = 0; rooms.length < this.options.roomCountMax && a < maxAttempts; a++) {
-			const w = this.rand.intBetween(this.options.roomSizeMin, this.options.roomCountMax);
-			const h = this.rand.intBetween(this.options.roomSizeMin, this.options.roomCountMax);
+			const w = this.rand.intBetween(this.options.roomSizeMin, this.options.roomSizeMax);
+			const h = this.rand.intBetween(this.options.roomSizeMin, this.options.roomSizeMax);
 			const x = this.rand.intBetween(0, this.width - w - 1);
 			const y = this.rand.intBetween(0, this.height - h - 1);
 			const newRoom = new Room(x, y, w, h);
