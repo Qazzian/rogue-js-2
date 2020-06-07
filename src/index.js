@@ -1,5 +1,3 @@
-import rand from 'random-seed';
-
 import Game from './RogueEngine/Game';
 
 import './index.css';
@@ -18,6 +16,10 @@ window.addEventListener("keydown", (eventDescription) => {
 document.getElementById('newMapButton').addEventListener('click', () => {
 	game.pause();
 	game.start();
+});
+document.getElementById('mapGeneratorSelector').addEventListener("change", (event) => {
+	const selectedValue = event.target.value;
+	game.setMapGenerator(selectedValue);
 });
 document.getElementById('pause').addEventListener("click", () => game.pause());
 document.getElementById('unpause').addEventListener("click", () => game.unpause());
