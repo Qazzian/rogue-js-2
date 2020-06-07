@@ -9,9 +9,12 @@ import {COLOURS} from '../PixelGameEngine/Colour';
 
 
 import TutorialMap from './mapGenerators/TutorialMap';
+import AdvancedHeroQuestGenerator from './mapGenerators/AdvancedHeroquestGenerator';
 
 function getMapGenerator(name) {
 	switch (name) {
+		case 'adv-heroquest':
+			return AdvancedHeroQuestGenerator;
 		default:
 		case 'tutorial':
 			return TutorialMap;
