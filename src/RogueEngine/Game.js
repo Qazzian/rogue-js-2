@@ -7,12 +7,9 @@ import { COLOURS } from '../PixelGameEngine/Colour';
 
 
 import TutorialMap from './mapGenerators/TutorialMap';
-import AdvancedHeroQuestGenerator from './mapGenerators/AdvancedHeroquestGenerator';
 
 function getMapGenerator(name) {
 	switch (name) {
-		case 'adv-heroquest':
-			return AdvancedHeroQuestGenerator;
 		default:
 		case 'tutorial':
 			return TutorialMap;
@@ -48,7 +45,7 @@ export default class Game {
 		try {
 
 			await this.preloadAssets();
-			this.map = new (getMapGenerator(this.generatorName))(60, 40);
+			this.map = new (getMapGenerator(this.generatorName))(100, 100);
 			this.seed = await fetchSeed();
 			console.info('MAP SEED = ', this.seed);
 			this.random = new rand(this.seed);

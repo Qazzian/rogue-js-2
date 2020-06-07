@@ -4,7 +4,7 @@ import MapTile from './MapTile';
 const defaultOptions = {
 	roomSizeMax: 12,
 	roomSizeMin: 7,
-	roomCountMax: 15,
+	roomCountMax: 50,
 };
 
 export default class GameMap {
