@@ -1,32 +1,10 @@
-import Grid from './Grid';
+import Grid from '../Grid';
+import Edge from './Edge';
 
 
-export class Edge {
-	constructor(x1, y1, dx, dy) {
-		this.x1 = x1;
-		this.x2 = x1;
-		this.y1 = y1;
-		this.y2 = y1;
+export default buildGeometry;
 
-		if (dx || dy) {
-			this.extend(dx, dy);
-		}
-	}
-
-	extend(dx, dy) {
-		this.x2 += dx;
-		this.y2 += dy;
-	}
-
-	getPoints() {
-		return [
-			[this.x1, this.x2],
-			[this.y1, this.y2],
-		];
-	}
-}
-
-export function buildGeometry(mapTiles, isBlockingTest) {
+function buildGeometry(mapTiles, isBlockingTest) {
 	const parsedTiles = {};
 	const edges = [];
 	const grid = new Grid(mapTiles);
