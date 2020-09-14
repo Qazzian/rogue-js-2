@@ -30,24 +30,63 @@ describe('FOV functions', () => {
 
 
 	describe('buildGeometry', () => {
-
-		const testMap = [
-			[0, 0, 0, 0],
-			[0, 0, 0, 0],
-			[0, 0, 0, 0],
-			[0, 0, 0, 0],
-		];
-
-		test('defined', () => {
+		test('is defined', () => {
 			expect(buildGeometry).toBeDefined();
 		});
 
-		test('Returns geometry listing', () => {
-			const geom = buildGeometry();
-
+		test('Empty map returns empty array', () => {
+			const emptyMap = [
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+				[0, 0, 0, 0],
+			];
+			const geom = buildGeometry(emptyMap, () => {
+			});
 			expect(geom).toBeDefined();
-			expect(geom.length).toBeGreaterThan(0);
-			expect(geom[0] instanceof Edge).toBe(true);
+			expect(geom.length).toBe(0);
+		});
+
+		describe('for only one block', () => {
+			const tests = [
+				{
+					name: 'single east edge',
+					map: [[0], [1]],
+					geom: [{x1: 1, x2: 1, y1: 0, y2: 1}],
+				},
+				{
+					name: 'single west edge',
+					map: [[1], [0]],
+					geom: [{x1: 1, x2: 1, y1: 0, y2: 1}],
+				},
+				{
+					name: 'single north edge',
+					map: [[0, 1]],
+					geom: [{x1: 0, x2: 1, y1: 1, y2: 1}],
+				},
+				{
+					name: 'single south edge',
+					map: [[1, 0]],
+					geom: [{x1: 0, x2: 1, y1: 1, y2: 1}],
+				},
+				{
+					name: 'isolated block',
+					map: [[0, 0, 0], [0, 1, 0], [0, 0, 0]],
+					geom: [// todo
+						{x1: 1, x2: 2, y1: 1, y2: 1},
+						{x1: 2, x2: 2, y1: 1, y2: 2},
+						{x1: 1, x2: 2, y1: 2, y2: 2},
+						{x1: 1, x2: 1, y1: 1, y2: 2},
+					],
+				},
+			];
+
+			tests.forEach(testData => test(testData.name, () => {
+				const geom = buildGeometry(testData.map, (b) => !!b);
+				expect(geom).toBeDefined();
+				expect(geom.length).toBe(testData.geom.length);
+				expect(geom).toMatchObject(testData.geom);
+			}));
 		});
 	});
 
