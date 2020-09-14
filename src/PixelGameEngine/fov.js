@@ -31,30 +31,71 @@ export function buildGeometry(mapTiles, isBlockingTest) {
 	const edges = [];
 	const grid = new Grid(mapTiles);
 
-	grid.forEach((mapTile, x, y) => {
-		const neighbours = {
-			n: north(x, y),
-			s: south(x, y),
-			e: east(x, y),
-			w: west(x, y),
-		};
+	try {
+		grid.forEach((mapTile, x, y) => {
+			const neighbours = {
+				n: north(x, y),
+				s: south(x, y),
+				e: east(x, y),
+				w: west(x, y),
+			};
 
-		if (isBlockingTest(mapTile)) {
-			if (neighbours.n !== undefined && !isBlockingTest(neighbours.n)) {
-				edges.push(new Edge(x, y, 1, 0));
+			if (isBlock(mapTile)) {
+				const parsedBlock = {};
+				if (isNotBlock(neighbours.n)) {
+					if (isBlock(neighbours.w) && parsedTiles[`${x - 1}_${y}`].n) {
+						parsedBlock.n = parsedTiles[`${x - 1}_${y}`].n;
+						parsedBlock.n.extend(1, 0);
+					} else {
+						edges.push(new Edge(x, y, 1, 0));
+						parsedBlock.n = edges[edges.length - 1];
+					}
+				}
+				if (isNotBlock(neighbours.e)) {
+					if (isBlock(neighbours.n && parsedTiles[`${x}_${y - 1}`].e)) {
+						parsedBlock.e = parsedTiles[`${x}_${y - 1}`].e;
+						parsedBlock.e.extend(0, 1);
+					} else {
+						edges.push(new Edge(x + 1, y, 0, 1));
+						parsedBlock.e = edges[edges.length - 1];
+					}
+				}
+				if (isNotBlock(neighbours.s)) {
+					if (isBlock(neighbours.w && parsedTiles[`${x - 1}_${y}`].s)) {
+						parsedBlock.s = parsedTiles[`${x - 1}_${y}`].s;
+						parsedBlock.s.extend(1, 0);
+					} else {
+						edges.push(new Edge(x, y + 1, 1, 0));
+						parsedBlock.s = edges[edges.length - 1];
+					}
+				}
+				if (isNotBlock(neighbours.w)) {
+					if (isBlock(neighbours.n && parsedTiles[`${x}_${y - 1}`].w)) {
+						parsedBlock.w = parsedTiles[`${x}_${y - 1}`].w;
+						parsedBlock.w.extend(0, 1);
+					} else {
+						edges.push(new Edge(x, y, 0, 1));
+						parsedBlock.w = edges[edges.length - 1];
+					}
+				}
+				parsedTiles[`${x}_${y}`] = parsedBlock;
 			}
-			if (neighbours.e !== undefined && !isBlockingTest(neighbours.e)) {
-				edges.push(new Edge(x+1, y, 0, 1));
-			}
-			if (neighbours.s !== undefined && !isBlockingTest(neighbours.s)) {
-				edges.push(new Edge(x, y+1, 1, 0));
-			}
-			if (neighbours.w !== undefined && !isBlockingTest(neighbours.w)) {
-				edges.push(new Edge(x, y, 0, 1));
-			}
-		}
-	});
+		});
+	}
+	catch (error) {
+		console.error("error parsing geometry");
+		console.info(JSON.stringify({grid, parsedTiles, edges}));
+	}
+
 	return edges;
+
+
+	function isBlock(obj) {
+		return obj !== undefined && isBlockingTest(obj);
+	}
+	function isNotBlock(obj) {
+		return obj !== undefined && !isBlockingTest(obj);
+	}
 
 	function north(x, y) {
 		return grid.get(x, y - 1);
