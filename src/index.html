@@ -4,16 +4,28 @@
 	<title>Rogue.Js 2</title>
 </head>
 <body>
-<div>
-	<canvas id="game_screen"></canvas>
-</div>
-<div id="actions">
-	<button id="newMapButton">New map</button>
-	<button id="pause">Stop!</button>
-	<button id="unpause">Carry on</button>
-	<label>debug: <input type="checkbox" id="DebugFlag" value="1" /></label>
-	<span id="stats"></span>
-</div>
+	<div>
+		<canvas id="game_screen"></canvas>
+		<section class="debug-actions">
+			<header>Debug options</header>
+			<label>
+				Room numbers:
+				<input type="checkbox" id="ShowRoomNumbersOptions" value="1"/>
+			</label>
+			<label>
+				Show fov geometry:
+				<input type="checkbox" id="ShowFovGeomOption" value="1"/>
+			</label>
+
+		</section>
+	</div>
+	<div id="actions">
+		<button id="newMapButton">New map</button>
+		<button id="pause">Stop!</button>
+		<button id="unpause">Carry on</button>
+
+		<span id="stats"></span>
+	</div>
 
 </body>
 </html>

@@ -39,6 +39,11 @@ export default class Game {
 			area: {x: 0, y: 0, width: 0, height: 0},
 			tiles: [],
 		};
+
+		this.debugFlags = {
+			ShowRoomNumbersOption: false,
+			showFovGeometry: false,
+		}
 	}
 
 	async start() {
@@ -170,10 +175,8 @@ export default class Game {
 		}
 	}
 
-	printMapDebug({xOffset, yOffset}) {
-		if (!this.debugFlag) {
-			return;
-		}
+	printMapDebug({xOffset, yOffset, width, height}) {
+		if (this.debugFlags.ShowRoomNumbersOption) {
 		this.map.rooms.forEach((room, index) => {
 			const {x1, y1} = room;
 			this.gameEngine.drawCharacter(x1 + 1 + xOffset, y1 + 1 + yOffset, '' + index, COLOURS.DARK_RED);
@@ -200,8 +203,8 @@ export default class Game {
 		this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
 	}
 
-	setDebugFlag(flag) {
-		console.info('setDebugFlag', flag);
-		this.debugFlag = flag;
+	setDebugFlag(flag, value) {
+		console.info('set debug flag: ', flag, value);
+		this.debugFlags[flag] = value;
 	}
 }
