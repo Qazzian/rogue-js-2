@@ -11,14 +11,14 @@ function buildGeometry(mapTiles, isBlockingTest) {
 
 	try {
 		grid.forEach((mapTile, x, y) => {
-			const neighbours = {
-				n: north(x, y),
-				s: south(x, y),
-				e: east(x, y),
-				w: west(x, y),
-			};
-
 			if (isBlock(mapTile)) {
+				const neighbours = {
+					n: north(x, y),
+					s: south(x, y),
+					e: east(x, y),
+					w: west(x, y),
+				};
+
 				const parsedBlock = {};
 				if (isNotBlock(neighbours.n)) {
 					if (isBlock(neighbours.w) && parsedTiles[`${x - 1}_${y}`].n) {
@@ -30,7 +30,7 @@ function buildGeometry(mapTiles, isBlockingTest) {
 					}
 				}
 				if (isNotBlock(neighbours.e)) {
-					if (isBlock(neighbours.n && parsedTiles[`${x}_${y - 1}`].e)) {
+					if (isBlock(neighbours.n) && parsedTiles[`${x}_${y - 1}`].e) {
 						parsedBlock.e = parsedTiles[`${x}_${y - 1}`].e;
 						parsedBlock.e.extend(0, 1);
 					} else {
@@ -39,7 +39,7 @@ function buildGeometry(mapTiles, isBlockingTest) {
 					}
 				}
 				if (isNotBlock(neighbours.s)) {
-					if (isBlock(neighbours.w && parsedTiles[`${x - 1}_${y}`].s)) {
+					if (isBlock(neighbours.w) && parsedTiles[`${x - 1}_${y}`].s) {
 						parsedBlock.s = parsedTiles[`${x - 1}_${y}`].s;
 						parsedBlock.s.extend(1, 0);
 					} else {
@@ -48,7 +48,7 @@ function buildGeometry(mapTiles, isBlockingTest) {
 					}
 				}
 				if (isNotBlock(neighbours.w)) {
-					if (isBlock(neighbours.n && parsedTiles[`${x}_${y - 1}`].w)) {
+					if (isBlock(neighbours.n) && parsedTiles[`${x}_${y - 1}`].w) {
 						parsedBlock.w = parsedTiles[`${x}_${y - 1}`].w;
 						parsedBlock.w.extend(0, 1);
 					} else {
@@ -62,7 +62,7 @@ function buildGeometry(mapTiles, isBlockingTest) {
 	}
 	catch (error) {
 		console.error("error parsing geometry");
-		console.info(JSON.stringify({grid, parsedTiles, edges}));
+		console.info(JSON.stringify(parsedTiles, edges));
 	}
 
 	return edges;
