@@ -1,4 +1,5 @@
 import PixelGameEngine from '../PixelGameEngine/PixelGameEngine';
+import buildGeometry from '../PixelGameEngine/fov/buildGeometry';
 import { fetchSeed, objMatch } from '../PixelGameEngine/util';
 import rand from 'random-seed';
 import Entity from './Entity';
@@ -177,10 +178,20 @@ export default class Game {
 
 	printMapDebug({xOffset, yOffset, width, height}) {
 		if (this.debugFlags.ShowRoomNumbersOption) {
-		this.map.rooms.forEach((room, index) => {
-			const {x1, y1} = room;
-			this.gameEngine.drawCharacter(x1 + 1 + xOffset, y1 + 1 + yOffset, '' + index, COLOURS.DARK_RED);
-		});
+			this.map.rooms.forEach((room, index) => {
+				const {x1, y1} = room;
+				this.gameEngine.drawCharacter(x1 + 1 + xOffset, y1 + 1 + yOffset, '' + index, COLOURS.DARK_RED);
+			});
+		}
+
+		if (this.debugFlags.showFovGeometry) {
+			const mapRange = this.map.getTilesInRange({x:xOffset*-1, y:yOffset*-1, width, height});
+			const geometry = buildGeometry(mapRange, (tile) => tile.canSeeThrough());
+			geometry.forEach((edge) => {
+				const {x1, x2, y1, y2} = edge;
+				this.gameEngine.drawDebugLine(x1, y1, x2, y2, COLOURS.YELLOW);
+			})
+		}
 	}
 
 	printEntities({xOffset, yOffset}) {

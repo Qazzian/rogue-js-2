@@ -78,13 +78,13 @@ export default class PixelGameEngine {
 		this.context.fillStyle = color.stringify();
 		this.context.strokeStyle = color.stringify();
 
-		// vertical
+		// Single block
 		if (dx === 0 && dy === 0) {
 			return this.draw(x1, y1, color);
 		}
+		// vertical
 		if (dx === 0) {
 			const top = Math.min(y1, y2);
-			const bottom = Math.max(y1, y2);
 			return this.context.fillRect(
 				x1 * this.pixelWidth,
 				top * this.pixelHeight,
@@ -92,9 +92,9 @@ export default class PixelGameEngine {
 				(Math.abs(dy) * this.pixelHeight) + this.pixelHeight
 			);
 		}
+		// horizontal
 		if (dy === 0) {
 			const left = Math.min(x1, x2);
-			const right = Math.max(x1, x2);
 			return this.context.fillRect(
 				left * this.pixelWidth,
 				y1 * this.pixelHeight,
@@ -112,7 +112,20 @@ export default class PixelGameEngine {
 		this.context.lineTo(x2 * this.pixelWidth, (y2 * this.pixelHeight) + yPost);
 		this.context.closePath();
 		this.context.fill();
+	}
 
+	drawDebugLine(x1, y1, x2, y2, color) {
+		const dx = x1 - x2;
+		const dy = y1 - y2;
+
+		this.context.fillStyle = color.stringify();
+		this.context.strokeStyle = color.stringify();
+
+		this.context.beginPath();
+		this.context.moveTo(x1 * this.pixelWidth, y1 * this.pixelHeight);
+		this.context.lineTo(x2 * this.pixelWidth, y2 * this.pixelHeight);
+		this.context.closePath();
+		this.context.stroke();
 	}
 
 	/**
