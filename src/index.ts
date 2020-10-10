@@ -1,12 +1,13 @@
-class Index {
-	private isBuilt: boolean;
+export default class Index {
+	readonly isBuilt: boolean;
 	constructor() {
 		this.isBuilt = true;
 	}
 
 	alert() {
-		alert('Hello from webpack and TypeScript');
+		console.info('Has Built: ', this.isBuilt);
 	}
+
 }
 
 const myIndex = new Index();
