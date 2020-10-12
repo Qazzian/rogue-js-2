@@ -21,6 +21,7 @@ document.getElementById('newMapButton').addEventListener('click', () => {
 });
 document.getElementById('pause').addEventListener("click", () => game.pause());
 document.getElementById('unpause').addEventListener("click", () => game.unpause());
+
 document.getElementById('ShowRoomNumbersOptions').addEventListener("change", (event) => {
 	const value = event.target.checked;
 	game.setDebugFlag('ShowRoomNumbersOption', value);

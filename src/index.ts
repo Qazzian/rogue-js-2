@@ -1,3 +1,5 @@
+import rand from 'random-seed';
+
 import Game from './RogueEngine/Game';
 
 import './index.css';
@@ -13,19 +15,24 @@ window.addEventListener("keydown", (eventDescription) => {
 	game.handleKeyEvent(eventDescription);
 });
 
-// @ts-ignore
-document.getElementById('newMapButton').addEventListener('click', () => {
+document.getElementById('newMapButton')!.addEventListener('click', () => {
 	game.pause();
 	game.start();
 });
-// @ts-ignore
-document.getElementById('pause').addEventListener("click", () => game.pause());
-// @ts-ignore
-document.getElementById('unpause').addEventListener("click", () => game.unpause());
-// @ts-ignore
-document.getElementById('DebugFlag').addEventListener("change", (event:ChangeEvent) => {
-	const checked = event.currentTarget.checked;
-	game.setDebugFlag(checked);
+document.getElementById('pause')!.addEventListener("click", () => game.pause());
+document.getElementById('unpause')!.addEventListener("click", () => game.unpause());
+
+document.getElementById('ShowRoomNumbersOptions')!.addEventListener("change", (event: Event) => {
+
+	// @ts-ignore
+	const value = event.currentTarget!.checked;
+	game.setDebugFlag('ShowRoomNumbersOption', value);
+});
+
+document.getElementById('ShowFovGeomOption')!.addEventListener("change", (event:Event) => {
+	// @ts-ignore
+	const value = event.currentTarget!.checked;
+	game.setDebugFlag('showFovGeometry', value);
 });
 game.start();
 

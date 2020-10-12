@@ -9,6 +9,9 @@
 		"forceConsistentCasingInFileNames": true,
 //		"isolatedModules": true,
 		"jsx": "react",
+		"lib": [
+			"DOM"
+		],
 		"module": "esnext",
 		"moduleResolution": "node",
 //		"noEmit": true,
