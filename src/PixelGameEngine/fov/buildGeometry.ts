@@ -1,5 +1,5 @@
 import Grid from '../Grid';
-import Edge from './Edge';
+import Edge from './Edge.';
 
 
 export default buildGeometry;

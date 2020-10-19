@@ -24,6 +24,6 @@ describe('FOV functions', () => {
 			x1: 0, x2: 1, y1: 0, y2: -3,
 		});
 
-		expect(edge2.getPoints()).toMatchObject([[0, 1], [0, -3]]);
+		expect(edge2.getPoints()).toMatchObject([{x:0, y:0}, {x:1, y:-3}]);
 	});
 });
