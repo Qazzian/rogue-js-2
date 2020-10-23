@@ -106,9 +106,9 @@ describe('FOV functions', () => {
 		tests.forEach(testGeometry);
 	});
 
-	function testGeometry(testData){
+	function testGeometry(testData:any){
 		test(testData.name, () => {
-			const geom = buildGeometry(testData.map, (b) => !!b);
+			const geom = buildGeometry(testData.map, (b:any) => !!b);
 			expect(geom).toMatchObject(testData.geom);
 		})
 	}
