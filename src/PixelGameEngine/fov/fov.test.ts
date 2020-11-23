@@ -1,4 +1,8 @@
-import fov, {createRaysFromPoint, makeRay} from './fov';
+import fov, {
+	createRaysFromGeometry,
+	createRaysFromPoint,
+	makeRay,
+} from './fov';
 
 import Edge from './Edge';
 
@@ -8,9 +12,9 @@ describe('FOV', () => {
 		expect(typeof fov).toBe('function');
 	});
 
-	test('fov', () => {
+	test('createRaysFromGeometry', () => {
 		const geom = [new Edge(2, 2, 1, 0)];
-		const rayList = fov({x: 1, y: 1}, geom, 5);
+		const rayList = createRaysFromGeometry({x: 1, y: 1}, geom, 5);
 		expect(rayList).toBeDefined();
 		expect(rayList.length).toBe(6);
 		expect(rayList).toMatchSnapshot();

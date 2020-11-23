@@ -16,6 +16,14 @@ export default function fov(
 	geometry: Edge[],
 	radius: number,
 ) {
+	const lightRays = createRaysFromGeometry(source, geometry, radius);
+	return calculateLightPolygon(lightRays);
+}
+
+export function createRaysFromGeometry(
+	source: Point,
+	geometry: Edge[],
+	radius: number,) {
 	return geometry.reduce((rays: Ray[], edge: Edge) => {
 		const pointList = edge.getPoints();
 		const rayList = pointList.reduce((allRays, point) => {
