@@ -1,6 +1,7 @@
 import fov, {
 	createRaysFromGeometry,
 	createRaysFromPoint,
+	getIntersection,
 	makeRay,
 } from './fov';
 
@@ -44,6 +45,16 @@ describe('FOV', () => {
 				x: 6.123233995736766e-16,
 				y: 10,
 			});
+	});
+
+
+	test('lineIntersection',  () => {
+		const e1 = new Edge(1.0, 1.0, 2.0, 2.0);
+		const e2 = new Edge(2.0, 1.0, 1.0, 2.0);
+		expect(getIntersection(e1, e2)).toMatchObject({
+			x: 1.5,
+			y: 1.5,
+		});
 	});
 });
 

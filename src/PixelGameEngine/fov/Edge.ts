@@ -28,4 +28,13 @@ export default class Edge {
 			{x: this.x2, y: this.y2},
 		];
 	}
+
+	getVector() {
+		return {
+			x: this.x1,
+			y: this.y1,
+			dx: this.x2 - this.x1,
+			dy: this.y2 - this.y1,
+		};
+	}
 }
