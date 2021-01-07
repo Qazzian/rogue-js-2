@@ -1,6 +1,6 @@
 import PixelGameEngine from '../PixelGameEngine/PixelGameEngine';
 import buildGeometry from '../PixelGameEngine/fov/buildGeometry';
-import { fetchSeed, objMatch } from '../PixelGameEngine/util';
+import { fetchSeed, objMatch } from '../PixelGameEngine/util.ts';
 import rand from 'random-seed';
 import Entity from './Entity';
 import Theme from './GameTheme';

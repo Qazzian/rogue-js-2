@@ -2,10 +2,11 @@ import fov, {
 	createRaysFromGeometry,
 	createRaysFromPoint,
 	getIntersection,
-	makeRay,
 } from './fov';
 
 import Edge from './Edge';
+import Ray from './Ray';
+import {degToRad} from '../util';
 
 describe('FOV', () => {
 	test('id defined', () => {
@@ -29,36 +30,14 @@ describe('FOV', () => {
 		expect(testRays).toMatchSnapshot();
 	});
 
-
-	test('makeRay', () => {
-		expect(makeRay(0, 10))
-			.toMatchObject({angle: 0, x: 10, y: 0});
-		expect(makeRay(degToRad(360), 10))
-			.toMatchObject({
-				angle: 6.283185307179586,
-				x: 10,
-				y: -2.4492935982947065e-15,
-			});
-		expect(makeRay(degToRad(90), 10))
-			.toMatchObject({
-				angle: 1.5707963267948966,
-				x: 6.123233995736766e-16,
-				y: 10,
-			});
-	});
-
-
 	test('lineIntersection',  () => {
-		const e1 = new Edge(1.0, 1.0, 2.0, 2.0);
-		const e2 = new Edge(2.0, 1.0, 1.0, 2.0);
-		expect(getIntersection(e1, e2)).toMatchObject({
+		const rayOrigin = {x: 1.0, y: 1.0};
+		const e1 = new Ray(degToRad(45), 2);
+		const e2 = new Edge(2.0, 1.0, -1.0, 1.0);
+		// set Ray origin and convert e1 to a Ray
+		expect(getIntersection(rayOrigin, e1, e2)).toMatchObject({
 			x: 1.5,
 			y: 1.5,
 		});
 	});
 });
-
-
-function degToRad(deg: number) {
-	return deg * Math.PI / 180;
-}

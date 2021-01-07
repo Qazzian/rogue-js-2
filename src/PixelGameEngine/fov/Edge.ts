@@ -1,10 +1,18 @@
+
+
 export default class Edge {
 	private readonly x1: number;
 	private readonly y1: number;
 	private x2: number;
 	private y2: number;
 
-
+	/**
+	 * Create an Edge with a start position and a movement vector
+	 * @param {number} x1 - x start position
+	 * @param {number} y1 - y start position
+	 * @param {number} dx - x change
+	 * @param {number} dy - y change
+	 */
 	constructor(x1:number, y1:number, dx?:number, dy?:number) {
 		this.x1 = x1;
 		this.y1 = y1;
