@@ -1,6 +1,6 @@
 import PixelGameEngine from '../PixelGameEngine/PixelGameEngine';
 import buildGeometry from '../PixelGameEngine/fov/buildGeometry';
-import { fetchSeed, objMatch } from '../PixelGameEngine/util.ts';
+import { getASeed, objMatch } from '../PixelGameEngine/util.ts';
 import rand from 'random-seed';
 import Entity from './Entity';
 import Theme from './GameTheme';
@@ -52,7 +52,7 @@ export default class Game {
 
 			await this.preloadAssets();
 			this.map = new (getMapGenerator(this.generatorName))(100, 100);
-			this.seed = await fetchSeed();
+			this.seed = await getASeed();
 			console.info('MAP SEED = ', this.seed);
 			this.random = new rand(this.seed);
 
