@@ -6,13 +6,23 @@ interface Point {
 	y: number,
 }
 
+interface Intersect {
+	angle: number,
+	x: number,
+	y: number,
+	distance: number,
+}
+
 export default function fov(
 	source: Point,
 	geometry: Edge[],
 	radius: number,
 ) {
 	const lightRays = createRaysFromGeometry(source, geometry, radius);
-	return findLineIntersections(source, lightRays, geometry);
+	const intersectionPoints = findLineIntersections(source, lightRays, geometry)
+		.sort((a, b) => {
+			return a.angle - b.angle;
+		});
 }
 
 export function createRaysFromGeometry(
@@ -33,14 +43,17 @@ export function findLineIntersections(
 	rayOrigin: Point,
 	lightRays: Ray[],
 	worldGeometry: Edge[]
-) {
-	lightRays.map((ray) => {
-		const intersectedEdges = worldGeometry.filter((edge) => {
+): Intersect[] {
+	const INITIAL_INTERSECT =  {x: 0, y: 0, distance: Number.MAX_VALUE, angle: 0};
+
+	return lightRays.map((ray) => {
+		return worldGeometry.reduce((nearestIntersect, edge) => {
 			if (!doVectorsOverlap(ray, edge.getVector())) {
-				return false;
+				return nearestIntersect;
 			}
 			const intersectionPoint = getIntersection(rayOrigin, ray, edge);
-		})
+			return intersectionPoint && intersectionPoint.distance < nearestIntersect.distance ? intersectionPoint : nearestIntersect;
+		}, INITIAL_INTERSECT as Intersect)
 	})
 }
 
@@ -48,7 +61,7 @@ function doVectorsOverlap(ray: Ray, vector: {dx: number, dy: number}) {
 	return Math.abs(ray.dx - vector.dx) === 0.0 || Math.abs(ray.dy - vector.dy) === 0.0
 }
 
-export function getIntersection(rayOrigin: Point, ray: Ray, segment:Edge){
+export function getIntersection(rayOrigin: Point, ray: Ray, segment:Edge): Intersect | null{
 // TODO translate into my interfaces
 	// RAY in parametric: Point + Delta*T1
 	const segmentVector = segment.getVector();
@@ -69,9 +82,10 @@ export function getIntersection(rayOrigin: Point, ray: Ray, segment:Edge){
 
 	// Return the POINT OF INTERSECTION
 	return {
+		angle: ray.angle,
 		x: rayOrigin.x + ray.dx * T1,
 		y: rayOrigin.y + ray.dy * T1,
-		param: T1
+		distance: T1
 	};
 
 }

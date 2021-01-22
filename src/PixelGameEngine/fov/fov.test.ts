@@ -30,7 +30,14 @@ describe('FOV', () => {
 		expect(testRays).toMatchSnapshot();
 	});
 
+	// TODO test findLineIntersections
+
 	test('lineIntersection',  () => {
+		// TODO:
+		//  T1 < 0
+		//  T2 <0,
+		//  T2 > 1
+
 		const rayOrigin = {x: 1.0, y: 1.0};
 		const e1 = new Ray(degToRad(45), 2);
 		const e2 = new Edge(2.0, 1.0, -1.0, 1.0);
