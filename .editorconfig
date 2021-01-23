@@ -20,7 +20,7 @@ tab_width = 2
 [*.scss]
 tab_width = 2
 
-[{*.cjs,*.js}]
+[{*.cjs,*.js,*.ts}]
 indent_style = tab
 
 [{.prettierrc,.stylelintrc,.eslintrc,.babelrc,jest.config,bowerrc,*.json,*.jsb3,*.jsb2}]

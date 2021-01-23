@@ -121,7 +121,7 @@ export default class Game {
 	}
 
 	printStats(timeStats) {
-		const {timestamp, timePassed, fps} = timeStats;
+		const {fps} = timeStats;
 		if (this.isGameActive) {
 			this.statsElement.innerText = `FPS: ${fps}`;
 		} else {
@@ -147,7 +147,7 @@ export default class Game {
 	}
 
 	printMap(area) {
-		let displayTiles = [];
+		let displayTiles;
 		if (objMatch(area, this.mapViewer.area)) {
 			displayTiles = this.mapViewer.tiles;
 		} else {
