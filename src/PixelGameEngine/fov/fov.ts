@@ -1,10 +1,6 @@
 import Edge from './Edge';
 import Ray from './Ray';
-
-interface Point {
-	x: number,
-	y: number,
-}
+import {Point} from "./point";
 
 interface Intersect {
 	angle: number,
@@ -23,6 +19,8 @@ export default function fov(
 		.sort((a, b) => {
 			return a.angle - b.angle;
 		});
+	return intersectionPoints;
+
 }
 
 export function createRaysFromGeometry(

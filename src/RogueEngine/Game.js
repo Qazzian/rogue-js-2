@@ -1,10 +1,11 @@
 import PixelGameEngine from '../PixelGameEngine/PixelGameEngine';
 import buildGeometry from '../PixelGameEngine/fov/buildGeometry';
-import { getASeed, objMatch } from '../PixelGameEngine/util.ts';
+import fov from '../PixelGameEngine/fov/fov';
+import {getASeed, objMatch} from '../PixelGameEngine/util.ts';
 import rand from 'random-seed';
 import Entity from './Entity';
 import Theme from './GameTheme';
-import { COLOURS } from '../PixelGameEngine/Colour';
+import {COLOURS} from '../PixelGameEngine/Colour';
 
 
 import TutorialMap from './mapGenerators/TutorialMap';
@@ -41,10 +42,16 @@ export default class Game {
 			tiles: [],
 		};
 
+		this.fovCache = {
+			playerPos: {x: NaN, y: NaN},
+			fov: null,
+		};
+
 		this.debugFlags = {
-			ShowRoomNumbersOption: false,
+			showRoomNumbers: false,
 			showFovGeometry: false,
-		}
+			showFov: false,
+		};
 	}
 
 	async start() {
@@ -177,20 +184,29 @@ export default class Game {
 	}
 
 	printMapDebug({xOffset, yOffset, width, height}) {
-		if (this.debugFlags.ShowRoomNumbersOption) {
+		if (this.debugFlags.showRoomNumbers) {
 			this.map.rooms.forEach((room, index) => {
 				const {x1, y1} = room;
 				this.gameEngine.drawCharacter(x1 + 1 + xOffset, y1 + 1 + yOffset, '' + index, COLOURS.DARK_RED);
 			});
 		}
 
+		const mapRange = this.map.getTilesInRange({x: xOffset * -1, y: yOffset * -1, width, height});
+		const geometry = buildGeometry(mapRange, (tile) => tile.canSeeThrough());
 		if (this.debugFlags.showFovGeometry) {
-			const mapRange = this.map.getTilesInRange({x:xOffset*-1, y:yOffset*-1, width, height});
-			const geometry = buildGeometry(mapRange, (tile) => tile.canSeeThrough());
 			geometry.forEach((edge) => {
 				const {x1, x2, y1, y2} = edge;
 				this.gameEngine.drawDebugLine(x1, y1, x2, y2, COLOURS.YELLOW);
-			})
+			});
+		}
+
+		if (this.debugFlags.showFov) {
+			const playerPosition = {
+				x: this.player.x,
+				y: this.player.y,
+			};
+			const fovData = this.printFov(playerPosition, geometry, 20);
+			// TODO create FOV overlay
 		}
 	}
 
@@ -201,8 +217,22 @@ export default class Game {
 		}
 	}
 
+	// TODO
 	setMapGenerator(generatorName) {
 		this.generatorName = generatorName;
+	}
+
+	printFov(playerPosition, geometry, radius) {
+		if (playerPosition.x === this.fovCache.playerPos.x
+			&& playerPosition.y === this.fovCache.playerPos.y) {
+			return this.fovCache.fov;
+		}
+
+		this.fovCache.playerPos = playerPosition;
+		this.fovCache.fov = fov(playerPosition, geometry, radius);
+
+		console.info('fov:', this.fovCache.fov);
+		return this.fovCache.fov;
 	}
 
 	pause() {

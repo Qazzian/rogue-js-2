@@ -1,5 +1,3 @@
-import rand from 'random-seed';
-
 import Game from './RogueEngine/Game';
 
 import './index.css';
@@ -22,17 +20,14 @@ document.getElementById('newMapButton')!.addEventListener('click', () => {
 document.getElementById('pause')!.addEventListener("click", () => game.pause());
 document.getElementById('unpause')!.addEventListener("click", () => game.unpause());
 
-document.getElementById('ShowRoomNumbersOptions')!.addEventListener("change", (event: Event) => {
-
-	// @ts-ignore
-	const value = event.currentTarget!.checked;
-	game.setDebugFlag('ShowRoomNumbersOption', value);
-});
-
-document.getElementById('ShowFovGeomOption')!.addEventListener("change", (event:Event) => {
-	// @ts-ignore
-	const value = event.currentTarget!.checked;
-	game.setDebugFlag('showFovGeometry', value);
-});
+document.getElementById('showRoomNumbers')!.addEventListener("change", debugOptionChanged);
+document.getElementById('showFovGeometry')!.addEventListener("change", debugOptionChanged);
+document.getElementById('showFov')!.addEventListener("change", debugOptionChanged)
 game.start();
 
+function debugOptionChanged(event:Event) {
+	const target = event.currentTarget as HTMLInputElement;
+	const flagName =  target.id;
+	const value = target.checked;
+	game.setDebugFlag(flagName, value);
+}
