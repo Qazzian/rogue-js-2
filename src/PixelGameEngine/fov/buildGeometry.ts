@@ -18,7 +18,10 @@ interface ProcessedBlock {
 }
 
 
-function buildGeometry(mapTiles: any[][], isBlockingTest: { (tile: any): any; (arg0: any): any; }) {
+function buildGeometry(
+	mapTiles: any[][],
+	isBlockingTest: { (tile: any): any; (arg0: any): any; }
+	): Edge[] {
 	const parsedTiles:{[index: string]:any} = {};
 	const edges: Edge[] = [];
 	const grid = new Grid(mapTiles);

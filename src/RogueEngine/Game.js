@@ -184,19 +184,19 @@ export default class Game {
 	}
 
 	printMapDebug({xOffset, yOffset, width, height}) {
-		if (this.debugFlags.showRoomNumbers) {
-			this.map.rooms.forEach((room, index) => {
-				const {x1, y1} = room;
-				this.gameEngine.drawCharacter(x1 + 1 + xOffset, y1 + 1 + yOffset, '' + index, COLOURS.DARK_RED);
-			});
-		}
-
 		const mapRange = this.map.getTilesInRange({x: xOffset * -1, y: yOffset * -1, width, height});
 		const geometry = buildGeometry(mapRange, (tile) => tile.canSeeThrough());
 		if (this.debugFlags.showFovGeometry) {
 			geometry.forEach((edge) => {
 				const {x1, x2, y1, y2} = edge;
 				this.gameEngine.drawDebugLine(x1, y1, x2, y2, COLOURS.YELLOW);
+			});
+		}
+
+		if (this.debugFlags.showRoomNumbers) {
+			this.map.rooms.forEach((room, index) => {
+				const {x1, y1} = room;
+				this.gameEngine.drawCharacter(x1 + 1 + xOffset, y1 + 1 + yOffset, '' + index, COLOURS.DARK_RED);
 			});
 		}
 
@@ -223,15 +223,17 @@ export default class Game {
 	}
 
 	printFov(playerPosition, geometry, radius) {
-		if (playerPosition.x === this.fovCache.playerPos.x
-			&& playerPosition.y === this.fovCache.playerPos.y) {
-			return this.fovCache.fov;
+		if (playerPosition.x !== this.fovCache.playerPos.x
+			|| playerPosition.y !== this.fovCache.playerPos.y
+		)
+		{
+			this.fovCache.playerPos = playerPosition;
+			this.fovCache.fov = fov(playerPosition, geometry, radius);
+
+			console.info('fov:', this.fovCache.fov);
 		}
 
-		this.fovCache.playerPos = playerPosition;
-		this.fovCache.fov = fov(playerPosition, geometry, radius);
-
-		console.info('fov:', this.fovCache.fov);
+		this.gameEngine.drawPolygon(this.fovCache.fov, COLOURS.YELLOW);
 		return this.fovCache.fov;
 	}
 

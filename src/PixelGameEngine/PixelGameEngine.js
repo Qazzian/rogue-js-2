@@ -169,6 +169,26 @@ export default class PixelGameEngine {
 	}
 
 	/**
+	 *
+	 * @param coords[] Array of {x, y} coordinate pairs
+	 */
+	drawPolygon(coords, colour) {
+		const ctx = this.context;
+		const startPos = coords[0];
+		ctx.strokeStyle = colour.stringify();
+		ctx.beginPath();
+		ctx.moveTo(startPos.x* this.pixelWidth, startPos.y*this.pixelHeight);
+
+		coords.forEach((pos) => {
+			ctx.lineTo(pos.x * this.pixelWidth, pos.y * this.pixelHeight);
+		});
+
+		ctx.lineTo(startPos.x * this.pixelWidth, startPos.y * this.pixelHeight);
+		ctx.stroke();
+
+	}
+
+	/**
 	 * Draw a single utf-8 character onto the canvas
 	 * @param x {Number}
 	 * @param y {Number}

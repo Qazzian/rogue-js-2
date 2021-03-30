@@ -1,6 +1,7 @@
 import fov, {
 	createRaysFromGeometry,
 	createRaysFromPoint,
+	findLineIntersections,
 	getIntersection,
 } from './fov';
 
@@ -30,21 +31,35 @@ describe('FOV', () => {
 		expect(testRays).toMatchSnapshot();
 	});
 
-	// TODO test findLineIntersections
+	test('findLineIntersections',  () => {
+		const rayOrigin = {x: 1.0, y: 1.0};
+		const geometry = [
+			new Edge(0, 0, 3, 0),
+			new Edge(0, 0, 0, 3),
+			new Edge(0, 3, 3, 0),
+			new Edge(3, 0, 0, 3),
+		];
+		const lightRays = createRaysFromGeometry(rayOrigin, geometry, 5);
+		console.info('findLineIntersections');
+		console.info({lightRays, length: lightRays.length});
+		const intersections = findLineIntersections(rayOrigin, lightRays, geometry);
+		console.info({intersections});
+	});
 
-	test('lineIntersection',  () => {
+	test('getIntersection',  () => {
 		// TODO:
-		//  T1 < 0
 		//  T2 <0,
 		//  T2 > 1
 
 		const rayOrigin = {x: 1.0, y: 1.0};
-		const e1 = new Ray(degToRad(45), 2);
-		const e2 = new Edge(2.0, 1.0, -1.0, 1.0);
+		const ray = new Ray(degToRad(45), 2);
+		const intersectingEdge = new Edge(2.0, 1.0, -1.0, 1.0);
 		// set Ray origin and convert e1 to a Ray
-		expect(getIntersection(rayOrigin, e1, e2)).toMatchObject({
+		expect(getIntersection(rayOrigin, ray, intersectingEdge)).toMatchObject({
 			x: 1.5,
 			y: 1.5,
 		});
+		const lineBelow = new Edge(-1, -1, 3, 3);
+		expect(getIntersection(rayOrigin, ray, lineBelow)).toBeNull();
 	});
 });
