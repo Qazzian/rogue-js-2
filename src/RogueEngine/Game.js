@@ -184,8 +184,14 @@ export default class Game {
 	}
 
 	printMapDebug({xOffset, yOffset, width, height}) {
-		const mapRange = this.map.getTilesInRange({x: xOffset * -1, y: yOffset * -1, width, height});
+		const mapRange = this.map.getTilesInRange({x: xOffset * -1, y: yOffset * -1, width: width - 2, height: height - 2});
 		const geometry = buildGeometry(mapRange, (tile) => tile.canSeeThrough());
+
+		const relativePlayerPosition = {
+			x: this.player.x + xOffset + 0.5,
+			y: this.player.y + yOffset + 0.5,
+		};
+
 		if (this.debugFlags.showFovGeometry) {
 			geometry.forEach((edge) => {
 				const {x1, x2, y1, y2} = edge;
@@ -200,13 +206,19 @@ export default class Game {
 			});
 		}
 
+
+		if (this.player.x !== this.fovCache.playerPos.x
+			|| this.player.y !== this.fovCache.playerPos.y
+		)
+		{
+			this.fovCache.playerPos = {...this.player};
+			this.fovCache.fov = fov(relativePlayerPosition, geometry, 20);
+
+			console.info('fov:', this.fovCache.fov);
+		}
+
 		if (this.debugFlags.showFov) {
-			const playerPosition = {
-				x: this.player.x,
-				y: this.player.y,
-			};
-			const fovData = this.printFov(playerPosition, geometry, 20);
-			// TODO create FOV overlay
+			const fovData = this.printFov(relativePlayerPosition, this.fovCache.fov);
 		}
 	}
 
@@ -222,19 +234,9 @@ export default class Game {
 		this.generatorName = generatorName;
 	}
 
-	printFov(playerPosition, geometry, radius) {
-		if (playerPosition.x !== this.fovCache.playerPos.x
-			|| playerPosition.y !== this.fovCache.playerPos.y
-		)
-		{
-			this.fovCache.playerPos = playerPosition;
-			this.fovCache.fov = fov(playerPosition, geometry, radius);
-
-			console.info('fov:', this.fovCache.fov);
-		}
-
-		this.gameEngine.drawPolygon(this.fovCache.fov, COLOURS.YELLOW);
-		return this.fovCache.fov;
+	printFov(playerPosition, fovMask) {
+		this.gameEngine.drawCharacter(playerPosition.x, playerPosition.y, 'O', COLOURS.YELLOW);
+		this.gameEngine.drawPolygon(fovMask, COLOURS.YELLOW);
 	}
 
 	pause() {
