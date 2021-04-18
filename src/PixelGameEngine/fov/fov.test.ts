@@ -40,10 +40,10 @@ describe('FOV', () => {
 			new Edge(3, 0, 0, 3),
 		];
 		const lightRays = createRaysFromGeometry(rayOrigin, geometry, 5);
-		console.info('findLineIntersections');
-		console.info({lightRays, length: lightRays.length});
+		expect(lightRays.length).toBe(geometry.length * 2 * 3);
 		const intersections = findLineIntersections(rayOrigin, lightRays, geometry);
-		console.info({intersections});
+		expect(intersections.length).toBe(lightRays.length);
+		expect(intersections).toMatchSnapshot();
 	});
 
 	test('getIntersection',  () => {
