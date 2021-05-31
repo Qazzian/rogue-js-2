@@ -91,6 +91,7 @@ export default class Game {
 		this.printMap(viewWindow);
 		this.printMapDebug(viewWindow);
 		this.printEntities(viewWindow);
+		this.printOverlays(viewWindow);
 
 		return this.isGameActive;
 	}
@@ -235,13 +236,24 @@ export default class Game {
 		}
 	}
 
+	printOverlays({xOffset, yOffset, width, height}) {
+
+		const playerPosition = {
+			x: this.player.x + xOffset + 0.5,
+			y: this.player.y + yOffset + 0.5,
+		};
+
+		if (this.debugFlags.showFov) {
+			this.gameEngine.drawCharacter(playerPosition.x - 0.5, playerPosition.y - 0.5, '+', COLOURS.RED);
+		}
+	}
+
 	// TODO
 	setMapGenerator(generatorName) {
 		this.generatorName = generatorName;
 	}
 
 	printFov(playerPosition, fovMask) {
-		this.gameEngine.drawCharacter(playerPosition.x, playerPosition.y, 'O', COLOURS.YELLOW);
 		this.gameEngine.drawPolygon(fovMask, COLOURS.RED);
 	}
 
