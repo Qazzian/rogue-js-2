@@ -20,11 +20,16 @@ interface ProcessedBlock {
 
 function buildGeometry(
 	mapTiles: any[][],
-	isBlockingTest: { (tile: any): any; (arg0: any): any; }
+	isBlockingTest: { (tile: any): any; (arg0: any): any; },
+	addBorder: boolean
 	): Edge[] {
 	const parsedTiles:{[index: string]:any} = {};
 	const edges: Edge[] = [];
 	const grid = new Grid(mapTiles);
+
+	if (addBorder) {
+		edges.push(...addBoarders(grid));
+	}
 
 	try {
 		grid.forEach((mapTile: any, x: number, y: number) => {
@@ -95,4 +100,13 @@ function buildGeometry(
 	function getNeighbour(x:number, y:number, direction:number[]) {
 		return grid.get(x+direction[0], y+direction[1]);
 	}
+}
+
+function addBoarders(grid: Grid) : Edge[] {
+	const edges = [];
+	edges.push(new Edge(0, 0, grid.width, 0));
+	edges.push(new Edge(0, 0, 0, grid.height));
+	edges.push(new Edge(grid.width, 0, 0, grid.height));
+	edges.push(new Edge(0, grid.height, grid.width, 0));
+	return edges;
 }

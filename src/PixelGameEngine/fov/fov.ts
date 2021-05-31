@@ -16,11 +16,11 @@ export default function fov(
 ) {
 	const lightRays = createRaysFromGeometry(source, geometry, radius);
 	const intersectionPoints = findLineIntersections(source, lightRays, geometry)
+		.filter(line => line.angle !== 0)
 		.sort((a, b) => {
 			return a.angle - b.angle;
 		});
 	return intersectionPoints;
-
 }
 
 export function createRaysFromGeometry(
@@ -47,6 +47,7 @@ export function findLineIntersections(
 	return lightRays.map((ray) => {
 		return worldGeometry.reduce((nearestIntersect, edge) => {
 			if (doVectorsOverlap(ray, edge.getVector())) {
+				console.warn('OVERLAP:', ray, edge);
 				return nearestIntersect;
 			}
 			const intersectionPoint = getIntersection(rayOrigin, ray, edge);
@@ -74,7 +75,7 @@ export function getIntersection(rayOrigin: Point, ray: Ray, segment: Edge): Inte
 		/ (segmentVector.dx * ray.dy - segmentVector.dy * ray.dx);
 	const T1 = (segmentVector.x + segmentVector.dx * T2 - rayOrigin.x) / ray.dx;
 
-	// Must be within parametic whatevers for RAY/SEGMENT
+	// Must be within parametric whatevers for RAY/SEGMENT
 	if (T1 < 0) return null;
 	if (T2 < 0 || T2 > 1) return null;
 

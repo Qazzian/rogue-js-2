@@ -184,8 +184,14 @@ export default class Game {
 	}
 
 	printMapDebug({xOffset, yOffset, width, height}) {
-		const mapRange = this.map.getTilesInRange({x: xOffset * -1, y: yOffset * -1, width: width - 2, height: height - 2});
-		const geometry = buildGeometry(mapRange, (tile) => tile.canSeeThrough());
+		const mapRangeParams = {
+			x: xOffset * -1,
+			y: yOffset * -1,
+			width: width,
+			height: height
+		}
+		const mapRange = this.map.getTilesInRange(mapRangeParams);
+		const geometry = buildGeometry(mapRange, (tile) => tile.canSeeThrough(), true);
 
 		const relativePlayerPosition = {
 			x: this.player.x + xOffset + 0.5,
@@ -214,7 +220,7 @@ export default class Game {
 			this.fovCache.playerPos = {...this.player};
 			this.fovCache.fov = fov(relativePlayerPosition, geometry, 20);
 
-			console.info('fov:', this.fovCache.fov);
+			// console.info('fov:', this.fovCache.fov);
 		}
 
 		if (this.debugFlags.showFov) {
@@ -236,7 +242,7 @@ export default class Game {
 
 	printFov(playerPosition, fovMask) {
 		this.gameEngine.drawCharacter(playerPosition.x, playerPosition.y, 'O', COLOURS.YELLOW);
-		this.gameEngine.drawPolygon(fovMask, COLOURS.YELLOW);
+		this.gameEngine.drawPolygon(fovMask, COLOURS.RED);
 	}
 
 	pause() {
