@@ -21,7 +21,7 @@ interface ProcessedBlock {
 function buildGeometry(
 	mapTiles: any[][],
 	isBlockingTest: { (tile: any): any; (arg0: any): any; },
-	addBorder: boolean
+	addBorder: boolean=false
 	): Edge[] {
 	const parsedTiles:{[index: string]:any} = {};
 	const edges: Edge[] = [];
