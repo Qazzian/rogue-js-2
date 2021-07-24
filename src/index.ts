@@ -12,7 +12,11 @@ const game = new Game(screen, stats);
 window.addEventListener("keydown", (eventDescription) => {
 	game.handleKeyEvent(eventDescription);
 });
-
+document.getElementById('mapGeneratorSelector')!.addEventListener("change", (event) => {
+	const selectElement = event.target as HTMLSelectElement;
+	const selectedValue = selectElement.value;
+	game.setMapGenerator(selectedValue);
+});
 document.getElementById('newMapButton')!.addEventListener('click', () => {
 	game.pause();
 	game.start();
