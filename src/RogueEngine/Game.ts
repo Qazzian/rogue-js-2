@@ -1,26 +1,26 @@
 import {
-	PixelGameEngine,
-	COLOURS,
-	TimeStats,
 	Area,
-	Position,
-	util,
-	Point,
+	COLOURS,
 	fov,
+	PixelGameEngine,
+	Point,
+	Position,
 	Random,
+	TimeStats,
+	util,
 } from "@Qazzian/pixel-game-engine";
 import Entity from "./Entity";
 import Theme from "./GameTheme";
+import EventEmitter from "events";
 
 import TutorialMap from "./mapGenerators/TutorialMap";
 import MapTile from "./MapTile";
 import GameMap from "./mapGenerators/GameMap";
 import { MapView } from "./MapView";
 import { EmptyMap } from "./mapGenerators/EmptyMap";
+import { DebugFlags } from "./tools/DebugOptions";
 
 const { buildFov, buildGeometry } = fov;
-
-// const { getASeed, objMatch } = util;
 
 // Todo move to a factory module in ./mapGenerators
 function getMapGenerator(name: string) {
@@ -31,15 +31,7 @@ function getMapGenerator(name: string) {
 	}
 }
 
-export enum DebugFlags {
-	empty,
-	showRoomNumbers,
-	showFovGeometry,
-	showFov,
-}
-
-export default class Game {
-	private statsElement: HTMLElement;
+export default class Game extends EventEmitter {
 	private canvas: HTMLCanvasElement;
 	private mapWindow: { width: number; height: number };
 	private gameEngine: PixelGameEngine;
@@ -52,11 +44,13 @@ export default class Game {
 	private player: Entity | undefined;
 	private entities: Entity[];
 	private fovCache: { playerPos: Point; fov: fov.Intersect[] | null };
-	private readonly debugFlags: { [key in DebugFlags]?: boolean };
+	private readonly debugFlags: DebugFlags;
 	previousViewArea: Area = new Area(0, 0, 0, 0);
+	private updateHandler: { (gameStats: TimeStats): void; (gameStats: TimeStats): void };
 
-	constructor(canvasElement: HTMLCanvasElement, statsElement: HTMLElement) {
-		this.statsElement = statsElement;
+	constructor(canvasElement: HTMLCanvasElement) {
+		super();
+
 		this.canvas = canvasElement;
 		this.mapWindow = {
 			width: 600,
@@ -69,6 +63,7 @@ export default class Game {
 		this.generatorName = "tutorial";
 
 		this.entities = [];
+		this.updateHandler = () => {};
 
 		this.fovCache = {
 			playerPos: { x: NaN, y: NaN },
@@ -76,15 +71,16 @@ export default class Game {
 		};
 
 		this.debugFlags = {
-			[DebugFlags.showRoomNumbers]: false,
-			[DebugFlags.showFovGeometry]: false,
-			[DebugFlags.showFov]: false,
+			showRoomNumbers: false,
+			showFovGeometry: false,
+			showFov: false,
 		};
 	}
 
-	async start() {
+	async start(onUpdateHandler: { (gameStats: TimeStats): void; (gameStats: TimeStats): void }) {
 		try {
 			await this.preloadAssets();
+			this.updateHandler = onUpdateHandler;
 			this.map = new (getMapGenerator(this.generatorName))({ maxWidth: 100, maxHeight: 100 });
 			this.seed = await util.getASeed();
 			console.info("MAP SEED = ", this.seed);
@@ -118,13 +114,13 @@ export default class Game {
 		const engine = this.gameEngine;
 		engine.clear();
 
-		this.printStats(timeStats);
 		const viewWindow = this.mainView.window;
 
 		this.mainView.print();
 		this.printMapDebug();
 		this.printEntities(viewWindow);
 		this.printOverlays(viewWindow);
+		this.updateHandler(timeStats);
 
 		return this.isGameActive;
 	}
@@ -171,12 +167,12 @@ export default class Game {
 		}
 	}
 
-	printStats(timeStats: TimeStats) {
+	getGameSpeed(timeStats: TimeStats) {
 		const { fps } = timeStats;
 		if (this.isGameActive) {
-			this.statsElement.innerText = `FPS: ${fps}`;
+			return fps;
 		} else {
-			this.statsElement.innerText = "FPS: PAUSED";
+			return "PAUSED";
 		}
 	}
 
@@ -184,7 +180,6 @@ export default class Game {
 		if (!this.map) {
 			return;
 		}
-		// console.log("Need to implement printMapDebug", { xOffset, yOffset, width, height });
 		const mapRange = this.mainView.visibleMap;
 		const geometry = buildGeometry(
 			mapRange,
@@ -196,20 +191,6 @@ export default class Game {
 			},
 			true,
 		);
-
-		// if (this.debugFlags.showFovGeometry) {
-		// 	geometry.forEach((edge) => {
-		// 		const { x1, x2, y1, y2 } = edge;
-		// 		this.gameEngine.drawDebugLine(x1, y1, x2, y2, COLOURS.YELLOW);
-		// 	});
-		// }
-
-		// if (this.debugFlags.showRoomNumbers) {
-		// 	this.map.rooms.forEach((room: Room, index: number) => {
-		// 		const { x1, y1 } = room;
-		// 		this.gameEngine.drawCharacter(x1 + 1 + xOffset, y1 + 1 + yOffset, "" + index, COLOURS.DARK_RED);
-		// 	});
-		// }
 
 		if (this.player) {
 			const relativePlayerPosition = {
@@ -228,6 +209,20 @@ export default class Game {
 			}
 			// }
 		}
+
+		if (this.debugFlags.showFovGeometry) {
+			geometry.forEach((edge) => {
+				const [{ x: x1, y: y1 }, { x: x2, y: y2 }] = edge.getPoints();
+				this.gameEngine.drawDebugLine(x1, y1, x2, y2, COLOURS.YELLOW);
+			});
+		}
+
+		// if (this.debugFlags.showRoomNumbers) {
+		// 	this.map.rooms.forEach((room, index) => {
+		// 		const {x1, y1} = room;
+		// 		this.gameEngine.drawCharacter(x1 + 1 + xOffset, y1 + 1 + yOffset, '' + index, COLOURS.DARK_RED);
+		// 	});
+		// }
 	}
 
 	printEntities({ x: xOffset, y: yOffset }: Point) {
@@ -250,7 +245,7 @@ export default class Game {
 			y: this.player.y - yOffset + 0.5,
 		};
 
-		if (this.debugFlags[DebugFlags.showFov]) {
+		if (this.debugFlags.showFov) {
 			this.gameEngine.drawCharacter(playerPosition.x - 0.5, playerPosition.y - 0.5, "+", COLOURS.RED);
 		}
 	}
@@ -274,8 +269,12 @@ export default class Game {
 		this.gameEngine.start();
 	}
 
-	setDebugFlag(flag: DebugFlags, value: boolean) {
+	setDebugFlag(flag: keyof DebugFlags, value: boolean) {
 		console.info("set debug flag: ", flag, value);
 		this.debugFlags[flag] = value;
+	}
+
+	getDebugFlags(): DebugFlags {
+		return this.debugFlags;
 	}
 }

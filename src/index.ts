@@ -1,37 +1,9 @@
-import Game from "./RogueEngine/Game";
+import { createRoot } from "react-dom/client";
+import GameComponents from "./GameComponents";
 
 import "./index.css";
+import React from "react";
 
-const screen = document.getElementById("game_screen");
-const stats = document.getElementById("stats");
-if (!screen) {
-	throw new Error("No game screen found.");
-}
-
-const game = new Game(screen as HTMLCanvasElement, stats as HTMLElement);
-
-window.addEventListener("keydown", (eventDescription) => {
-	game.handleKeyEvent(eventDescription);
-});
-
-document.getElementById("newMapButton")!.addEventListener("click", () => {
-	game.pause();
-	game.start();
-});
-document.getElementById("pause")!.addEventListener("click", () => game.pause());
-document.getElementById("unpause")!.addEventListener("click", () => game.unpause());
-
-document.getElementById("showRoomNumbers")!.addEventListener("change", debugOptionChanged);
-document.getElementById("showFovGeometry")!.addEventListener("change", debugOptionChanged);
-document.getElementById("showFov")!.addEventListener("change", debugOptionChanged);
-game.start();
-
-function debugOptionChanged(event: Event) {
-	const target = event.currentTarget as HTMLInputElement;
-	const flagName = target.id;
-	const value = target.checked;
-	console.log("Debug flag to set: ", flagName, value);
-	// if (flagName in DebugFlags) {
-	// 	game.setDebugFlag(flagName, value);
-	// }
-}
+const container = document.getElementById("App") as HTMLElement;
+const root = createRoot(container);
+root.render(React.createElement(GameComponents));
