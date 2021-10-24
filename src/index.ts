@@ -1,12 +1,19 @@
-import Game from './RogueEngine/Game';
+import React from 'react';
+import ReactDOM from "react-dom";
+
+import Main from './GameComponents';
+import Game from "./RogueEngine/Game";
 
 import './index.css';
-
 
 const screen = document.getElementById('game_screen');
 const stats = document.getElementById('stats');
 const game = new Game(screen, stats);
 
+
+
+
+ReactDOM.render(React.createElement(Main), document.getElementById('App'));
 
 
 window.addEventListener("keydown", (eventDescription) => {
