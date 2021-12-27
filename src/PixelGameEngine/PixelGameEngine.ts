@@ -1,8 +1,19 @@
 import { Colour, COLOURS } from "./Colour";
+import EventEmitter from "events";
 
 
-export default class PixelGameEngine {
-	constructor(canvas, width, height, pixelWidth, pixelHeight) {
+export default class PixelGameEngine extends EventEmitter{
+	private canvas: HTMLCanvasElement;
+	private context: CanvasRenderingContext2D | null;
+	private width: number;
+	private height: number;
+	private pixelWidth: number;
+	private pixelHeight: number;
+	private lastTimestamp: number;
+
+
+	constructor(canvas: HTMLCanvasElement, width: number, height: number, pixelWidth: number, pixelHeight: number) {
+		super();
 		this.canvas = canvas;
 		this.context = canvas.getContext('2d');
 
@@ -15,22 +26,27 @@ export default class PixelGameEngine {
 		canvas.width = width * pixelWidth;
 		canvas.height = height * pixelHeight;
 
-		this.context.font = `${this.pixelHeight}px monospace`;
-		this.context.textAlign = 'center';
-		this.context.textBaseline = "middle";
+		this.lastTimestamp = 0;
+
+		if (this.context) {
+			this.context.font = `${this.pixelHeight}px monospace`;
+			this.context.textAlign = 'center';
+			this.context.textBaseline = "middle";
+		}
 	}
 
 	/**
 	 * Start listening to the animation frames
 	 * @param onUpdate{function}
 	 */
-	start(onUpdate) {
+	start() {
+		this.emit('start');
 		this.lastTimestamp = 0;
-		this.onUpdate = onUpdate;
 		window.requestAnimationFrame(timestamp => this.step(timestamp));
 	}
 
-	step(timestamp) {
+	step(timestamp: number) {
+		this.emit('before-update', timestamp);
 		const timePassed = timestamp - this.lastTimestamp;
 		this.lastTimestamp = timestamp;
 		const fps = Math.round(1000 / timePassed);
@@ -41,6 +57,7 @@ export default class PixelGameEngine {
 		};
 		const doAnotherStep = this.onUpdate(timePassed, timeStats);
 
+		this.emit('after-update', timestamp, timeStats);
 		if (doAnotherStep) {
 			window.requestAnimationFrame(timestamp => this.step(timestamp));
 		}

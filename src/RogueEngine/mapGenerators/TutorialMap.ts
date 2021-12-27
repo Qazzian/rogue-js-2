@@ -1,17 +1,25 @@
 import GameMap from '../GameMap';
 import Room from '../Room';
 import MapTile from '../MapTile';
+import {RandomSeed} from "random-seed";
+import Area from "../../PixelGameEngine/locationObjects/Area";
 
 export default class TutorialMap extends GameMap {
-	constructor(width, height) {
+	private rand: RandomSeed | undefined;
+	private rooms: Room[];
+
+	constructor(width: number, height:number) {
 		super(width, height);
 
-		this.rand = null;
 		this.rooms = [];
 		this.tiles = [];
 	}
 
-	generateMap(randomGenerator) {
+	generateMap(randomGenerator?: RandomSeed) {
+		if (!randomGenerator) {
+			throw new Error('Missing RandomSeed generator');
+		}
+
 		this.rand = randomGenerator;
 
 		const rooms = [];
@@ -50,18 +58,20 @@ export default class TutorialMap extends GameMap {
 		return this.rooms[0].center();
 	}
 
-	getTilesInRange({x, y, width, height}) {
+	getTilesInRange(area:Area) {
 		const tilesInRange = [];
-		const [x1, x2] = [x, x + width];
-		const [y1, y2] = [Math.max(y, 0), Math.min(y + height, this.height)];
-		let yPreFill = [];
-		let yPostFill = [];
-		if (y<0) { yPreFill = fillerTiles(Math.abs(y)); }
-		if (y+height > this.height) { yPostFill = fillerTiles(y + height - this.height); }
+		const {x1, x2} = area;
+		const [y1, y2] = [Math.max(area.y, 0), Math.min(area.y + area.height, this.height)];
+		let yPreFill: MapTile[] = [];
+		let yPostFill: MapTile[] = [];
+		if (area.y < 0) { yPreFill = fillerTiles(Math.abs(area.y)); }
+		if (area.y + area.height > this.height) {
+			yPostFill = fillerTiles(area.y + area.height - this.height);
+		}
 
 		for (let mx = x1; mx < x2; mx++) {
 			if (mx < 0 || mx >= this.width) {
-				tilesInRange.push(fillerTiles(height));
+				tilesInRange.push(fillerTiles(area.height));
 			}
 			else {
 				tilesInRange.push([
@@ -74,14 +84,14 @@ export default class TutorialMap extends GameMap {
 		// console.info(`getTilesInRange {${x1}, ${x2}, ${y1}, ${y2}}: `, tilesInRange);
 		return tilesInRange;
 
-		function fillerTiles(length) {
+		function fillerTiles(length: number) {
 			return Array.from({length}, (v, i) => new MapTile('empty', false));
 		}
 	}
 
 
 	initTiles() {
-		const tiles = [];
+		const tiles: MapTile[][] = [];
 		for (let x = 0; x < this.width; x++) {
 			tiles[x] = [];
 			for (let y = 0; y < this.height; y++) {
@@ -96,7 +106,7 @@ export default class TutorialMap extends GameMap {
 	 *
 	 * @param room{Room}
 	 */
-	createRoom(room) {
+	createRoom(room: Room) {
 		const {x1, x2, y1, y2} = room;
 		for (let x = x1 + 1; x < x2 - 1; x++) {
 			for (let y = y1 + 1; y < y2 - 1; y++) {
@@ -108,13 +118,13 @@ export default class TutorialMap extends GameMap {
 		}
 	}
 
-	joinRooms(rooms) {
+	joinRooms(rooms: Room[]) {
 		rooms.forEach((room, index) => {
 			if (index === 0) { return; }
 			const prev = rooms[index - 1];
 			const [px, py] = prev.center();
 			const [x, y] = room.center();
-			if (this.rand.intBetween(0,1)) {
+			if (this.rand?.intBetween(0,1)) {
 				this.createTunnelH(px, x, py);
 				this.createTunnelV(x, py, y);
 			}
@@ -125,7 +135,7 @@ export default class TutorialMap extends GameMap {
 		});
 	}
 
-	createTunnelH(x1, x2, y) {
+	createTunnelH(x1: number, x2: number, y: number) {
 		const xMin = Math.min(x1, x2);
 		const xMax = Math.max(x1, x2);
 		for (let x = xMin; x <= xMax; x++) {
@@ -133,12 +143,11 @@ export default class TutorialMap extends GameMap {
 		}
 	}
 
-	createTunnelV(x, y1, y2) {
+	createTunnelV(x: number, y1: number, y2: number) {
 		const yMin = Math.min(y1, y2);
 		const yMax = Math.max(y1, y2);
 		for (let y = yMin; y <= yMax; y++) {
 			this.tiles[x][y] = new MapTile('ground', true);
 		}
 	}
-
 }

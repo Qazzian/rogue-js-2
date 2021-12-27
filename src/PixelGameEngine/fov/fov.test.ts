@@ -31,7 +31,7 @@ describe('FOV', () => {
 		expect(testRays).toMatchSnapshot();
 	});
 
-	test('findLineIntersections',  () => {
+	test('findLineIntersections', () => {
 		const rayOrigin = {x: 1.0, y: 1.0};
 		const geometry = [
 			new Edge(0, 0, 3, 0),
@@ -46,7 +46,7 @@ describe('FOV', () => {
 		expect(intersections).toMatchSnapshot();
 	});
 
-	test('getIntersection',  () => {
+	test('getIntersection', () => {
 		// TODO:
 		//  T2 <0,
 		//  T2 > 1
@@ -62,4 +62,31 @@ describe('FOV', () => {
 		const lineBelow = new Edge(-1, -1, 3, 3);
 		expect(getIntersection(rayOrigin, ray, lineBelow)).toBeNull();
 	});
+
+	test('Can find edges in the fov', () => {
+		const rayOrigin = {x: 1.0, y: 1.0};
+		const geometry = [
+			new Edge(0, 0, 3, 0),
+			new Edge(0, 0, 0, 3),
+			new Edge(0, 3, 3, 0),
+			new Edge(3, 0, 0, 3),
+			new Edge(4, 0, 0, 3),
+		];
+
+		const testView = fov(rayOrigin, geometry, 10);
+		// TODO how are we going to know what is in the FOV?
+		// options
+		//  1. use the fov to produce image layers.
+		//    bottom: full map
+		//    middle: starts black, as player moves fov is added to transparent mask
+		//    top: layer makes underneath Black and white except for current fov mask
+		// 2. use the fov polygon to work out what is visible
+		// In each case, will need a polygon that is added to as the player moves around the map to keep track of
+		//   visited places.
+		// entities should only be visible within the current fov
+
+
+	});
+
+
 });

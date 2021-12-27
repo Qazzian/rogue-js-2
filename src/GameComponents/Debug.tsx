@@ -1,26 +1,50 @@
 import * as React from "react";
+import {ChangeEvent, useEffect, useState} from "react";
+
+import {DebugOption} from "../RogueEngine/tools/DebugOptions";
 
 interface DebugProps {
 	setDebugFlag: (flagName: string, isEnabled: boolean) => void,
+	getDebugFlags: () => any,
 }
 
+const defaultDebugProps = {
+	setDebugFlag: (flagName: string, isEnabled: boolean) => {},
+	getDebugFlags: () => {[]},
+};
 
 export default function Debug(props: DebugProps) {
 
+	const [debugFlags, setDebugFlags]: [any, any] = useState(defaultDebugProps);
+
+	useEffect(() => {
+		setDebugFlags(props.getDebugFlags());
+	}, []);
+
+	const flagNames = Object.keys(debugFlags);
+
+
+	console.info('Debug flags', debugFlags);
+
 	return <section className="debug-actions">
 		<header>Debug options</header>
-		<label>
-			Room numbers:
-			<input type="checkbox" id="showRoomNumbers" value="1"/>
-		</label>
-		<label>
-			Show fov geometry:
-			<input type="checkbox" id="showFovGeometry" value="1"/>
-		</label>
-		<label>
-			Show fov:
-			<input type="checkbox" id="showFov" value="1"/>
-		</label>
+		{ flagNames.map(flagName => DebugFlag(flagName)) }
+	</section>;
 
-	</section>
+
+	function DebugFlag(flagName: string) {
+		const isActive:boolean = debugFlags[flagName];
+
+		return <label key={flagName}>
+			Room numbers:
+			<input type="checkbox" id={flagName} value="1" checked={isActive} onChange={event => onFlagChanged(flagName, event)}/>
+		</label>
+	}
+
+	function onFlagChanged(flagName: string, event:ChangeEvent<HTMLInputElement>) {
+		console.info('flagChange:', {flagName, event});
+		const isChecked = event.target.checked;
+		props.setDebugFlag(flagName, isChecked);
+	}
 }
+

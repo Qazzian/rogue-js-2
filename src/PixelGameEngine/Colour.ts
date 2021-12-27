@@ -1,5 +1,10 @@
 export class Colour {
-	constructor(r, g, b, a = 1) {
+	private r: number;
+	private g: number;
+	private b: number;
+	private a: number;
+
+	constructor(r: number, g: number, b: number, a = 1) {
 		this.r = r;
 		this.g = g;
 		this.b = b;

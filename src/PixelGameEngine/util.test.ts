@@ -1,4 +1,4 @@
-import {objMatch} from './util.ts';
+import {objMatch} from './util';
 
 
 describe('objMatch Tests', () => {

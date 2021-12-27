@@ -1,25 +1,61 @@
 import * as React from "react";
-import Game from '../RogueEngine/Game';
-import {useState} from "react";
+
+import Game from "../RogueEngine/Game";
 
 import Debug from './Debug';
+import {useEffect, useState} from "react";
 
-interface MainProps {
-	setDebugFlag: (flagName: string, isEnabled: boolean) => void,
-}
 
-export default (props: MainProps) => {
+const screen = document.getElementById('game_screen');
+const game = new Game(screen);
+
+export default () => {
+
+	const [gameSpeed, setGameSpeed] = useState('Paused');
+
+	useEffect(() => {
+
+		const handleKeyEvents = (eventDescription:KeyboardEvent) => {
+			game.handleKeyEvent(eventDescription);
+		}
+
+		window.addEventListener("keydown", handleKeyEvents);
+		game.start(gameUpdatedHandler).catch((error) => {
+			console.error(error);
+		});
+
+		return () => {
+			window.removeEventListener('keydown', handleKeyEvents);
+		};
+	}, [game])
+
+
 
 	return <>
-		<Debug setDebugFlag={props.setDebugFlag}/>
+		<Debug setDebugFlag={game.setDebugFlag} getDebugFlags={() => {
+			game.getDebugFlags()
+		}}/>
 
 		<section id="actions">
-			<button id="newMapButton">New map</button>
-			<button id="pause">Stop!</button>
-			<button id="unpause">Carry on</button>
+			<button id="newMapButton" onClick={newGame}>New map</button>
+			<button id="pause" onClick={game.pause}>Stop!</button>
+			<button id="unpause" onClick={game.unpause}>Carry on</button>
 
-			<span id="stats"></span>
+			<span id="stats">FPS: {gameSpeed}</span>
 		</section>
 
 	</>
+
+	function newGame() {
+		game.pause();
+		game.start(gameUpdatedHandler).catch((error) => {
+			console.error(error);
+		});
+
+	}
+
+	function gameUpdatedHandler(gameStats:any) {
+		setGameSpeed(gameStats.gameSpeed);
+	}
+
 };
