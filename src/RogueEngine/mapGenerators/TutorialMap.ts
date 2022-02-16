@@ -3,6 +3,7 @@ import Room from '../Room';
 import MapTile from '../MapTile';
 import {RandomSeed} from "random-seed";
 import Area from "../../PixelGameEngine/locationObjects/Area";
+import Position from "../../PixelGameEngine/locationObjects/Position";
 
 export default class TutorialMap extends GameMap {
 	private rand: RandomSeed | undefined;
@@ -51,11 +52,12 @@ export default class TutorialMap extends GameMap {
 		// console.info('Generated map tiles:', this.tiles);
 	}
 
-	getPlayerStart() {
+	getPlayerStart(): Position {
 		if (this.rooms.length === 0) {
 			throw Error('Cannot get player start position. Map has not been generated yet');
 		}
-		return this.rooms[0].center();
+		const [x, y] = this.rooms[0].center();
+		return new Position(x, y);
 	}
 
 	getTilesInRange(area:Area) {

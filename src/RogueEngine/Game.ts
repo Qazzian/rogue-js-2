@@ -2,10 +2,11 @@ import PixelGameEngine from '../PixelGameEngine/PixelGameEngine';
 import buildGeometry from '../PixelGameEngine/fov/buildGeometry';
 import fov from '../PixelGameEngine/fov/fov';
 import {getASeed, objMatch} from '../PixelGameEngine/util';
-import Rand from 'random-seed';
+import Rand, {RandomSeed} from 'random-seed';
 import Entity from './Entity';
 import Theme from './GameTheme';
 import {COLOURS} from '../PixelGameEngine/Colour';
+import Position from "../PixelGameEngine/locationObjects/Position";
 import EventEmitter from 'events';
 
 
@@ -28,7 +29,7 @@ export default class Game extends EventEmitter {
 	private isGameActive: boolean;
 
 	private seed: string;
-	private random: null;
+	private random: RandomSeed;
 	private generatorName: string;
 	private map: GameMap | undefined;
 	private player: Entity;
@@ -63,7 +64,7 @@ export default class Game extends EventEmitter {
 		};
 
 
-		this.player = new Entity(0, 0, 'player', Theme.entities.player);
+		this.player = new Entity(new Position(0, 0), 'player', Theme.entities.player);
 		this.entities = [this.player];
 		this.updateHandler = () => {
 		};
@@ -89,7 +90,7 @@ export default class Game extends EventEmitter {
 			this.map = new (getMapGenerator(this.generatorName))(50, 50);
 			this.seed = await getASeed();
 			console.info('MAP SEED = ', this.seed);
-			this.random = Rand(this.seed).create();
+			this.random = Rand.create(this.seed);
 
 			this.map.generateMap(this.random);
 			console.info('MAP:', this.map);
@@ -97,8 +98,8 @@ export default class Game extends EventEmitter {
 			this.isGameActive = true;
 
 			this.entities = [];
-			const [px, py] = this.map.getPlayerStart();
-			this.player = new Entity(px, py, 'player', Theme.entities.player);
+			const playerPos: Position = this.map.getPlayerStart();
+			this.player = new Entity(playerPos, 'player', Theme.entities.player);
 			this.entities.push(this.player);
 			// const [ox, oy] = this.map.rooms[3].center();
 			// this.entities.push(new Entity(ox, oy, 'npc', Theme.entities.npc));

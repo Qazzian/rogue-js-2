@@ -10,6 +10,7 @@ export default class PixelGameEngine extends EventEmitter{
 	private pixelWidth: number;
 	private pixelHeight: number;
 	private lastTimestamp: number;
+	private isRunning: boolean;
 
 
 	constructor(canvas: HTMLCanvasElement, width: number, height: number, pixelWidth: number, pixelHeight: number) {
@@ -27,6 +28,7 @@ export default class PixelGameEngine extends EventEmitter{
 		canvas.height = height * pixelHeight;
 
 		this.lastTimestamp = 0;
+		this.isRunning = false;
 
 		if (this.context) {
 			this.context.font = `${this.pixelHeight}px monospace`;
@@ -42,10 +44,14 @@ export default class PixelGameEngine extends EventEmitter{
 	start() {
 		this.emit('start');
 		this.lastTimestamp = 0;
+		this.isRunning = true;
 		window.requestAnimationFrame(timestamp => this.step(timestamp));
 	}
 
 	step(timestamp: number) {
+		if (!this.isRunning) {
+			return;
+		}
 		this.emit('before-update', timestamp);
 		const timePassed = timestamp - this.lastTimestamp;
 		this.lastTimestamp = timestamp;
@@ -55,18 +61,29 @@ export default class PixelGameEngine extends EventEmitter{
 			timestamp,
 			fps,
 		};
-		const doAnotherStep = this.onUpdate(timePassed, timeStats);
 
+		this.emit('update', timestamp);
 		this.emit('after-update', timestamp, timeStats);
-		if (doAnotherStep) {
-			window.requestAnimationFrame(timestamp => this.step(timestamp));
-		}
+
+		window.requestAnimationFrame(timestamp => this.step(timestamp));
 	}
 
+	stop() {
+		this.emit('stop');
+		this.isRunning = false;
+	}
+
+	getContext() : CanvasRenderingContext2D {
+		if (!this.context) {
+			throw new Error("Context element not initialised");
+		}
+		return this.context;
+	}
 
 	clear(backgroundColor = COLOURS.BLACK) {
-		this.context.fillStyle = backgroundColor.stringify();
-		this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+		const context = this.getContext();
+		context.fillStyle = backgroundColor.stringify();
+		context.fillRect(0, 0, this.canvas.width, this.canvas.height);
 	}
 
 
@@ -76,9 +93,10 @@ export default class PixelGameEngine extends EventEmitter{
 	 * @param y{Number}
 	 * @param color{Colour}
 	 */
-	draw(x, y, color) {
-		this.context.fillStyle = color.stringify();
-		this.context.fillRect(x * this.pixelWidth, y * this.pixelHeight, this.pixelWidth, this.pixelHeight);
+	draw(x: number, y: number, color: Colour) {
+		const context = this.getContext();
+		context.fillStyle = color.stringify();
+		context.fillRect(x * this.pixelWidth, y * this.pixelHeight, this.pixelWidth, this.pixelHeight);
 	}
 
 	/**
@@ -89,11 +107,12 @@ export default class PixelGameEngine extends EventEmitter{
 	 * @param y2
 	 * @param color
 	 */
-	drawLine(x1, y1, x2, y2, color) {
+	drawLine(x1: number, y1: number, x2: number, y2: number, color: Colour) {
+		const context = this.getContext();
 		const dx = x1 - x2;
 		const dy = y1 - y2;
-		this.context.fillStyle = color.stringify();
-		this.context.strokeStyle = color.stringify();
+		context.fillStyle = color.stringify();
+		context.strokeStyle = color.stringify();
 
 		// Single block
 		if (dx === 0 && dy === 0) {
@@ -102,7 +121,7 @@ export default class PixelGameEngine extends EventEmitter{
 		// vertical
 		if (dx === 0) {
 			const top = Math.min(y1, y2);
-			return this.context.fillRect(
+			return context.fillRect(
 				x1 * this.pixelWidth,
 				top * this.pixelHeight,
 				this.pixelWidth,
@@ -112,7 +131,7 @@ export default class PixelGameEngine extends EventEmitter{
 		// horizontal
 		if (dy === 0) {
 			const left = Math.min(x1, x2);
-			return this.context.fillRect(
+			return context.fillRect(
 				left * this.pixelWidth,
 				y1 * this.pixelHeight,
 				(Math.abs(dx) * this.pixelWidth) + this.pixelWidth,
@@ -122,27 +141,28 @@ export default class PixelGameEngine extends EventEmitter{
 
 		const yPre = y1 > y2 ? this.pixelHeight : 0;
 		const yPost = y1 < y2 ? this.pixelHeight : 0;
-		this.context.beginPath();
-		this.context.moveTo(x1 * this.pixelWidth, (y1 * this.pixelHeight) + yPre);
-		this.context.lineTo((x1 * this.pixelWidth) + this.pixelWidth, (y1 * this.pixelHeight) + yPre);
-		this.context.lineTo((x2 * this.pixelWidth) + this.pixelWidth, (y2 * this.pixelHeight) + yPost);
-		this.context.lineTo(x2 * this.pixelWidth, (y2 * this.pixelHeight) + yPost);
-		this.context.closePath();
-		this.context.fill();
+		context.beginPath();
+		context.moveTo(x1 * this.pixelWidth, (y1 * this.pixelHeight) + yPre);
+		context.lineTo((x1 * this.pixelWidth) + this.pixelWidth, (y1 * this.pixelHeight) + yPre);
+		context.lineTo((x2 * this.pixelWidth) + this.pixelWidth, (y2 * this.pixelHeight) + yPost);
+		context.lineTo(x2 * this.pixelWidth, (y2 * this.pixelHeight) + yPost);
+		context.closePath();
+		context.fill();
 	}
 
-	drawDebugLine(x1, y1, x2, y2, color) {
+	drawDebugLine(x1: number, y1: number, x2: number, y2: number, color: Colour) {
+		const context = this.getContext();
 		const dx = x1 - x2;
 		const dy = y1 - y2;
 
-		this.context.fillStyle = color.stringify();
-		this.context.strokeStyle = color.stringify();
+		context.fillStyle = color.stringify();
+		context.strokeStyle = color.stringify();
 
-		this.context.beginPath();
-		this.context.moveTo(x1 * this.pixelWidth, y1 * this.pixelHeight);
-		this.context.lineTo(x2 * this.pixelWidth, y2 * this.pixelHeight);
-		this.context.closePath();
-		this.context.stroke();
+		context.beginPath();
+		context.moveTo(x1 * this.pixelWidth, y1 * this.pixelHeight);
+		context.lineTo(x2 * this.pixelWidth, y2 * this.pixelHeight);
+		context.closePath();
+		context.stroke();
 	}
 
 	/**
@@ -153,9 +173,10 @@ export default class PixelGameEngine extends EventEmitter{
 	 * @param height{number}
 	 * @param color{Colour}
 	 */
-	fillRect(x, y, width, height, color) {
-		this.context.fillStyle = color.stringify();
-		this.context.fillRect(
+	fillRect(x: number, y: number, width: number, height: number, color: Colour) {
+		const context = this.getContext();
+		context.fillStyle = color.stringify();
+		context.fillRect(
 			x * this.pixelWidth,
 			y * this.pixelHeight,
 			width * this.pixelWidth,
@@ -169,14 +190,15 @@ export default class PixelGameEngine extends EventEmitter{
 	 * @param y{number}
 	 * @param width{number}
 	 * @param height{number}
-	 * @param color{Colour}
+	 * @param colour{Colour}
 	 */
-	drawRect(x, y, width, height, colour) {
-		this.context.strokeStyle = colour.stringify();
+	drawRect(x: number, y: number, width: number, height: number, colour: Colour) {
+		const context = this.getContext();
+		context.strokeStyle = colour.stringify();
 
 		for (let dx = 0; dx < this.pixelWidth; dx++) {
 			for (let dy = 0; dy < this.pixelHeight; dy++) {
-				this.context.strokeRect(
+				context.strokeRect(
 					(x * this.pixelWidth) + dx,
 					(y * this.pixelHeight) + dy,
 					width * this.pixelWidth,
@@ -188,20 +210,21 @@ export default class PixelGameEngine extends EventEmitter{
 	/**
 	 *
 	 * @param coords[] Array of {x, y} coordinate pairs
+	 * @param colour{Colour}
 	 */
-	drawPolygon(coords, colour) {
-		const ctx = this.context;
+	drawPolygon(coords: {x:number, y: number}[], colour: Colour) {
+		const context = this.getContext();
 		const startPos = coords[0];
-		ctx.strokeStyle = colour.stringify();
-		ctx.beginPath();
-		ctx.moveTo(startPos.x* this.pixelWidth, startPos.y*this.pixelHeight);
+		context.strokeStyle = colour.stringify();
+		context.beginPath();
+		context.moveTo(startPos.x* this.pixelWidth, startPos.y*this.pixelHeight);
 
 		coords.forEach((pos) => {
-			ctx.lineTo(pos.x * this.pixelWidth, pos.y * this.pixelHeight);
+			context.lineTo(pos.x * this.pixelWidth, pos.y * this.pixelHeight);
 		});
 
-		ctx.lineTo(startPos.x * this.pixelWidth, startPos.y * this.pixelHeight);
-		ctx.stroke();
+		context.lineTo(startPos.x * this.pixelWidth, startPos.y * this.pixelHeight);
+		context.stroke();
 
 	}
 
@@ -212,12 +235,13 @@ export default class PixelGameEngine extends EventEmitter{
 	 * @param character {String}
 	 * @param colour {Colour}
 	 */
-	drawCharacter(x, y, character, colour) {
-		this.context.fillStyle = colour.stringify();
+	drawCharacter(x: number, y: number, character: string, colour: Colour) {
+		const context = this.getContext();
+		context.fillStyle = colour.stringify();
 
 		const charX = x * this.pixelWidth + (this.pixelWidth / 2);
 		const charY = y * this.pixelHeight + (this.pixelHeight / 2);
-		this.context.fillText(character, charX, charY);
+		context.fillText(character, charX, charY);
 	}
 
 	/**
@@ -226,13 +250,14 @@ export default class PixelGameEngine extends EventEmitter{
 	 * @param sourcePosition{[x, y, width, height]} The position of the sprite in the source image
 	 * @param destinationPosition{[x, y]} Position to place the sprite in the final image
 	 */
-	drawSprite(image, sourcePosition, destinationPosition) {
+	drawSprite(image: CanvasImageSource, sourcePosition: [number, number, number, number], destinationPosition: number[]) {
+		const context = this.getContext();
 		const [sx, sy, sw, sh] = sourcePosition;
 		const dx = destinationPosition[0] * this.pixelWidth;
 		const dy = destinationPosition[1] * this.pixelHeight;
 		const [dw, dh] = [this.pixelWidth, this.pixelHeight];
 
-		this.context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+		context.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
 	}
 
 }
