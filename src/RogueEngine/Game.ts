@@ -13,6 +13,7 @@ import TutorialMap from './mapGenerators/TutorialMap';
 import GameMap from "./GameMap";
 import Area from '../PixelGameEngine/locationObjects/Area';
 import MapTile from "./MapTile";
+import {DebugOption} from "./tools/DebugOptions";
 
 function getMapGenerator(name: string) {
 	switch (name) {
@@ -20,6 +21,12 @@ function getMapGenerator(name: string) {
 		case 'tutorial':
 			return TutorialMap;
 	}
+}
+
+interface DebugFlagNames {
+	"showFov": string,
+	"showRoomNumbers": string,
+	"showFovGeometry": string,
 }
 
 export default class Game extends EventEmitter {
@@ -296,15 +303,17 @@ export default class Game extends EventEmitter {
 		this.gameEngine.start((timePassed, timeStats) => this.update(timePassed, timeStats));
 	}
 
-	setDebugFlag(flag, value) {
+	setDebugFlag(flag: string, value: boolean) {
 		console.info('set debug flag: ', {flag, value}, this);
-		this.debugFlags[flag] = value;
+		this.debugFlags[flag as keyof DebugFlagNames] = value;
 	}
 
-	getDebugFlags() {
+	getDebugFlags(): DebugOption[] {
 		console.info('getting debug flags', this.debugFlags);
-		return {
-			...(this.debugFlags),
-		};
+		const flagNames = Object.keys(this.debugFlags);
+		return flagNames.map(name => ({
+			name: name,
+			value: this.debugFlags[name as keyof DebugFlagNames],
+		}));
 	}
 }
