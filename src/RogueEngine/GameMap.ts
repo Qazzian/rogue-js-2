@@ -1,6 +1,7 @@
 import rand from 'random-seed';
 import MapTile from './MapTile';
 import Area from '../PixelGameEngine/locationObjects/Area';
+import Position from "../PixelGameEngine/locationObjects/Position";
 
 const defaultOptions = {
 	roomSizeMax: 12,
@@ -27,7 +28,7 @@ export default abstract class GameMap {
 
 	abstract generateMap() : void
 
-	getPlayerStart() {
+	getPlayerStart(): Position {
 		throw Error('Abstract method GameMap.getPlayerStart. Overload this method in a sub class');
 	}
 

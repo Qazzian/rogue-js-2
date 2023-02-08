@@ -7,7 +7,7 @@ import {useEffect, useState} from "react";
 
 
 const screen = document.getElementById('game_screen');
-const game = new Game(screen);
+const game = new Game(screen as HTMLCanvasElement);
 
 export default () => {
 
