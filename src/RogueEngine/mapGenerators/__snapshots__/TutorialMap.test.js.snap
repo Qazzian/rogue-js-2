@@ -1,8 +1,8 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
 exports[`TutorialMap tests Get Tiles in range with negative x offset 1`] = `
-Array [
-  Array [
+[
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -44,7 +44,7 @@ Array [
       "type": "empty",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -86,7 +86,7 @@ Array [
       "type": "empty",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -128,7 +128,7 @@ Array [
       "type": "wall",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -170,7 +170,7 @@ Array [
       "type": "wall",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -216,8 +216,8 @@ Array [
 `;
 
 exports[`TutorialMap tests Get Tiles in range with negative y offset 1`] = `
-Array [
-  Array [
+[
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -259,7 +259,7 @@ Array [
       "type": "wall",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -301,7 +301,7 @@ Array [
       "type": "wall",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -343,7 +343,7 @@ Array [
       "type": "wall",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -385,7 +385,7 @@ Array [
       "type": "wall",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -431,8 +431,8 @@ Array [
 `;
 
 exports[`TutorialMap tests Get Tiles in range with no offset 1`] = `
-Array [
-  Array [
+[
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -474,7 +474,7 @@ Array [
       "type": "wall",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -516,7 +516,7 @@ Array [
       "type": "wall",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -558,7 +558,7 @@ Array [
       "type": "wall",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -600,7 +600,7 @@ Array [
       "type": "wall",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -646,8 +646,8 @@ Array [
 `;
 
 exports[`TutorialMap tests Get Tiles in range with y overflow 1`] = `
-Array [
-  Array [
+[
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -689,7 +689,7 @@ Array [
       "type": "empty",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -731,7 +731,7 @@ Array [
       "type": "empty",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -773,7 +773,7 @@ Array [
       "type": "empty",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
@@ -815,7 +815,7 @@ Array [
       "type": "empty",
     },
   ],
-  Array [
+  [
     MapTile {
       "allowsMovement": false,
       "allowsSight": false,
