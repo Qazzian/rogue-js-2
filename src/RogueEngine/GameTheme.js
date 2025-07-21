@@ -1,4 +1,6 @@
-import {COLOURS} from '../PixelGameEngine/Colour';
+import {Colour} from 'pixel-game-engine';
+
+const COLOURS = {Colour}
 
 export default {
 	entities: {

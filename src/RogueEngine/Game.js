@@ -1,14 +1,12 @@
-import PixelGameEngine from '../PixelGameEngine/PixelGameEngine';
-import buildGeometry from '../PixelGameEngine/fov/buildGeometry';
-import fov from '../PixelGameEngine/fov/fov';
-import {getASeed, objMatch} from '../PixelGameEngine/util.ts';
+import { PixelGameEngine, fov, util, COLOURS } from 'pixel-game-engine';
 import rand from 'random-seed';
 import Entity from './Entity';
 import Theme from './GameTheme';
-import {COLOURS} from '../PixelGameEngine/Colour';
-
 
 import TutorialMap from './mapGenerators/TutorialMap';
+
+const {buildGeometry} = fov;
+const {getASeed, objMatch} = util;
 
 function getMapGenerator(name) {
 	switch (name) {

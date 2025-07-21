@@ -46,6 +46,7 @@
 	},
 	"dependencies": {
 		"@types/random-seed": "^0.3.3",
+		"pixel-game-engine": "gitlab:Qazzian/pixel-game-engine#master",
 		"random-seed": "^0.3.0",
 		"react": "^17.0.1"
 	}
