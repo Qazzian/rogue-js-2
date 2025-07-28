@@ -1,10 +1,7 @@
-const { jsWithBabel: tsjPreset } = require('ts-jest/presets');
-
-module.exports = {
-  preset: 'ts-jest',
-  testEnvironment: 'node',
-
+/** @type {import('ts-jest').JestConfigWithTsJest} **/
+export default {
+	testEnvironment: "node",
 	transform: {
-		...tsjPreset.transform,
-	}
+		"^.+.tsx?$": ["ts-jest",{}],
+	},
 };

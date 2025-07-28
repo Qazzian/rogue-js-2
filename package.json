@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
+	"type": "module",
 	"scripts": {
 		"build": "webpack",
 		"build:watch": "webpack --watch",
@@ -46,7 +47,7 @@
 	},
 	"dependencies": {
 		"@types/random-seed": "^0.3.3",
-		"pixel-game-engine": "gitlab:Qazzian/pixel-game-engine#master",
+		"@qazzian/pixel-game-engine": "gitlab:Qazzian/pixel-game-engine#master",
 		"random-seed": "^0.3.0",
 		"react": "^17.0.1"
 	}

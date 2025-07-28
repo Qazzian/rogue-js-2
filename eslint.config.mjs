@@ -11,13 +11,14 @@ export default tseslint.config([
 		files: ["**/*.{ts,mts,cts,jsx,tsx}"],
 		plugins: {
 			js,
-			"@typescript-eslint": tseslint,
+			tseslint,
 			prettier: prettierPlugin,
 		},
 		languageOptions: {globals: globals.browser},
 		extends: [
 			pluginReact.configs.flat.recommended,
 			prettierConfig,
+			tseslint.configs.recommended,
 		],
 		rules: {
 			"@/no-unused-vars": "warn",

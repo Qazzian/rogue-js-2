@@ -1,7 +1,6 @@
 {
 	"files": ["src/index.ts"],
 	"compilerOptions": {
-
 		"allowJs": true,
 		"allowSyntheticDefaultImports": true,
 		"checkJs": false,
@@ -12,7 +11,7 @@
 		"lib": [
 			"DOM"
 		],
-		"module": "esnext",
+		"module": "es6",
 		"moduleResolution": "node",
 //		"noEmit": true,
 		"noImplicitAny": true,
