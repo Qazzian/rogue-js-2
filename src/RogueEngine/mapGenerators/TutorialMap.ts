@@ -13,7 +13,7 @@ export default class TutorialMap extends GameMap {
 
 		this.rand = null;
 		this.rooms = [];
-		this.tiles = [];
+		this._tiles = [];
 	}
 
 	generateMap(randomGenerator?: RandomSeed) {
@@ -95,7 +95,7 @@ export default class TutorialMap extends GameMap {
 			}
 		}
 
-		this.tiles = tiles;
+		this._tiles = tiles;
 	}
 
 	/**

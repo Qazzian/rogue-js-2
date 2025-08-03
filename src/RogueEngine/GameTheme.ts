@@ -16,5 +16,12 @@ export default {
 		empty: { char: undefined, dark: COLOURS.BLACK, light: COLOURS.BLACK }, // for showing out-of-bounds areas
 		ground: { char: undefined, dark: COLOURS.BLACK, light: COLOURS.BLACK },
 		wall: { char: undefined, dark: COLOURS.VERY_DARK_BLUE, light: COLOURS.DARK_BLUE },
-	},
+	} as unknown as { [key: string]: EntityTheme },
+
+	getTile (tileType: string) {
+		if (tileType in this.tiles) {
+			return this.tiles[tileType];
+		}
+		return this.tiles.ground;
+	}
 };

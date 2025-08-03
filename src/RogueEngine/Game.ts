@@ -1,4 +1,4 @@
-import { PixelGameEngine, COLOURS, TimeStats, Area, Position } from "@qazzian/pixel-game-engine";
+import { PixelGameEngine, COLOURS, TimeStats, Area, Position, util, Point } from "@qazzian/pixel-game-engine";
 import rand, { RandomSeed } from "random-seed";
 import Entity from "./Entity.js";
 import Theme from "./GameTheme";
@@ -6,7 +6,6 @@ import Theme from "./GameTheme";
 import TutorialMap from "./mapGenerators/TutorialMap.js";
 import MapTile from "./MapTile";
 import GameMap from "./GameMap";
-import Room from "./Room";
 //
 // const { buildGeometry } = fov;
 // const { getASeed, objMatch } = util;
@@ -20,10 +19,11 @@ function getMapGenerator(name: string) {
 	}
 }
 
-interface DebugFlags {
-	showRoomNumbers: boolean;
-	showFovGeometry: boolean;
-	showFov: boolean;
+export enum DebugFlags {
+	empty,
+	showRoomNumbers,
+	showFovGeometry,
+	showFov,
 }
 
 export default class Game {
@@ -40,7 +40,7 @@ export default class Game {
 	private entities: Entity[];
 	private mapViewer: { area: { x: number; y: number; width: number; height: number }; tiles: MapTile[][] };
 	private fovCache: { playerPos: { x: number; y: number }; fov: null };
-	private debugFlags: DebugFlags;
+	private readonly debugFlags: { [key in DebugFlags]?: boolean };
 
 	constructor(canvasElement: HTMLCanvasElement, statsElement: HTMLElement) {
 		this.statsElement = statsElement;
@@ -67,18 +67,17 @@ export default class Game {
 		};
 
 		this.debugFlags = {
-			showRoomNumbers: false,
-			showFovGeometry: false,
-			showFov: false,
+			[DebugFlags.showRoomNumbers]: false,
+			[DebugFlags.showFovGeometry]: false,
+			[DebugFlags.showFov]: false,
 		};
 	}
 
 	async start() {
 		try {
-
 			await this.preloadAssets();
 			this.map = new (getMapGenerator(this.generatorName))(100, 100);
-			this.seed = await getASeed();
+			this.seed = await util.getASeed();
 			console.info("MAP SEED = ", this.seed);
 			this.random = rand.create(this.seed);
 
@@ -117,12 +116,11 @@ export default class Game {
 	}
 
 	async preloadAssets() {
-
 		// this.spriteSheet = await loadSpriteSheet();
 	}
 
-	handleKeyEvent(event) {
-		if (!this.isGameActive) {
+	handleKeyEvent(event: KeyboardEvent) {
+		if (!this.isGameActive || !this.player) {
 			return;
 		}
 		switch (event.key) {
@@ -141,50 +139,53 @@ export default class Game {
 		}
 	}
 
-	moveEntity(entity, dx, dy) {
+	moveEntity(entity: Entity, dx: number, dy: number) {
+		if (!this.map) {
+			return;
+		}
 		const [newX, newY] = [entity.x + dx, entity.y + dy];
 		if (this.map.canMoveTo(newX, newY)) {
 			entity.move(dx, dy);
 		}
 	}
 
-	printStats(timeStats) {
+	printStats(timeStats: TimeStats) {
 		const { fps } = timeStats;
 		if (this.isGameActive) {
 			this.statsElement.innerText = `FPS: ${fps}`;
 		} else {
-			this.statsElement.innerText = `FPS: PAUSED`;
+			this.statsElement.innerText = "FPS: PAUSED";
 		}
 	}
 
-	calcViewArea() {
-		return {
-			x: this.player.x - (this.mapWindow.width / 2),
-			width: this.mapWindow.width,
-			y: this.player.y - (this.mapWindow.height / 2),
-			height: this.mapWindow.height,
-		};
+	calcViewArea(): Area {
+		const { x, y } = this.player ?? { x: 0, y: 0 };
+
+		return new Area(x - this.mapWindow.width / 2,
+			y - this.mapWindow.height / 2,
+			this.mapWindow.width,
+			this.mapWindow.height,
+		);
 	}
 
-	calcViewOffset(viewArea) {
+	calcViewOffset(viewArea: Area): Area {
 		return {
 			...viewArea,
-			xOffset: -viewArea.x,
-			yOffset: -viewArea.y,
+			x: -viewArea.x,
+			y: -viewArea.y,
 		};
 	}
 
-	printMap(area) {
+	printMap(area: Area) {
 		let displayTiles;
-		if (objMatch(area, this.mapViewer.area)) {
-			displayTiles = this.mapViewer.tiles;
-		} else {
-			displayTiles = this.map.getTilesInRange(area);
-			this.mapViewer = {
-				area,
-				tiles: displayTiles,
-			};
+		if (!this.map) {
+			return;
 		}
+		displayTiles = this.map.getTilesInRange(area);
+		this.mapViewer = {
+			area,
+			tiles: displayTiles,
+		};
 
 		displayTiles.forEach((row, x) => {
 			// console.info('print row: ', x);
@@ -195,7 +196,7 @@ export default class Game {
 	}
 
 	printTile(x: number, y: number, tile: MapTile) {
-		const tileTheme = tile.tileType && Theme.tiles[tile.tileType] ? Theme.tiles[tile.tileType] : Theme.tiles.ground;
+		const tileTheme = Theme.tiles[tile?.tileType] ?? Theme.tiles.ground;
 		if (tileTheme.char) {
 			debugger;
 			this.gameEngine.drawCharacter(x, y, tileTheme.char, tileTheme.light);
@@ -208,47 +209,43 @@ export default class Game {
 		if (!this.map) {
 			return;
 		}
-		const mapRangeParams = new Area(xOffset * -1, yOffset * -1, width, height);
-		const mapRange = this.map.getTilesInRange(mapRangeParams);
-		const geometry = buildGeometry(mapRange, (tile: MapTile) => tile.canSeeThrough(), true);
+		console.log("Need to implement printMapDebug", { xOffset, yOffset, width, height });
+		// const mapRangeParams = new Area(xOffset * -1, yOffset * -1, width, height);
+		// const mapRange = this.map.getTilesInRange(mapRangeParams);
+		// const geometry = buildGeometry(mapRange, (tile: MapTile) => tile.canSeeThrough(), true);
 
+		// if (this.debugFlags.showFovGeometry) {
+		// 	geometry.forEach((edge) => {
+		// 		const { x1, x2, y1, y2 } = edge;
+		// 		this.gameEngine.drawDebugLine(x1, y1, x2, y2, COLOURS.YELLOW);
+		// 	});
+		// }
 
-		if (this.debugFlags.showFovGeometry) {
-			geometry.forEach((edge) => {
-				const { x1, x2, y1, y2 } = edge;
-				this.gameEngine.drawDebugLine(x1, y1, x2, y2, COLOURS.YELLOW);
-			});
-		}
+		// if (this.debugFlags.showRoomNumbers) {
+		// 	this.map.rooms.forEach((room: Room, index: number) => {
+		// 		const { x1, y1 } = room;
+		// 		this.gameEngine.drawCharacter(x1 + 1 + xOffset, y1 + 1 + yOffset, "" + index, COLOURS.DARK_RED);
+		// 	});
+		// }
 
-		if (this.debugFlags.showRoomNumbers) {
-			this.map.rooms.forEach((room: Room, index: number) => {
-				const { x1, y1 } = room;
-				this.gameEngine.drawCharacter(x1 + 1 + xOffset, y1 + 1 + yOffset, "" + index, COLOURS.DARK_RED);
-			});
-		}
+		// if (this.player) {
+		// 	const relativePlayerPosition = {
+		// 		x: this.player.x + xOffset + 0.5,
+		// 		y: this.player.y + yOffset + 0.5,
+		// 	};
+		// 	if (this.player.x !== this.fovCache.playerPos.x || this.player.y !== this.fovCache.playerPos.y) {
+		// 		this.fovCache.playerPos = { ...this.player };
+		// 		this.fovCache.fov = fov(relativePlayerPosition, geometry, 20);
+		// 		console.info('fov:', this.fovCache.fov);
+		// 	}
 
-
-		if (this.player) {
-			const relativePlayerPosition = {
-				x: this.player.x + xOffset + 0.5,
-				y: this.player.y + yOffset + 0.5,
-			};
-			if (this.player.x !== this.fovCache.playerPos.x
-				|| this.player.y !== this.fovCache.playerPos.y
-			) {
-				this.fovCache.playerPos = { ...this.player };
-				this.fovCache.fov = fov(relativePlayerPosition, geometry, 20);
-
-				// console.info('fov:', this.fovCache.fov);
-			}
-
-			if (this.debugFlags.showFov) {
-				const fovData = this.printFov(relativePlayerPosition, this.fovCache.fov);
-			}
-		}
+		//	 if (this.debugFlags.showFov) {
+		//	 	const fovData = this.printFov(relativePlayerPosition, this.fovCache.fov);
+		//	 }
+		// }
 	}
 
-	printEntities({ x: xOffset, y: yOffset }: Position) {
+	printEntities({ x: xOffset, y: yOffset }: Point) {
 		for (let i = this.entities.length - 1; i >= 0; i--) {
 			const {
 				x,
@@ -268,7 +265,7 @@ export default class Game {
 			y: this.player.y + yOffset + 0.5,
 		};
 
-		if (this.debugFlags.showFov) {
+		if (this.debugFlags[DebugFlags.showFov]) {
 			this.gameEngine.drawCharacter(playerPosition.x - 0.5, playerPosition.y - 0.5, "+", COLOURS.RED);
 		}
 	}
@@ -291,7 +288,7 @@ export default class Game {
 		this.gameEngine.start();
 	}
 
-	setDebugFlag(flag: keyof DebugFlags, value: boolean) {
+	setDebugFlag(flag: DebugFlags, value: boolean) {
 		console.info("set debug flag: ", flag, value);
 		this.debugFlags[flag] = value;
 	}

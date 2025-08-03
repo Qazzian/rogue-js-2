@@ -1,10 +1,14 @@
-import Game from "./RogueEngine/Game.js";
+import Game, { DebugFlags } from "./RogueEngine/Game.js";
 
 import "./index.css";
 
 const screen = document.getElementById("game_screen");
 const stats = document.getElementById("stats");
-const game = new Game(screen, stats);
+if (!screen) {
+	throw new Error("No game screen found.");
+}
+
+const game = new Game(screen as HTMLCanvasElement, stats as HTMLElement);
 
 window.addEventListener("keydown", (eventDescription) => {
 	game.handleKeyEvent(eventDescription);
@@ -26,5 +30,8 @@ function debugOptionChanged(event: Event) {
 	const target = event.currentTarget as HTMLInputElement;
 	const flagName = target.id;
 	const value = target.checked;
-	game.setDebugFlag(flagName, value);
+	console.log("Debug flag to set: ", flagName, value);
+	// if (flagName in DebugFlags) {
+		// game.setDebugFlag(flagName, value);
+	// }
 }

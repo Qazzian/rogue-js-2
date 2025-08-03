@@ -1,4 +1,4 @@
-import rand from "random-seed";
+import { RandomSeed } from "random-seed";
 import MapTile from "./MapTile";
 import { Area, Position } from "@qazzian/pixel-game-engine";
 
@@ -9,9 +9,9 @@ const defaultOptions = {
 };
 
 export default abstract class GameMap {
-	protected tiles: MapTile[][];
-	protected width: number;
-	protected height: number;
+	protected _tiles: MapTile[][];
+	width: number;
+	height: number;
 	protected options: { roomSizeMax: number; roomSizeMin: number; roomCountMax: number };
 
 	constructor(width: number, height: number, options = defaultOptions) {
@@ -22,23 +22,26 @@ export default abstract class GameMap {
 			...options,
 		};
 
-		this.tiles = [];
+		this._tiles = [];
+	}
+	get tiles(): MapTile[][] {
+		return this._tiles;
 	}
 
-	abstract generateMap(): void;
+	abstract generateMap(seed: RandomSeed): void;
 
 	abstract getPlayerStart(): Position;
 
 	abstract getTilesInRange(range: Area): MapTile[][];
 
 	getTile(x: number, y: number) {
-		if (this.tiles.length <= x) {
+		if (this._tiles.length <= x) {
 			throw Error(`x co-ord ${x} is out of map bounds (${x}, ${y})`);
 		}
-		if (this.tiles[x].length <= y) {
+		if (this._tiles[x].length <= y) {
 			throw Error(`y co-ord ${y} is out of map bounds (${x}, ${y})`);
 		}
-		return this.tiles[x][y];
+		return this._tiles[x][y];
 	}
 
 	canMoveTo(x: number, y: number) {
