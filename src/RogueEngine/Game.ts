@@ -1,9 +1,9 @@
 import { PixelGameEngine, COLOURS, TimeStats, Area, Position, util, Point } from "@qazzian/pixel-game-engine";
 import rand, { RandomSeed } from "random-seed";
-import Entity from "./Entity.js";
+import Entity from "./Entity";
 import Theme from "./GameTheme";
 
-import TutorialMap from "./mapGenerators/TutorialMap.js";
+import TutorialMap from "./mapGenerators/TutorialMap";
 import MapTile from "./MapTile";
 import GameMap from "./GameMap";
 //
@@ -92,7 +92,10 @@ export default class Game {
 			this.entities.push(this.player);
 			// const [ox, oy] = this.map.rooms[3].center();
 			// this.entities.push(new Entity(ox, oy, 'npc', Theme.entities.npc));
-			this.gameEngine.on("update", (timePassed, timeStats) => this.update(timePassed, timeStats));
+			this.gameEngine.addEventListener("update", (event) => {
+				const timeStats = event.detail;
+				this.update(timeStats);
+			});
 			this.gameEngine.start();
 		} catch (error) {
 			this.isGameActive = false;
@@ -100,7 +103,7 @@ export default class Game {
 		}
 	}
 
-	update(timePassed: number, timeStats: TimeStats) {
+	update(timeStats: TimeStats) {
 		const engine = this.gameEngine;
 		engine.clear();
 
@@ -161,7 +164,8 @@ export default class Game {
 	calcViewArea(): Area {
 		const { x, y } = this.player ?? { x: 0, y: 0 };
 
-		return new Area(x - this.mapWindow.width / 2,
+		return new Area(
+			x - this.mapWindow.width / 2,
 			y - this.mapWindow.height / 2,
 			this.mapWindow.width,
 			this.mapWindow.height,
@@ -177,11 +181,10 @@ export default class Game {
 	}
 
 	printMap(area: Area) {
-		let displayTiles;
 		if (!this.map) {
 			return;
 		}
-		displayTiles = this.map.getTilesInRange(area);
+		const displayTiles = this.map.getTilesInRange(area);
 		this.mapViewer = {
 			area,
 			tiles: displayTiles,
@@ -209,9 +212,9 @@ export default class Game {
 		if (!this.map) {
 			return;
 		}
-		console.log("Need to implement printMapDebug", { xOffset, yOffset, width, height });
-		// const mapRangeParams = new Area(xOffset * -1, yOffset * -1, width, height);
-		// const mapRange = this.map.getTilesInRange(mapRangeParams);
+		// console.log("Need to implement printMapDebug", { xOffset, yOffset, width, height });
+		const mapRangeParams = new Area(xOffset * -1, yOffset * -1, width, height);
+		const mapRange = this.map.getTilesInRange(mapRangeParams);
 		// const geometry = buildGeometry(mapRange, (tile: MapTile) => tile.canSeeThrough(), true);
 
 		// if (this.debugFlags.showFovGeometry) {
@@ -228,21 +231,21 @@ export default class Game {
 		// 	});
 		// }
 
-		// if (this.player) {
-		// 	const relativePlayerPosition = {
-		// 		x: this.player.x + xOffset + 0.5,
-		// 		y: this.player.y + yOffset + 0.5,
-		// 	};
-		// 	if (this.player.x !== this.fovCache.playerPos.x || this.player.y !== this.fovCache.playerPos.y) {
-		// 		this.fovCache.playerPos = { ...this.player };
-		// 		this.fovCache.fov = fov(relativePlayerPosition, geometry, 20);
-		// 		console.info('fov:', this.fovCache.fov);
-		// 	}
+		if (this.player) {
+			const relativePlayerPosition = {
+				x: this.player.x + xOffset + 0.5,
+				y: this.player.y + yOffset + 0.5,
+			};
+			if (this.player.x !== this.fovCache.playerPos.x || this.player.y !== this.fovCache.playerPos.y) {
+				this.fovCache.playerPos = { ...this.player };
+				// this.fovCache.fov = fov(relativePlayerPosition, geometry, 20);
+				console.info('fov:', this.fovCache.fov);
+			}
 
-		//	 if (this.debugFlags.showFov) {
-		//	 	const fovData = this.printFov(relativePlayerPosition, this.fovCache.fov);
-		//	 }
-		// }
+			 // if (this.debugFlags.showFov) {
+			 // 	const fovData = this.printFov(relativePlayerPosition, this.fovCache.fov);
+			 // }
+		}
 	}
 
 	printEntities({ x: xOffset, y: yOffset }: Point) {
@@ -281,6 +284,7 @@ export default class Game {
 
 	pause() {
 		this.isGameActive = false;
+		this.gameEngine.stop();
 	}
 
 	unpause() {

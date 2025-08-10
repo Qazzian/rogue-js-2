@@ -1,4 +1,4 @@
-import Game, { DebugFlags } from "./RogueEngine/Game.js";
+import Game from "./RogueEngine/Game";
 
 import "./index.css";
 
@@ -32,6 +32,6 @@ function debugOptionChanged(event: Event) {
 	const value = target.checked;
 	console.log("Debug flag to set: ", flagName, value);
 	// if (flagName in DebugFlags) {
-		// game.setDebugFlag(flagName, value);
+	// 	game.setDebugFlag(flagName, value);
 	// }
 }

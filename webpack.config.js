@@ -1,7 +1,11 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
+import path from "path";
+import { fileURLToPath } from 'url';
+import HtmlWebpackPlugin from "html-webpack-plugin";
 
-module.exports = {
+const __filename = fileURLToPath(import.meta.url); // get the resolved path to the file
+const __dirname = path.dirname(__filename); // get the name of the directory
+
+export default {
 	mode: 'development',
 	entry: './src/index.ts',
 	output: {
@@ -36,7 +40,7 @@ module.exports = {
 		],
 	},
 	resolve: {
-		extensions: ['.ts', 'tsx', '.js', '.json'],
+		extensions: ['.ts', '.tsx', '.js', '.json'],
 	},
 	plugins: [
 		new HtmlWebpackPlugin({

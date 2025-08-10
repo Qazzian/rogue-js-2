@@ -9,9 +9,9 @@
 //		"isolatedModules": true,
 		"jsx": "react",
 		"lib": [
-			"DOM"
+			"DOM", "es5", "es6"
 		],
-		"module": "es6",
+		"module": "commonjs",
 		"moduleResolution": "node",
 //		"noEmit": true,
 		"noImplicitAny": true,

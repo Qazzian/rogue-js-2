@@ -22,7 +22,7 @@ export default tseslint.config([
 		],
 		rules: {
 			"@/no-unused-vars": "warn",
-			"no-console": "warn",
+			// "no-console": "warn",
 			"semi": ["error", "always"],
 			"quotes": ["error", "double"],
 			"prettier/prettier": "error",

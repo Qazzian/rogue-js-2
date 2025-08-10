@@ -6,7 +6,7 @@ export interface EntityTheme {
 	light: Colour;
 }
 
-export default {
+const theme = {
 	entities: {
 		player: { char: "@", dark: COLOURS.DARK_RED, light: COLOURS.CYAN },
 		npc: { char: "@", dark: COLOURS.DARK_CYAN, light: COLOURS.RED },
@@ -18,10 +18,12 @@ export default {
 		wall: { char: undefined, dark: COLOURS.VERY_DARK_BLUE, light: COLOURS.DARK_BLUE },
 	} as unknown as { [key: string]: EntityTheme },
 
-	getTile (tileType: string) {
-		if (tileType in this.tiles) {
-			return this.tiles[tileType];
+	getTile: (tileType: string) => {
+		if (tileType in theme.tiles) {
+			return theme.tiles[tileType];
 		}
-		return this.tiles.ground;
-	}
+		return theme.tiles.ground;
+	},
 };
+
+export default theme;

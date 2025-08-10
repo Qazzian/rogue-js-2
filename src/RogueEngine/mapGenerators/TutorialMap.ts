@@ -82,7 +82,7 @@ export default class TutorialMap extends GameMap {
 		return tilesInRange;
 
 		function fillerTiles(length: number) {
-			return Array.from({ length }, (v, i) => new MapTile("empty", false));
+			return Array.from({ length }, () => new MapTile("empty", false));
 		}
 	}
 
