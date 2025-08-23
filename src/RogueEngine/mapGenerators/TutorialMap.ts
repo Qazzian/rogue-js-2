@@ -1,15 +1,27 @@
-import GameMap from "../GameMap";
+import GameMap, { MapOptions } from "../GameMap";
 import Room from "../Room";
 import MapTile from "../MapTile";
 import { RandomSeed } from "random-seed";
-import { Area } from "@qazzian/pixel-game-engine";
+import { Area, Grid } from "@qazzian/pixel-game-engine";
+
+export interface TutorialMapOptions extends MapOptions {
+	maxWidth: number;
+	maxHeight: number;
+	roomSizeMax: number;
+	roomSizeMin: number;
+	roomCountMax: number;
+}
 
 export default class TutorialMap extends GameMap {
 	private rand: RandomSeed | null;
 	private rooms: Room[];
+	protected options: TutorialMapOptions;
 
-	constructor(width: number, height: number) {
-		super(width, height);
+	constructor(options: TutorialMapOptions) {
+		super();
+		this.width = options.maxWidth;
+		this.height = options.maxHeight;
+		this.options = { ...options };
 
 		this.rand = null;
 		this.rooms = [];
@@ -79,7 +91,7 @@ export default class TutorialMap extends GameMap {
 			}
 		}
 		// console.info(`getTilesInRange {${x1}, ${x2}, ${y1}, ${y2}}: `, tilesInRange);
-		return tilesInRange;
+		return new Grid(tilesInRange);
 
 		function fillerTiles(length: number) {
 			return Array.from({ length }, () => new MapTile("empty", false));
