@@ -30,7 +30,13 @@ export class MapView {
 
 	print(): void {
 		this.printer.clear(COLORS.BLACK);
+		if (!this.printArea) {
+			return;
+		}
 		this.printArea.forEach((tile, x, y) => {
+			if (!tile) {
+				return;
+			}
 			const tileTheme = Theme.tiles[tile?.tileType] ?? Theme.tiles.ground;
 			this.printer.draw(x, y, tileTheme.light);
 		});

@@ -1,8 +1,7 @@
 import { MapView } from "./MapView";
-import { Area, COLORS, Colour, DrawInterface, Position } from "@qazzian/pixel-game-engine";
+import { Area, COLORS, DrawInterface, Grid, Position } from "@qazzian/pixel-game-engine";
 import GameMap from "./GameMap";
-import { EntityTheme } from "./GameTheme";
-import Entity from "./Entity";
+import MapTile from "./MapTile";
 
 class TestMap extends GameMap {
 	generateMap = jest.fn();
@@ -10,8 +9,7 @@ class TestMap extends GameMap {
 	getTilesInRange = jest.fn();
 }
 
-const BasicEntityTheme: EntityTheme = { char: "", dark: COLORS.BLACK, light: COLORS.WHITE };
-const BasicEntity: Entity = new Entity(1, 1, "testBlock", BasicEntityTheme);
+const WallTile: MapTile = new MapTile("wall", false, false);
 
 const mockDisplay: DrawInterface = {
 	draw: jest.fn(),
@@ -45,12 +43,13 @@ describe("MapView", () => {
 	test("map with a single block", () => {
 		const startArea = new Area(0, 0, 10, 10);
 		const testMap = new TestMap();
-		testMap.getTilesInRange.mockReturnValue([[], [BasicEntity]]); // return a block at 1,1
+		const simpleGrid = new Grid([[], [null, WallTile]]);
+		testMap.getTilesInRange.mockReturnValue(simpleGrid); // return a block at 1,1
 		const mapView = new MapView(startArea, testMap, mockDisplay);
 
 		mapView.print();
 		expect(mockDisplay.clear).toHaveBeenCalledTimes(1);
-		expect(mockDisplay.draw).toHaveBeenCalledWith(1, 1, COLORS.WHITE);
+		expect(mockDisplay.draw).toHaveBeenCalledWith(1, 1, COLORS.DARK_BLUE);
 	});
 
 	test("Map with an area", () => {
