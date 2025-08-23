@@ -11,7 +11,7 @@
 		"lib": [
 			"DOM", "es5", "es6"
 		],
-		"module": "commonjs",
+		"module": "esnext",
 		"moduleResolution": "node",
 //		"noEmit": true,
 		"noImplicitAny": true,
