@@ -1,4 +1,13 @@
-import { PixelGameEngine, COLOURS, TimeStats, Area, Position, util, Point } from "@qazzian/pixel-game-engine";
+import {
+	PixelGameEngine,
+	COLOURS,
+	TimeStats,
+	Area,
+	Position,
+	util,
+	Point,
+	fov,
+} from "@qazzian/pixel-game-engine";
 import rand, { RandomSeed } from "random-seed";
 import Entity from "./Entity";
 import Theme from "./GameTheme";
@@ -6,8 +15,10 @@ import Theme from "./GameTheme";
 import TutorialMap from "./mapGenerators/TutorialMap";
 import MapTile from "./MapTile";
 import GameMap from "./GameMap";
-//
-// const { buildGeometry } = fov;
+import { Intersect } from "../../../pixel-game-engine/src/fov";
+
+const { buildFov, buildGeometry } = fov;
+
 // const { getASeed, objMatch } = util;
 
 // Todo move to a factory module in ./mapGenerators
@@ -38,16 +49,16 @@ export default class Game {
 	private map: GameMap | undefined;
 	private player: Entity | undefined;
 	private entities: Entity[];
-	private mapViewer: { area: { x: number; y: number; width: number; height: number }; tiles: MapTile[][] };
-	private fovCache: { playerPos: { x: number; y: number }; fov: null };
+	private fovCache: { playerPos: Point; fov: Intersect[] | null };
 	private readonly debugFlags: { [key in DebugFlags]?: boolean };
+	previousViewArea: Area = new Area(0, 0, 0, 0);
 
 	constructor(canvasElement: HTMLCanvasElement, statsElement: HTMLElement) {
 		this.statsElement = statsElement;
 		this.canvas = canvasElement;
 		this.mapWindow = {
-			width: 60,
-			height: 40,
+			width: 600,
+			height: 400,
 		};
 		this.gameEngine = new PixelGameEngine(this.canvas, this.mapWindow.width, this.mapWindow.height, 16, 16);
 
@@ -56,10 +67,6 @@ export default class Game {
 		this.generatorName = "tutorial";
 
 		this.entities = [];
-		this.mapViewer = {
-			area: { x: 0, y: 0, width: 0, height: 0 },
-			tiles: [],
-		};
 
 		this.fovCache = {
 			playerPos: { x: NaN, y: NaN },
@@ -173,28 +180,24 @@ export default class Game {
 	}
 
 	calcViewOffset(viewArea: Area): Area {
-		return {
-			...viewArea,
-			x: -viewArea.x,
-			y: -viewArea.y,
-		};
+		return new Area(-viewArea.x, -viewArea.y, viewArea.width, viewArea.height);
 	}
 
 	printMap(area: Area) {
 		if (!this.map) {
 			return;
 		}
-		const displayTiles = this.map.getTilesInRange(area);
-		this.mapViewer = {
-			area,
-			tiles: displayTiles,
-		};
+		let displayTiles: MapTile[] = [];
 
-		displayTiles.forEach((row, x) => {
-			// console.info('print row: ', x);
-			row.forEach((tile, y) => {
-				this.printTile(x, y, tile);
-			});
+		if (!this.previousViewArea || !this.previousViewArea.equals(area)) {
+			this.previousViewArea = area;
+			displayTiles = this.map.getTilesInRange(area);
+		}
+
+
+
+		displayTiles.forEach((tile, x, y) => {
+			this.printTile(x, y, tile);
 		});
 	}
 
@@ -215,7 +218,16 @@ export default class Game {
 		// console.log("Need to implement printMapDebug", { xOffset, yOffset, width, height });
 		const mapRangeParams = new Area(xOffset * -1, yOffset * -1, width, height);
 		const mapRange = this.map.getTilesInRange(mapRangeParams);
-		// const geometry = buildGeometry(mapRange, (tile: MapTile) => tile.canSeeThrough(), true);
+		const geometry = buildGeometry(
+			mapRange,
+			(tile: unknown) => {
+				if (tile instanceof MapTile) {
+					return tile.canSeeThrough();
+				}
+				return false;
+			},
+			true,
+		);
 
 		// if (this.debugFlags.showFovGeometry) {
 		// 	geometry.forEach((edge) => {
@@ -238,13 +250,13 @@ export default class Game {
 			};
 			if (this.player.x !== this.fovCache.playerPos.x || this.player.y !== this.fovCache.playerPos.y) {
 				this.fovCache.playerPos = { ...this.player };
-				// this.fovCache.fov = fov(relativePlayerPosition, geometry, 20);
-				console.info('fov:', this.fovCache.fov);
+				this.fovCache.fov = buildFov(relativePlayerPosition, geometry, 20);
+				console.info("fov:", this.fovCache.fov);
 			}
 
-			 // if (this.debugFlags.showFov) {
-			 // 	const fovData = this.printFov(relativePlayerPosition, this.fovCache.fov);
-			 // }
+			// if (this.debugFlags.showFov) {
+			// 	const fovData = this.printFov(relativePlayerPosition, this.fovCache.fov);
+			// }
 		}
 	}
 
