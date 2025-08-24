@@ -10,13 +10,19 @@ export class MapView {
 	private printer: DrawInterface;
 	private printArea: Grid<MapTile>;
 
+	/**
+	 *
+	 * @param viewWindow An Area but the x, y, coords point to the center of the area instead of the min x, y coords
+	 * @param map A GameMap to load the view data from.
+	 * @param printer A DrawInterface that can be used to draw to the screen.
+	 */
 	constructor(viewWindow: Area, map: GameMap, printer: DrawInterface) {
-		this.viewCenter = new Position(viewWindow.x, viewWindow.y);
+		this.viewCenter = new Position(viewWindow.x1, viewWindow.y1);
 		this.viewWindow = viewWindow;
 		this.map = map;
 		this.printer = printer;
 		this.viewWindow = this.calcViewArea(this.viewCenter);
-		this.printArea = map.getTilesInRange(viewWindow);
+		this.printArea = map.getTilesInRange(this.viewWindow);
 	}
 
 	update(center: Position) {
@@ -24,7 +30,7 @@ export class MapView {
 			return;
 		}
 		this.viewCenter = center;
-		this.viewWindow = this.calcViewArea(center);
+		this.viewWindow = this.calcViewArea(this.viewCenter);
 		this.printArea = this.map.getTilesInRange(this.viewWindow);
 	}
 
