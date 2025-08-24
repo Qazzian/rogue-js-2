@@ -41,21 +41,32 @@ describe("MapView", () => {
 	});
 
 	test("map with a single block", () => {
-		const startArea = new Area(0, 0, 10, 10);
+		const startArea = new Area(5, 5, 10, 10);
 		const testMap = new TestMap();
 		const simpleGrid = new Grid([[], [null, WallTile]]);
 		testMap.getTilesInRange.mockReturnValue(simpleGrid); // return a block at 1,1
 		const mapView = new MapView(startArea, testMap, mockDisplay);
 
 		mapView.print();
+		expect(testMap.getTilesInRange).toHaveBeenCalledTimes(1);
+		expect(testMap.getTilesInRange).toHaveBeenCalledWith(new Area(0, 0, 10, 10));
 		expect(mockDisplay.clear).toHaveBeenCalledTimes(1);
 		expect(mockDisplay.draw).toHaveBeenCalledWith(1, 1, COLORS.DARK_BLUE);
 	});
 
-	test("Map with an area", () => {
-		const startArea = new Area(0, 0, 10, 10);
-		const mapView = new MapView(startArea, new TestMap(), mockDisplay);
-		expect(mapView.update).toBeDefined();
+	test("Move the focus point", () => {
+		const startArea = new Area(5, 5, 10, 10);
+		const testMap = new TestMap();
+		const simpleGrid = new Grid([[WallTile], []]);
+		testMap.getTilesInRange.mockReturnValue(simpleGrid); // return a block at 1,1
+		const mapView = new MapView(startArea, testMap, mockDisplay);
+
 		mapView.update(new Position(6, 6));
+		mapView.print();
+		expect(testMap.getTilesInRange).toHaveBeenCalledTimes(2);
+		expect(testMap.getTilesInRange).toHaveBeenNthCalledWith(1, new Area(0, 0, 10, 10));
+		expect(testMap.getTilesInRange).toHaveBeenNthCalledWith(2, new Area(1, 1, 10, 10));
+		expect(mockDisplay.clear).toHaveBeenCalledTimes(1);
+		expect(mockDisplay.draw).toHaveBeenCalledWith(0, 0, COLORS.DARK_BLUE);
 	});
 });
