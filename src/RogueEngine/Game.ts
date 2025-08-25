@@ -1,21 +1,14 @@
-import {
-	PixelGameEngine,
-	COLOURS,
-	TimeStats,
-	Area,
-	Position,
-	util,
-	Point,
-	fov,
-} from "@qazzian/pixel-game-engine";
+import { PixelGameEngine, COLOURS, TimeStats, Area, Position, util, Point, fov } from "@qazzian/pixel-game-engine";
 import rand, { RandomSeed } from "random-seed";
 import Entity from "./Entity";
 import Theme from "./GameTheme";
 
 import TutorialMap from "./mapGenerators/TutorialMap";
 import MapTile from "./MapTile";
-import GameMap from "./GameMap";
+import GameMap from "./mapGenerators/GameMap";
 import { Intersect } from "../../../pixel-game-engine/src/fov";
+import { MapView } from "./MapView";
+import { EmptyMap } from "./mapGenerators/EmptyMap";
 
 const { buildFov, buildGeometry } = fov;
 
@@ -42,6 +35,7 @@ export default class Game {
 	private canvas: HTMLCanvasElement;
 	private mapWindow: { width: number; height: number };
 	private gameEngine: PixelGameEngine;
+	private mainView: MapView;
 	private isGameActive: boolean;
 	private seed: string | undefined;
 	private random: RandomSeed | undefined;
@@ -61,7 +55,7 @@ export default class Game {
 			height: 400,
 		};
 		this.gameEngine = new PixelGameEngine(this.canvas, this.mapWindow.width, this.mapWindow.height, 16, 16);
-
+		this.mainView = new MapView(new Area(0, 0, 60, 40), new EmptyMap({}), this.gameEngine);
 		this.isGameActive = false;
 
 		this.generatorName = "tutorial";
@@ -83,7 +77,7 @@ export default class Game {
 	async start() {
 		try {
 			await this.preloadAssets();
-			this.map = new (getMapGenerator(this.generatorName))(100, 100);
+			this.map = new (getMapGenerator(this.generatorName))({ maxWidth: 100, maxHeight: 100 });
 			this.seed = await util.getASeed();
 			console.info("MAP SEED = ", this.seed);
 			this.random = rand.create(this.seed);
@@ -103,6 +97,8 @@ export default class Game {
 				const timeStats = event.detail;
 				this.update(timeStats);
 			});
+			this.mainView = new MapView(new Area(0, 0, 60, 40), this.map, this.gameEngine);
+			this.mainView.update(new Position(this.player.x, this.player.y));
 			this.gameEngine.start();
 		} catch (error) {
 			this.isGameActive = false;
@@ -117,7 +113,7 @@ export default class Game {
 		this.printStats(timeStats);
 		const viewWindow = this.calcViewOffset(this.calcViewArea());
 
-		this.printMap(viewWindow);
+		this.mainView.print();
 		this.printMapDebug(viewWindow);
 		this.printEntities(viewWindow);
 		this.printOverlays(viewWindow);
@@ -181,34 +177,6 @@ export default class Game {
 
 	calcViewOffset(viewArea: Area): Area {
 		return new Area(-viewArea.x, -viewArea.y, viewArea.width, viewArea.height);
-	}
-
-	printMap(area: Area) {
-		if (!this.map) {
-			return;
-		}
-		let displayTiles: MapTile[] = [];
-
-		if (!this.previousViewArea || !this.previousViewArea.equals(area)) {
-			this.previousViewArea = area;
-			displayTiles = this.map.getTilesInRange(area);
-		}
-
-
-
-		displayTiles.forEach((tile, x, y) => {
-			this.printTile(x, y, tile);
-		});
-	}
-
-	printTile(x: number, y: number, tile: MapTile) {
-		const tileTheme = Theme.tiles[tile?.tileType] ?? Theme.tiles.ground;
-		if (tileTheme.char) {
-			debugger;
-			this.gameEngine.drawCharacter(x, y, tileTheme.char, tileTheme.light);
-		} else {
-			this.gameEngine.draw(x, y, tileTheme.light);
-		}
 	}
 
 	printMapDebug({ x: xOffset, y: yOffset, width, height }: Area) {

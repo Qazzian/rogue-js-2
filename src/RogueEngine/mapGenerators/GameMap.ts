@@ -1,5 +1,5 @@
 import { RandomSeed } from "random-seed";
-import MapTile from "./MapTile";
+import MapTile from "../MapTile";
 import { Area, Grid, Position } from "@qazzian/pixel-game-engine";
 
 export interface MapOptions {

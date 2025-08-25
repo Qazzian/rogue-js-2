@@ -1,5 +1,5 @@
 import { Area, Position, DrawInterface, COLORS, Grid } from "@qazzian/pixel-game-engine";
-import GameMap from "./GameMap.js";
+import GameMap from "./mapGenerators/GameMap.js";
 import MapTile from "./MapTile";
 import Theme from "./GameTheme";
 
@@ -44,7 +44,11 @@ export class MapView {
 				return;
 			}
 			const tileTheme = Theme.tiles[tile?.tileType] ?? Theme.tiles.ground;
-			this.printer.draw(x, y, tileTheme.light);
+			if (tileTheme.char) {
+				this.printer.drawCharacter(x, y, tileTheme.char, tileTheme.light);
+			} else {
+				this.printer.draw(x, y, tileTheme.light);
+			}
 		});
 	}
 
