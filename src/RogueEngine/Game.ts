@@ -53,7 +53,7 @@ export default class Game {
 			width: 600,
 			height: 400,
 		};
-		this.gameEngine = new PixelGameEngine(this.canvas, this.mapWindow.width, this.mapWindow.height, 16, 16);
+		this.gameEngine = new PixelGameEngine(this.canvas, this.mapWindow.width, this.mapWindow.height, 60, 40);
 		this.mainView = new MapView(new Area(0, 0, 60, 40), new EmptyMap({}), this.gameEngine);
 		this.isGameActive = false;
 

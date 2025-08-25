@@ -14,7 +14,7 @@ export interface TutorialMapOptions extends MapOptions {
 
 const defaultOptions = {
 	roomCountMax: 20,
-	roomSizeMax: 10,
+	roomSizeMax: 25,
 	roomSizeMin: 5,
 };
 
@@ -113,7 +113,11 @@ export default class TutorialMap extends GameMap {
 		return new Grid(tilesInRange);
 
 		function fillerTiles(length: number) {
-			return Array.from({ length }, () => new MapTile("empty", false));
+			const tiles = [];
+			for (let i = 0; i < length; i++) {
+				tiles[i] = new MapTile("empty", false);
+			}
+			return tiles
 		}
 	}
 
