@@ -1,4 +1,4 @@
-import GameMap, { MapOptions } from "../GameMap";
+import GameMap, { MapOptions } from "./GameMap";
 import Room from "../Room";
 import MapTile from "../MapTile";
 import { RandomSeed } from "random-seed";
@@ -7,10 +7,16 @@ import { Area, Grid } from "@qazzian/pixel-game-engine";
 export interface TutorialMapOptions extends MapOptions {
 	maxWidth: number;
 	maxHeight: number;
-	roomSizeMax: number;
-	roomSizeMin: number;
-	roomCountMax: number;
+	roomSizeMax?: number;
+	roomSizeMin?: number;
+	roomCountMax?: number;
 }
+
+const defaultOptions = {
+	roomCountMax: 20,
+	roomSizeMax: 10,
+	roomSizeMin: 5,
+};
 
 export default class TutorialMap extends GameMap {
 	private rand: RandomSeed | null;
@@ -21,7 +27,10 @@ export default class TutorialMap extends GameMap {
 		super();
 		this.width = options.maxWidth;
 		this.height = options.maxHeight;
-		this.options = { ...options };
+		this.options = {
+			...defaultOptions,
+			...options,
+		};
 
 		this.rand = null;
 		this.rooms = [];
@@ -37,9 +46,19 @@ export default class TutorialMap extends GameMap {
 		const rooms: Room[] = [];
 		const maxAttempts = 300;
 
-		for (let a = 0; rooms.length < this.options.roomCountMax && a < maxAttempts; a++) {
-			const w = this.rand.intBetween(this.options.roomSizeMin, this.options.roomSizeMax);
-			const h = this.rand.intBetween(this.options.roomSizeMin, this.options.roomSizeMax);
+		for (
+			let a = 0;
+			rooms.length < (this.options?.roomCountMax ?? defaultOptions.roomCountMax) && a < maxAttempts;
+			a++
+		) {
+			const w = this.rand.intBetween(
+				this.options?.roomSizeMin ?? defaultOptions.roomSizeMin,
+				this.options.roomSizeMax ?? defaultOptions.roomSizeMax,
+			);
+			const h = this.rand.intBetween(
+				this.options?.roomSizeMin ?? defaultOptions.roomSizeMin,
+				this.options.roomSizeMax ?? defaultOptions.roomSizeMax,
+			);
 			const x = this.rand.intBetween(0, this.width - w - 1);
 			const y = this.rand.intBetween(0, this.height - h - 1);
 			const newRoom = new Room(x, y, w, h);

@@ -1,6 +1,6 @@
 import { MapView } from "./MapView";
 import { Area, COLORS, DrawInterface, Grid, Position } from "@qazzian/pixel-game-engine";
-import GameMap from "./GameMap";
+import GameMap from "./mapGenerators/GameMap";
 import MapTile from "./MapTile";
 
 class TestMap extends GameMap {
