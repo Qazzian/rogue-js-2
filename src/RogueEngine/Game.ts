@@ -6,7 +6,6 @@ import Theme from "./GameTheme";
 import TutorialMap from "./mapGenerators/TutorialMap";
 import MapTile from "./MapTile";
 import GameMap from "./mapGenerators/GameMap";
-import { Intersect } from "../../../pixel-game-engine/src/fov";
 import { MapView } from "./MapView";
 import { EmptyMap } from "./mapGenerators/EmptyMap";
 
@@ -43,7 +42,7 @@ export default class Game {
 	private map: GameMap | undefined;
 	private player: Entity | undefined;
 	private entities: Entity[];
-	private fovCache: { playerPos: Point; fov: Intersect[] | null };
+	private fovCache: { playerPos: Point; fov: fov.Intersect[] | null };
 	private readonly debugFlags: { [key in DebugFlags]?: boolean };
 	previousViewArea: Area = new Area(0, 0, 0, 0);
 
