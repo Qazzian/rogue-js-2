@@ -113,7 +113,7 @@ export default class Game {
 		const viewWindow = this.mainView.window;
 
 		this.mainView.print();
-		this.printMapDebug(viewWindow);
+		this.printMapDebug();
 		this.printEntities(viewWindow);
 		this.printOverlays(viewWindow);
 
@@ -171,13 +171,12 @@ export default class Game {
 		}
 	}
 
-	printMapDebug({ x: xOffset, y: yOffset, width, height }: Area) {
+	printMapDebug() {
 		if (!this.map) {
 			return;
 		}
 		// console.log("Need to implement printMapDebug", { xOffset, yOffset, width, height });
-		const mapRangeParams = new Area(xOffset * -1, yOffset * -1, width, height);
-		const mapRange = this.map.getTilesInRange(mapRangeParams);
+		const mapRange = this.mainView.visibleMap;
 		const geometry = buildGeometry(
 			mapRange,
 			(tile: unknown) => {
@@ -205,17 +204,19 @@ export default class Game {
 
 		if (this.player) {
 			const relativePlayerPosition = {
-				x: this.player.x - xOffset + 0.5,
-				y: this.player.y - yOffset + 0.5,
+				x: this.player.x - this.mainView.xOffset + 0.5,
+				y: this.player.y - this.mainView.yOffset + 0.5,
 			};
 			if (this.player.x !== this.fovCache.playerPos.x || this.player.y !== this.fovCache.playerPos.y) {
 				this.fovCache.playerPos = { ...this.player };
 				this.fovCache.fov = buildFov(relativePlayerPosition, geometry, 20);
-				console.info("fov:", this.fovCache.fov);
+				// console.info("fov:", this.fovCache.fov);
 			}
 
 			// if (this.debugFlags.showFov) {
-			// 	const fovData = this.printFov(relativePlayerPosition, this.fovCache.fov);
+			if (this.fovCache && this.fovCache.fov) {
+				this.printFov(this.fovCache.fov);
+			}
 			// }
 		}
 	}
@@ -250,7 +251,7 @@ export default class Game {
 		this.generatorName = generatorName;
 	}
 
-	printFov(playerPosition: Position, fovMask: Position[]) {
+	printFov(fovMask: Point[]) {
 		this.gameEngine.drawPolygon(fovMask, COLOURS.RED);
 	}
 
