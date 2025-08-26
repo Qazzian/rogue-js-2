@@ -52,8 +52,24 @@ export class MapView {
 		});
 	}
 
+	get xOffset(): number {
+		return this.viewWindow.x1;
+	}
+
+	get yOffset(): number {
+		return this.viewWindow.y1;
+	}
+
+	get offset(): Position {
+		return new Position(this.xOffset, this.yOffset);
+	}
+
 	get window(): Area {
 		return this.viewWindow;
+	}
+
+	get visibleMap(): Grid<MapTile> {
+		return this.printArea;
 	}
 
 	calcViewArea(center: Position): Area {
