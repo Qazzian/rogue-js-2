@@ -52,6 +52,10 @@ export class MapView {
 		});
 	}
 
+	get window(): Area {
+		return this.viewWindow;
+	}
+
 	calcViewArea(center: Position): Area {
 		const { x, y } = center;
 

@@ -110,7 +110,7 @@ export default class Game {
 		engine.clear();
 
 		this.printStats(timeStats);
-		const viewWindow = this.calcViewOffset(this.calcViewArea());
+		const viewWindow = this.mainView.window;
 
 		this.mainView.print();
 		this.printMapDebug(viewWindow);
@@ -130,18 +130,26 @@ export default class Game {
 		}
 		switch (event.key) {
 			case "ArrowUp":
-				this.moveEntity(this.player, 0, -1);
+				this.movePlayer(0, -1);
 				break;
 			case "ArrowDown":
-				this.moveEntity(this.player, 0, +1);
+				this.movePlayer(0, +1);
 				break;
 			case "ArrowLeft":
-				this.moveEntity(this.player, -1, 0);
+				this.movePlayer(-1, 0);
 				break;
 			case "ArrowRight":
-				this.moveEntity(this.player, +1, 0);
+				this.movePlayer(+1, 0);
 				break;
 		}
+	}
+
+	movePlayer(dx: number, dy: number) {
+		if (!this.player) {
+			return;
+		}
+		this.moveEntity(this.player, dx, dy);
+		this.mainView.update(this.player.pos);
 	}
 
 	moveEntity(entity: Entity, dx: number, dy: number) {
@@ -161,21 +169,6 @@ export default class Game {
 		} else {
 			this.statsElement.innerText = "FPS: PAUSED";
 		}
-	}
-
-	calcViewArea(): Area {
-		const { x, y } = this.player ?? { x: 0, y: 0 };
-
-		return new Area(
-			x - this.mapWindow.width / 2,
-			y - this.mapWindow.height / 2,
-			this.mapWindow.width,
-			this.mapWindow.height,
-		);
-	}
-
-	calcViewOffset(viewArea: Area): Area {
-		return new Area(-viewArea.x, -viewArea.y, viewArea.width, viewArea.height);
 	}
 
 	printMapDebug({ x: xOffset, y: yOffset, width, height }: Area) {
@@ -212,8 +205,8 @@ export default class Game {
 
 		if (this.player) {
 			const relativePlayerPosition = {
-				x: this.player.x + xOffset + 0.5,
-				y: this.player.y + yOffset + 0.5,
+				x: this.player.x - xOffset + 0.5,
+				y: this.player.y - yOffset + 0.5,
 			};
 			if (this.player.x !== this.fovCache.playerPos.x || this.player.y !== this.fovCache.playerPos.y) {
 				this.fovCache.playerPos = { ...this.player };
@@ -234,7 +227,7 @@ export default class Game {
 				y,
 				theme: { char, light },
 			} = this.entities[i];
-			this.gameEngine.drawCharacter(x + xOffset, y + yOffset, char, light);
+			this.gameEngine.drawCharacter(x - xOffset, y - yOffset, char, light);
 		}
 	}
 
@@ -243,8 +236,8 @@ export default class Game {
 			return;
 		}
 		const playerPosition = {
-			x: this.player.x + xOffset + 0.5,
-			y: this.player.y + yOffset + 0.5,
+			x: this.player.x - xOffset + 0.5,
+			y: this.player.y - yOffset + 0.5,
 		};
 
 		if (this.debugFlags[DebugFlags.showFov]) {

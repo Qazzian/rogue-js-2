@@ -1,4 +1,5 @@
 import { EntityTheme } from "./GameTheme";
+import { Position } from "@qazzian/pixel-game-engine";
 
 export default class Entity {
 	x: number;
@@ -17,6 +18,10 @@ export default class Entity {
 		this.y = y;
 		this.type = type;
 		this.theme = theme;
+	}
+
+	get pos(): Position {
+		return new Position(this.x, this.y);
 	}
 
 	/**
