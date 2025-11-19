@@ -52,8 +52,5 @@
 		"random-seed": "^0.3.0",
 		"react": "^19.1.1",
 		"react-dom": "^19.1.1"
-	},
-	"optionalDependencies": {
-		"fsevents": "^2.3.3"
 	}
 }
