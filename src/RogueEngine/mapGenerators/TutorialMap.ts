@@ -117,7 +117,7 @@ export default class TutorialMap extends GameMap {
 			for (let i = 0; i < length; i++) {
 				tiles[i] = new MapTile("empty", false);
 			}
-			return tiles
+			return tiles;
 		}
 	}
 
