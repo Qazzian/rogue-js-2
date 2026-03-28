@@ -48,7 +48,6 @@ export default {
 	],
 	devtool: "inline-source-map",
 	devServer: {
-		contentBase: "./dist",
 		port: 8081,
 	},
 };
