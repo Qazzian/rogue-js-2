@@ -6,7 +6,7 @@ stages:
   - test
 
 default:
-  image: node:24-node
+  image: node:24-alpine
   cache:
     key:
       files:
