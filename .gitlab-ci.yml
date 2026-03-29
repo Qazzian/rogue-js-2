@@ -1,0 +1,43 @@
+# ..gitlab-ci.yml
+
+stages:
+  - install
+  - build
+  - test
+
+default:
+  image: node:24-alpine
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - node_modules/
+
+install:deps:
+  stage: install
+  script:
+    - npm ci
+  artifacts:
+    paths:
+      - node_modules/
+    expire_in: 1 hour
+
+build:
+  stage: build
+  script:
+    - npm run build
+  artifacts:
+    paths:
+      - dist/
+    expire_in: 1 day
+  dependencies:
+    - install:deps
+
+test:unit:
+  stage: test
+  script:
+    - npm test
+  dependencies:
+    - install:deps
+    - build
