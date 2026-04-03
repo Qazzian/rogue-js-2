@@ -1,4 +1,4 @@
-import { PixelGameEngine, COLOURS, TimeStats, Area, Position, util, Point, fov } from "@qazzian/pixel-game-engine";
+import { PixelGameEngine, COLOURS, TimeStats, Area, Position, util, Point, fov } from "@Qazzian/pixel-game-engine";
 import rand, { RandomSeed } from "random-seed";
 import Entity from "./Entity";
 import Theme from "./GameTheme";

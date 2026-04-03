@@ -1,4 +1,4 @@
-import { Position } from "@qazzian/pixel-game-engine";
+import { Position } from "@Qazzian/pixel-game-engine";
 
 export default class Room {
 	x1: number;

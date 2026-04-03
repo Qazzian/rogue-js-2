@@ -1,5 +1,5 @@
 import { MapView } from "./MapView";
-import { Area, COLORS, DrawInterface, Grid, Position } from "@qazzian/pixel-game-engine";
+import { Area, COLORS, DrawInterface, Grid, Position } from "@Qazzian/pixel-game-engine";
 import GameMap from "./mapGenerators/GameMap";
 import MapTile from "./MapTile";
 

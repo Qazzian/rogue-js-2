@@ -1,7 +1,7 @@
 import TutorialMap from "./TutorialMap";
 
 // import rand from "random-seed";
-import { Area } from "@qazzian/pixel-game-engine";
+import { Area } from "@Qazzian/pixel-game-engine";
 
 describe("TutorialMap tests", () => {
 	test("init", () => {

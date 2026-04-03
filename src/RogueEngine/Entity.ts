@@ -1,5 +1,5 @@
 import { EntityTheme } from "./GameTheme";
-import { Position } from "@qazzian/pixel-game-engine";
+import { Position } from "@Qazzian/pixel-game-engine";
 
 export default class Entity {
 	x: number;

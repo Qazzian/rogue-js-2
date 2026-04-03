@@ -2,7 +2,7 @@ import GameMap, { MapOptions } from "./GameMap";
 import Room from "../Room";
 import MapTile from "../MapTile";
 import { RandomSeed } from "random-seed";
-import { Area, Grid } from "@qazzian/pixel-game-engine";
+import { Area, Grid } from "@Qazzian/pixel-game-engine";
 
 export interface TutorialMapOptions extends MapOptions {
 	maxWidth: number;

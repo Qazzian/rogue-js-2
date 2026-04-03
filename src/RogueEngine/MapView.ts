@@ -1,4 +1,4 @@
-import { Area, Position, DrawInterface, COLORS, Grid } from "@qazzian/pixel-game-engine";
+import { Area, Position, DrawInterface, COLORS, Grid } from "@Qazzian/pixel-game-engine";
 import GameMap from "./mapGenerators/GameMap.js";
 import MapTile from "./MapTile";
 import Theme from "./GameTheme";

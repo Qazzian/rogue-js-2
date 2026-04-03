@@ -1,4 +1,4 @@
-import { Colour, COLOURS } from "@qazzian/pixel-game-engine";
+import { Colour, COLOURS } from "@Qazzian/pixel-game-engine";
 
 export interface EntityTheme {
 	char: string;

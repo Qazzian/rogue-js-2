@@ -1,5 +1,5 @@
 import GameMap, { MapOptions } from "./GameMap";
-import { Area, Grid, Position } from "@qazzian/pixel-game-engine";
+import { Area, Grid, Position } from "@Qazzian/pixel-game-engine";
 import MapTile from "../MapTile";
 
 export class EmptyMap extends GameMap {
