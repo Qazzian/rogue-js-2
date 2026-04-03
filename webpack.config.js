@@ -50,4 +50,5 @@ export default {
 	devServer: {
 		port: 8081,
 	},
+	ignoreWarnings: [/Failed to parse source map/],
 };
