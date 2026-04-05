@@ -1,8 +1,7 @@
 import GameMap, { MapOptions } from "./GameMap";
 import Room from "../Room";
 import MapTile from "../MapTile";
-import { RandomSeed } from "random-seed";
-import { Area, Grid } from "@Qazzian/pixel-game-engine";
+import { Area, Grid, Random } from "@Qazzian/pixel-game-engine";
 
 export interface TutorialMapOptions extends MapOptions {
 	maxWidth: number;
@@ -19,7 +18,7 @@ const defaultOptions = {
 };
 
 export default class TutorialMap extends GameMap {
-	private rand: RandomSeed | null;
+	private rand: Random | null;
 	private rooms: Room[];
 	protected options: TutorialMapOptions;
 
@@ -37,7 +36,7 @@ export default class TutorialMap extends GameMap {
 		this._tiles = [];
 	}
 
-	generateMap(randomGenerator?: RandomSeed) {
+	generateMap(randomGenerator?: Random) {
 		if (!randomGenerator) {
 			throw Error("No random generator provided to TutorialMap");
 		}

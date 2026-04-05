@@ -1,6 +1,5 @@
-import { RandomSeed } from "random-seed";
 import MapTile from "../MapTile";
-import { Area, Grid, Position } from "@Qazzian/pixel-game-engine";
+import { Area, Grid, Position, Random } from "@Qazzian/pixel-game-engine";
 
 export interface MapOptions {
 	[key: string]: unknown;
@@ -26,7 +25,7 @@ export default abstract class GameMap {
 		return this._tiles;
 	}
 
-	abstract generateMap(seed: RandomSeed): void;
+	abstract generateMap(seed: Random): void;
 
 	abstract getPlayerStart(): Position;
 

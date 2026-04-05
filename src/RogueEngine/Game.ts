@@ -1,5 +1,14 @@
-import { PixelGameEngine, COLOURS, TimeStats, Area, Position, util, Point, fov } from "@Qazzian/pixel-game-engine";
-import rand, { RandomSeed } from "random-seed";
+import {
+	PixelGameEngine,
+	COLOURS,
+	TimeStats,
+	Area,
+	Position,
+	util,
+	Point,
+	fov,
+	Random,
+} from "@Qazzian/pixel-game-engine";
 import Entity from "./Entity";
 import Theme from "./GameTheme";
 
@@ -37,7 +46,7 @@ export default class Game {
 	private mainView: MapView;
 	private isGameActive: boolean;
 	private seed: string | undefined;
-	private random: RandomSeed | undefined;
+	private random: Random | undefined;
 	private generatorName: string;
 	private map: GameMap | undefined;
 	private player: Entity | undefined;
@@ -79,7 +88,7 @@ export default class Game {
 			this.map = new (getMapGenerator(this.generatorName))({ maxWidth: 100, maxHeight: 100 });
 			this.seed = await util.getASeed();
 			console.info("MAP SEED = ", this.seed);
-			this.random = rand.create(this.seed);
+			this.random = new Random(this.seed);
 
 			this.map.generateMap(this.random);
 			console.info("MAP:", this.map);
