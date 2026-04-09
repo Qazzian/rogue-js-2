@@ -166,6 +166,15 @@ export default class TutorialMap extends GameMap {
 		});
 	}
 
+	sortRooms(rooms: Room[]) {
+			return rooms.sort((a, b) => {
+								if (b.x1 === a.x1) {
+												return b.y1 - a.y1;
+								}
+								return b.x1 - a.x1;
+			})	
+	}
+
 	createTunnelH(x1: number, x2: number, y: number) {
 		const xMin = Math.min(x1, x2);
 		const xMax = Math.max(x1, x2);

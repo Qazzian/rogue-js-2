@@ -1,5 +1,5 @@
 import TutorialMap from "./TutorialMap";
-
+import Room from "../Room";
 // import rand from "random-seed";
 import { Area } from "@Qazzian/pixel-game-engine";
 
@@ -44,4 +44,15 @@ describe("TutorialMap tests", () => {
 			expect(tileRange2).toMatchSnapshot();
 		});
 	});
+
+	describe("Utility functions", () => {
+				test("sortRoom", ()=>{
+								const map = new TutorialMap({maxWidth: 100, maxHeight:100})
+								const empty:Room[] = [];
+								expect(map.sortRooms(empty)).toMatchObject([])
+								const rooms1 = [{x1:10, y1:10}] as Room[];
+								expect(map.sortRooms(rooms1)).toMatchObject(rooms1);
+								
+				});
+	})
 });
