@@ -1,7 +1,7 @@
 import GameMap from "./GameMap";
 import Room from "../Room";
 import MapTile from "../MapTile";
-import { Area, Grid, Random } from "@Qazzian/pixel-game-engine";
+import { Area, Grid, Point, Random } from "@Qazzian/pixel-game-engine";
 
 enum DIRS {
 	"n",
@@ -67,23 +67,44 @@ export default class AdvancedHeroquestGenerator extends GameMap {
 		this.generateNextPiece(passage1);
 	}
 
-	generateNextPiece(previousPiece) {}
+	generateNextPiece(previousPiece: MapNode) {
+		// TODO
+		throw new Error("Method not implemented." + JSON.stringify(previousPiece));
+	}
 
-	trackMapSize(addedPiece) {}
+	trackMapSize(addedPiece: MapNode) {
+		// TODO
+		throw new Error("Method not implemented." + JSON.stringify(addedPiece));
+	}
 
-	getPlayerStart() {
-		return [0, 0];
+	getPlayerStart(): Point {
+		return { x: 0, y: 0 };
 	}
 }
 
+interface MapNodeOptions {
+	id: number;
+	type: string;
+	x: number;
+	y: number;
+	width: number;
+	height: number;
+	entrance: MapNode;
+}
+
 class MapNode extends Room {
-	constructor({ id, type, x, y, width, height, enterFrom }) {
+	public id: number;
+	public type: string;
+	public exits: MapNode[];
+
+	constructor({ id, type, x, y, width, height, entrance }: MapNodeOptions) {
 		super(x, y, width, height);
 		this.id = id;
 		this.type = type;
-		this.enterFrom = enterFrom;
-		this.exits = [];
+		this.exits = [entrance];
 	}
+
+	exists() {}
 }
 
 /**

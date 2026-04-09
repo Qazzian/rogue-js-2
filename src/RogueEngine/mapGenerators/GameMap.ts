@@ -1,5 +1,5 @@
 import MapTile from "../MapTile";
-import { Area, Grid, Position, Random } from "@Qazzian/pixel-game-engine";
+import { Area, Grid, Point, Position, Random } from "@Qazzian/pixel-game-engine";
 
 export interface MapOptions {
 	[key: string]: unknown;
@@ -27,7 +27,7 @@ export default abstract class GameMap {
 
 	abstract generateMap(seed: Random): void;
 
-	abstract getPlayerStart(): Position;
+	abstract getPlayerStart(): Point;
 
 	abstract getTilesInRange(range: Area): Grid<MapTile>;
 
