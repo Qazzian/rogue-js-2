@@ -46,13 +46,12 @@ describe("TutorialMap tests", () => {
 	});
 
 	describe("Utility functions", () => {
-				test("sortRoom", ()=>{
-								const map = new TutorialMap({maxWidth: 100, maxHeight:100})
-								const empty:Room[] = [];
-								expect(map.sortRooms(empty)).toMatchObject([])
-								const rooms1 = [{x1:10, y1:10}] as Room[];
-								expect(map.sortRooms(rooms1)).toMatchObject(rooms1);
-								
-				});
-	})
+		test("sortRoom", () => {
+			const map = new TutorialMap({ maxWidth: 100, maxHeight: 100 });
+			const empty: Room[] = [];
+			expect(map.sortRooms(empty)).toMatchObject([]);
+			const rooms1 = [{ x1: 10, y1: 10 }] as Room[];
+			expect(map.sortRooms(rooms1)).toMatchObject(rooms1);
+		});
+	});
 });
