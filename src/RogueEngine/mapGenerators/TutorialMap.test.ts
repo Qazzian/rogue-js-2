@@ -1,6 +1,5 @@
 import TutorialMap from "./TutorialMap";
 import Room from "../Room";
-// import rand from "random-seed";
 import { Area } from "@Qazzian/pixel-game-engine";
 
 describe("TutorialMap tests", () => {
@@ -52,6 +51,18 @@ describe("TutorialMap tests", () => {
 			expect(map.sortRooms(empty)).toMatchObject([]);
 			const rooms1 = [{ x1: 10, y1: 10 }] as Room[];
 			expect(map.sortRooms(rooms1)).toMatchObject(rooms1);
+			const rooms2 = [{x1: 10, y1: 10 },
+				{x1:1, y1: 10}] as Room[];
+			expect(map.sortRooms(rooms2)).toMatchObject([
+				{x1:1, y1: 10}, {x1:10, y1:10}
+			])
+
+			const rooms3 = [{x1: 10, y1: 10 },
+				{x1:10, y1: 1}] as Room[];
+			expect(map.sortRooms(rooms3)).toMatchObject([
+				{x1:10, y1: 1}, {x1:10, y1:10}
+			])
+
 		});
 	});
 });

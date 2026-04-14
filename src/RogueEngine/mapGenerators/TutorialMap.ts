@@ -169,9 +169,9 @@ export default class TutorialMap extends GameMap {
 	sortRooms(rooms: Room[]) {
 		return rooms.sort((a, b) => {
 			if (b.x1 === a.x1) {
-				return b.y1 - a.y1;
+				return a.y1 - b.y1;
 			}
-			return b.x1 - a.x1;
+			return a.x1 - b.x1;
 		});
 	}
 
