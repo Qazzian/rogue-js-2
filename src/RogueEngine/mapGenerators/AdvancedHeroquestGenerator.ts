@@ -16,13 +16,13 @@ interface Dimensions {
 	minY: number;
 	maxY: number;
 }
-
-function isNS(dir: DIRS) {
-	return dir % 2 === 0;
-}
-function isEW(dir: DIRS) {
-	return dir % 2 === 1;
-}
+//
+// function isNS(enterFrom: MapNode) {
+// 	return dir % 2 === 0;
+// }
+// function isEW(dir: DIRS) {
+// 	return dir % 2 === 1;
+// }
 
 export default class AdvancedHeroquestGenerator extends GameMap {
 	nextId: number;
@@ -58,13 +58,13 @@ export default class AdvancedHeroquestGenerator extends GameMap {
 	generateMap(randomGenerator: Random) {
 		this.random = randomGenerator;
 
-		const startDir = this.random.rand(4);
+		const startDir = this.random.intBetween(0, 4);
 
 		this.dungeonGraph = PASSAGE_TYPES.STAIRS_IN(this.newId(), startDir, 0, 0);
-		const passage1 = PASSAGE_TYPES.PASSAGE(this.newId(), startDir, 2);
-		this.dungeonGraph.exits.push(passage1);
-		console.info("Dungeon Graph: ", this.dungeonGraph);
-		this.generateNextPiece(passage1);
+		// const passage1 = PASSAGE_TYPES.PASSAGE(this.newId(), startDir, 2);
+		// this.dungeonGraph.exits.push(passage1);
+		// console.info("Dungeon Graph: ", this.dungeonGraph);
+		// this.generateNextPiece(passage1);
 	}
 
 	generateNextPiece(previousPiece: MapNode) {
@@ -89,7 +89,7 @@ interface MapNodeOptions {
 	y: number;
 	width: number;
 	height: number;
-	entrance: MapNode;
+	entrance?: MapNode;
 }
 
 class MapNode extends Room {
@@ -101,7 +101,10 @@ class MapNode extends Room {
 		super(x, y, width, height);
 		this.id = id;
 		this.type = type;
-		this.exits = [entrance];
+		this.exits = [];
+		if (entrance) {
+			this.exits.push(entrance);
+		}
 	}
 
 	exists() {}
@@ -111,7 +114,7 @@ class MapNode extends Room {
  *
  * @param {rand}random
  */
-function genPassageLength(random) {
+function genPassageLength(random: Random) {
 	const roll = random.intBetween(1, 12);
 	if (roll <= 2) return 1;
 	if (roll <= 8) return 2;
@@ -123,12 +126,12 @@ function genPassageLength(random) {
  * @param {rand} random
  * @param {char} entranceFrom - Direction the map is being drawn from one of N, S, E or W
  */
-function rollForPassageEnd(random, entranceFrom) {
+function rollForPassageEnd(random: Random, entranceFrom: MapNode) {
 	const roll = random.intBetween(2, 24);
 	if (roll <= 3) {
 	}
 
-	function rollTDirection(random) {
+	function rollTDirection(random: Random) {
 		const roll = random.intBetween(1, 3);
 		if (roll === 1) {
 			return "LEFT";
@@ -144,7 +147,7 @@ function rollForPassageEnd(random, entranceFrom) {
 
 const PASSAGE_TYPES = {
 	// Start of the level
-	STAIRS_IN: function (id, enterFrom, x, y) {
+	STAIRS_IN: function (id: number, direction: number, x: number, y: number) {
 		return new MapNode({
 			id,
 			type: "STAIRS_IN",
@@ -152,7 +155,6 @@ const PASSAGE_TYPES = {
 			y,
 			width: 2,
 			height: 2,
-			enterFrom,
 		});
 	},
 	// End of the level
@@ -160,13 +162,15 @@ const PASSAGE_TYPES = {
 	STAIRS_OUT: {},
 	END_PASSAGE: {},
 	// length here means the number of passage segments not total number of tiles. Each segment is 5 tiles.
-	PASSAGE: function (id, enterFrom, length, x, y) {
+	PASSAGE: function (id: number, entrance: MapNode, length: number, x: number, y: number, isNS: boolean) {
 		return new MapNode({
 			id,
 			type: "PASSAGE",
-			width: isNS(enterFrom) ? 2 : 5 * length,
-			height: isNS(enterFrom) ? 5 * length : 2,
-			enterFrom,
+			x,
+			y,
+			width: isNS ? 2 : 5 * length,
+			height: isNS ? 5 * length : 2,
+			entrance,
 		});
 	},
 	S_W_CORNER: {},
