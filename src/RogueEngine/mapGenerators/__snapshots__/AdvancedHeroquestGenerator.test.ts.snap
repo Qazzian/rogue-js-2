@@ -1,15 +1,32 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`AdvancedHeroquestGenerator Can generate a map 1`] = `
+exports[`AdvancedHeroquestGenerator Can generate a start map 1`] = `
 MapNode {
-  "exits": [],
-  "height": 2,
-  "id": 0,
-  "type": "STAIRS_IN",
-  "width": 2,
-  "x1": 0,
-  "x2": 2,
-  "y1": 0,
-  "y2": 2,
+  "exits": [
+    MapNode {
+      "entrance": [Circular],
+      "exits": [],
+      "mapSection": MapSection {
+        "height": 2,
+        "id": 1,
+        "type": "PASSAGE",
+        "width": 2,
+        "x1": 5,
+        "x2": 7,
+        "y1": 0,
+        "y2": 2,
+      },
+    },
+  ],
+  "mapSection": MapSection {
+    "height": 2,
+    "id": 0,
+    "type": "STAIRS_IN",
+    "width": 2,
+    "x1": 0,
+    "x2": 2,
+    "y1": 0,
+    "y2": 2,
+  },
 }
 `;
