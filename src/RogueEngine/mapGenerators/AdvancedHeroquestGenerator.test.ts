@@ -1,5 +1,5 @@
 import AdvancedHeroquestGenerator, { DIRS } from "./AdvancedHeroquestGenerator";
-import { Area, Random } from "@Qazzian/pixel-game-engine";
+import { Random } from "@Qazzian/pixel-game-engine";
 import Mock = jest.Mock;
 jest.mock("@Qazzian/pixel-game-engine", () => {
 	const originalModule = jest.requireActual("@Qazzian/pixel-game-engine");
@@ -15,13 +15,30 @@ jest.mock("@Qazzian/pixel-game-engine", () => {
 	};
 });
 
+const dirs = Object.keys(DIRS).filter((dir) => !isNaN(parseInt(dir)));
+
 describe("AdvancedHeroquestGenerator", () => {
-	test("Can generate a start map", () => {
-		const ahq = new AdvancedHeroquestGenerator();
-		const mockRng = new Random();
+	let ahq: AdvancedHeroquestGenerator;
+	let rng: Random;
+
+	beforeEach(() => {
+		jest.clearAllMocks();
+		ahq = new AdvancedHeroquestGenerator();
+		rng = new Random();
+	});
+
+	afterAll(() => {
+		jest.restoreAllMocks();
+	});
+
+	test("Class is defined", () => {
+		expect(AdvancedHeroquestGenerator).toBeDefined();
 		expect(ahq).toBeDefined();
-		(mockRng.intBetween as Mock).mockReturnValueOnce(DIRS.n);
-		ahq.generateMap(mockRng);
+	});
+
+	test.each(dirs)("Can generate a start map - %s", (dir) => {
+		(rng.intBetween as Mock).mockReturnValueOnce(dir);
+		ahq.generateMap(rng);
 		expect(ahq.dungeonGraph).toMatchSnapshot();
 	});
 });

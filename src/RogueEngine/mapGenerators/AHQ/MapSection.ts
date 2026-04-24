@@ -7,15 +7,18 @@ export interface MapSectionParams {
 	y: number;
 	width: number;
 	height: number;
+	meta?: object;
 }
 
 export class MapSection extends Room {
 	private id: number;
 	private type: string;
+	private meta: object;
 
 	constructor(props: MapSectionParams) {
 		super(props.x, props.y, props.width, props.height);
 		this.id = props.id;
 		this.type = props.type;
+		this.meta = props?.meta ?? {};
 	}
 }
