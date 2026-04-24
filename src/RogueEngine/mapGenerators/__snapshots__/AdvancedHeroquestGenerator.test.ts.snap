@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`AdvancedHeroquestGenerator Can generate a start map 1`] = `
+exports[`AdvancedHeroquestGenerator Can generate a start map - 0 1`] = `
 MapNode {
   "exits": [
     MapNode {
@@ -9,10 +9,11 @@ MapNode {
       "mapSection": MapSection {
         "height": 2,
         "id": 1,
+        "meta": {},
         "type": "PASSAGE",
         "width": 2,
-        "x1": 5,
-        "x2": 7,
+        "x1": 0,
+        "x2": 2,
         "y1": 0,
         "y2": 2,
       },
@@ -21,6 +22,114 @@ MapNode {
   "mapSection": MapSection {
     "height": 2,
     "id": 0,
+    "meta": {
+      "direction": "0",
+    },
+    "type": "STAIRS_IN",
+    "width": 2,
+    "x1": 0,
+    "x2": 2,
+    "y1": 0,
+    "y2": 2,
+  },
+}
+`;
+
+exports[`AdvancedHeroquestGenerator Can generate a start map - 1 1`] = `
+MapNode {
+  "exits": [
+    MapNode {
+      "entrance": [Circular],
+      "exits": [],
+      "mapSection": MapSection {
+        "height": 5,
+        "id": 1,
+        "meta": {},
+        "type": "PASSAGE",
+        "width": 5,
+        "x1": 0,
+        "x2": 5,
+        "y1": 0,
+        "y2": 5,
+      },
+    },
+  ],
+  "mapSection": MapSection {
+    "height": 2,
+    "id": 0,
+    "meta": {
+      "direction": "1",
+    },
+    "type": "STAIRS_IN",
+    "width": 2,
+    "x1": 0,
+    "x2": 2,
+    "y1": 0,
+    "y2": 2,
+  },
+}
+`;
+
+exports[`AdvancedHeroquestGenerator Can generate a start map - 2 1`] = `
+MapNode {
+  "exits": [
+    MapNode {
+      "entrance": [Circular],
+      "exits": [],
+      "mapSection": MapSection {
+        "height": 2,
+        "id": 1,
+        "meta": {},
+        "type": "PASSAGE",
+        "width": 2,
+        "x1": 0,
+        "x2": 2,
+        "y1": 0,
+        "y2": 2,
+      },
+    },
+  ],
+  "mapSection": MapSection {
+    "height": 2,
+    "id": 0,
+    "meta": {
+      "direction": "2",
+    },
+    "type": "STAIRS_IN",
+    "width": 2,
+    "x1": 0,
+    "x2": 2,
+    "y1": 0,
+    "y2": 2,
+  },
+}
+`;
+
+exports[`AdvancedHeroquestGenerator Can generate a start map - 3 1`] = `
+MapNode {
+  "exits": [
+    MapNode {
+      "entrance": [Circular],
+      "exits": [],
+      "mapSection": MapSection {
+        "height": 5,
+        "id": 1,
+        "meta": {},
+        "type": "PASSAGE",
+        "width": 5,
+        "x1": 0,
+        "x2": 5,
+        "y1": 0,
+        "y2": 5,
+      },
+    },
+  ],
+  "mapSection": MapSection {
+    "height": 2,
+    "id": 0,
+    "meta": {
+      "direction": "3",
+    },
     "type": "STAIRS_IN",
     "width": 2,
     "x1": 0,

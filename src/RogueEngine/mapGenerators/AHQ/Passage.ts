@@ -13,6 +13,9 @@ export const Passage = {
 			y,
 			width: 2,
 			height: 2,
+			meta: {
+				direction,
+			},
 		});
 	},
 	// End of the level
