@@ -1,7 +1,7 @@
 import GameMap from "./GameMap";
 import MapTile from "../MapTile";
 import { Area, Grid, Point, Random } from "@Qazzian/pixel-game-engine";
-import { genPassageLength, Passage } from "./AHQ/Passage";
+import { genPassageLength, Passage, rollPassageEnd } from "./AHQ/Passage";
 import { MapNode } from "./AHQ/MapNode";
 import { MapSection } from "./AHQ/MapSection";
 
@@ -54,6 +54,8 @@ export default class AdvancedHeroquestGenerator extends GameMap {
 		const passageLength = genPassageLength(this.random);
 		const passage1 = Passage.PASSAGE(this.newId(), start, passageLength, passageStart.x, passageStart.y, startDir);
 		start.exits.push(new MapNode({ section: passage1, entrance: start }));
+
+		const endType = rollPassageEnd(this.random);
 	}
 
 	generateNextPiece(previousPiece: MapNode) {
