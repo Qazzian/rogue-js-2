@@ -33,24 +33,48 @@ export const Passage = {
 			height: direction % 2 !== 0 ? 5 * length : 2,
 		});
 	},
-	S_W_CORNER: {},
-	S_E_CORNER: {},
-	N_W_CORNER: {},
-	N_E_CORNER: {},
-	N_W_S_JUNC: {},
-	W_S_E_JUNC: {},
-	S_E_N_JUNC: {},
-	E_N_W_JUNC: {},
-	CROSS_JUNC: {},
 };
 
-/**
- *
- * @param {rand}random
- */
 export function genPassageLength(random: Random) {
 	const roll = random.intBetween(1, 12);
 	if (roll <= 2) return 1;
 	if (roll <= 8) return 2;
 	return 3;
+}
+
+export enum END_TYPES {
+	STAIRS_IN,
+	T_JUNCTION,
+	DEAD_END,
+	RIGHT_TURN,
+	LEFT_TURN,
+	CROSS_JUNCTION,
+	T_LEFT,
+	T_RIGHT,
+	STAIRS_OUT,
+	STAIRS_DOWN,
+}
+
+export function rollPassageEnd(random: Random) {
+	const roll = random.intBetween(2, 24);
+	if (roll <= 4) return rollTJunction(random);
+	if (roll <= 8) return END_TYPES.DEAD_END;
+	if (roll <= 11) return END_TYPES.RIGHT_TURN;
+	if (roll <= 14) return rollTJunction(random);
+	if (roll <= 17) return END_TYPES.LEFT_TURN;
+	if (roll <= 22) return rollStairs(random);
+	if (roll <= 24) return END_TYPES.CROSS_JUNCTION;
+}
+
+export function rollTJunction(random: Random) {
+	const roll = random.intBetween(1, 12);
+	if (roll <= 6) return END_TYPES.T_JUNCTION;
+	if (roll <= 9) return END_TYPES.T_LEFT;
+	if (roll <= 12) return END_TYPES.T_RIGHT;
+}
+
+export function rollStairs(rand: Random, modifier = 0) {
+	const roll = rand.intBetween(2, 24) + modifier;
+	if (roll <= 15) return END_TYPES.STAIRS_OUT;
+	return END_TYPES.STAIRS_DOWN;
 }
