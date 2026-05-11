@@ -2,6 +2,7 @@ import * as React from "react";
 
 import Game from "../RogueEngine/Game";
 
+import Controles from "./Controles";
 import Debug from "./Debug";
 import { useEffect, useState } from "react";
 import { TimeStats } from "@Qazzian/pixel-game-engine";
@@ -29,6 +30,7 @@ const GameComponent = () => {
 
 	return (
 		<>
+			<Controles onKeyPress={onKeyPress} />
 			<Debug
 				setDebugFlag={(flagName, value) => {
 					game.setDebugFlag(flagName, value);
@@ -65,6 +67,11 @@ const GameComponent = () => {
 		} else {
 			setGameSpeed(gameStats.fps.toString());
 		}
+	}
+
+	function onKeyPress(key: string) {
+		console.log(`Key pressed ${key}`);
+		game.handleKeyEvent({key})
 	}
 };
 export default GameComponent;
