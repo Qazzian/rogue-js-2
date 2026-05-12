@@ -31,6 +31,10 @@ function getMapGenerator(name: string) {
 	}
 }
 
+export interface GameEvent {
+	key?: string;
+} 
+
 export default class Game extends EventEmitter {
 	private canvas: HTMLCanvasElement;
 	private mapWindow: { width: number; height: number };
@@ -129,7 +133,7 @@ export default class Game extends EventEmitter {
 		// this.spriteSheet = await loadSpriteSheet();
 	}
 
-	handleKeyEvent(event: KeyboardEvent) {
+	handleKeyEvent(event: KeyboardEvent | GameEvent) {
 		if (!this.isGameActive || !this.player) {
 			return;
 		}
