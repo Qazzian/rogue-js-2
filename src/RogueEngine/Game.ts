@@ -13,9 +13,9 @@ import Entity from "./Entity";
 import Theme from "./GameTheme";
 import EventEmitter from "events";
 
-import TutorialMap from "./mapGenerators/TutorialMap";
-import MapTile from "./MapTile";
 import GameMap from "./mapGenerators/GameMap";
+import MapTile from "./MapTile";
+import MapGeneratorFactory, { mapGeneratorList } from "./mapGenerators/MapGeneratorFactory";
 import { MapView } from "./MapView";
 import { EmptyMap } from "./mapGenerators/EmptyMap";
 import { DebugFlags } from "./tools/DebugOptions";
@@ -85,7 +85,7 @@ export default class Game extends EventEmitter {
 		try {
 			await this.preloadAssets();
 			this.updateHandler = onUpdateHandler;
-			this.map = new (getMapGenerator(this.generatorName))({ maxWidth: 100, maxHeight: 100 });
+			this.map = new (MapGeneratorFactory(this.generatorName))({ maxWidth: 100, maxHeight: 100 });
 			this.seed = await util.getASeed();
 			console.info("MAP SEED = ", this.seed);
 			this.random = new Random(this.seed);
@@ -278,14 +278,12 @@ export default class Game extends EventEmitter {
 	}
 
 	getMapGenerators() {
-		return [
-			{ name: "Empty", id: "empty" },
-			{ name: "Tutorial", id: "tutorial" },
-			{ name: "Advanced Heroquest", id: "AHQ" },
-		];
+		return mapGeneratorList;
 	}
-	// TODO
+
+	// Sets the value but does not take affect until a new map is requested
 	setMapGenerator(generatorName: string) {
 		this.generatorName = generatorName;
+		console.log(`set mapGenerator ${this.generatorName}`);
 	}
 }

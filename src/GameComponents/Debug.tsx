@@ -10,8 +10,6 @@ export interface DebugProps {
 export default function Debug(props: DebugProps) {
 	const debugFlags = props.getDebugFlags();
 
-	console.info("Debug flags", debugFlags);
-
 	return (
 		<section className="debug-actions">
 			<header>Debug options</header>
