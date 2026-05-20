@@ -254,11 +254,6 @@ export default class Game extends EventEmitter {
 		}
 	}
 
-	// TODO
-	setMapGenerator(generatorName: string) {
-		this.generatorName = generatorName;
-	}
-
 	printFov(fovMask: Point[]) {
 		this.gameEngine.drawPolygon(fovMask, COLOURS.RED);
 	}
@@ -280,5 +275,17 @@ export default class Game extends EventEmitter {
 
 	getDebugFlags(): DebugFlags {
 		return this.debugFlags;
+	}
+
+	getMapGenerators() {
+		return [
+			{ name: "Empty", id: "empty" },
+			{ name: "Tutorial", id: "tutorial" },
+			{ name: "Advanced Heroquest", id: "AHQ" },
+		];
+	}
+	// TODO
+	setMapGenerator(generatorName: string) {
+		this.generatorName = generatorName;
 	}
 }

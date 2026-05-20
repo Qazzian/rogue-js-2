@@ -1,10 +1,11 @@
 import * as React from "react";
+import { useEffect, useState } from "react";
 
 import Game from "../RogueEngine/Game";
 
 import Controls from "./Controls";
 import Debug from "./Debug";
-import { useEffect, useState } from "react";
+import MapGeneratorSelector from "./MapGeneratorSelector";
 import { TimeStats } from "@Qazzian/pixel-game-engine";
 
 import "./game.css";
@@ -50,6 +51,7 @@ const GameComponent = () => {
 				<button id="unpause" onClick={() => game.unpause()}>
 					Carry on
 				</button>
+				<MapGeneratorSelector generators={game.getMapGenerators()} onChange={(id) => game.setMapGenerator(id)} />
 
 				<span id="stats">FPS: {gameSpeed}</span>
 			</section>
