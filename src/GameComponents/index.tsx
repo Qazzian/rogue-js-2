@@ -7,6 +7,8 @@ import Debug from "./Debug";
 import { useEffect, useState } from "react";
 import { TimeStats } from "@Qazzian/pixel-game-engine";
 
+import "./game.css";
+
 const screen = document.getElementById("game_screen");
 const game = new Game(screen as HTMLCanvasElement);
 

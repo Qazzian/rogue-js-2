@@ -1,0 +1,7 @@
+
+@media (max-width: 1200px) { 
+	#game_screen {
+		width: 95%;
+		margin: 1rem auto;
+	}
+}
