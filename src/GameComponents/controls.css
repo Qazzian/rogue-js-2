@@ -1,0 +1,16 @@
+@media (max-width: 1024px) {
+
+	.Controller div {
+		display: flex;
+		justify-content: space-between;
+		width: calc(100% - 1rem);
+	}
+
+
+	.Controller button {
+		height: 5em;
+		width: 24%;
+
+	}
+
+}
