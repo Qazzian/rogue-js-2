@@ -33,7 +33,7 @@ function getMapGenerator(name: string) {
 
 export interface GameEvent {
 	key?: string;
-} 
+}
 
 export default class Game extends EventEmitter {
 	private canvas: HTMLCanvasElement;

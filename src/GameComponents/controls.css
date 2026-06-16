@@ -8,9 +8,10 @@
 
 
 	.Controller button {
-		height: 5em;
 		width: 24%;
-
+		font-size: 2rem;
+		padding: 1em;
+		touch-action: manipulation;
 	}
 
 }
