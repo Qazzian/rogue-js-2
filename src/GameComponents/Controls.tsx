@@ -20,12 +20,14 @@ export default function Controls(props: Readonly<ControllerProps>) {
 	const [repeatFirstClick, setRepeatFirstClick] = useState<boolean>(false);
 	useEffect(() => {
 		if (repeatedKey !== "" && repeatFirstClick) {
+			console.log(`Pressed: ${repeatedKey}`);
 			props.onKeyPress(repeatedKey);
 			setTimeout(() => {
 				setRepeatFirstClick(false);
 			}, 300);
 		} else if (repeatedKey !== "") {
 			const intervalId = setInterval(() => {
+				console.log(`Pressed: ${repeatedKey}`);
 				props.onKeyPress(repeatedKey);
 			}, 100);
 			setRepeatIntervalId(intervalId);
@@ -58,10 +60,8 @@ export default function Controls(props: Readonly<ControllerProps>) {
 		e.stopPropagation();
 		const targetElement = e.target as HTMLButtonElement;
 		const key = targetElement.dataset.key ?? "";
-		props.onKeyPress(key);
 		setRepeatFirstClick(true);
 		setRepeatedKey(key);
-		console.log(`Pressed: ${key}`);
 	}
 
 	function onRelease(e: React.PointerEvent) {
