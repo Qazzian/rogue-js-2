@@ -22,15 +22,6 @@ import { DebugFlags } from "./tools/DebugOptions";
 
 const { buildFov, buildGeometry } = fov;
 
-// Todo move to a factory module in ./mapGenerators
-function getMapGenerator(name: string) {
-	switch (name) {
-		default:
-		case "tutorial":
-			return TutorialMap;
-	}
-}
-
 export interface GameEvent {
 	key?: string;
 }
