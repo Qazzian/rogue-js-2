@@ -14,7 +14,6 @@ const DirKeys = [
 ];
 
 export default function Controls(props: Readonly<ControllerProps>) {
-
 	const [repeatedKey, setRepeatedKey] = useState("");
 	const [repeatIntervalId, setRepeatIntervalId] = useState<NodeJS.Timeout>();
 	const [repeatFirstClick, setRepeatFirstClick] = useState<boolean>(false);
