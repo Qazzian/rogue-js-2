@@ -1,6 +1,12 @@
 version: 2
+registries:
+  Qazzian:
+    type: npm-registry
+    url: https://gitlab.com/api/v4/projects/33965507/packages/npm/
+    token: ${{secrets.GITLAB_NPM_TOKEN}}
 updates:
   - package-ecosystem: 'npm'
+    registries: ['Qazzian']
     directory: '/'
     schedule:
       interval: weekly
