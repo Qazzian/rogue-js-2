@@ -27,9 +27,9 @@ export interface GameEvent {
 }
 
 export default class Game extends EventEmitter {
-	private canvas: HTMLCanvasElement;
+	private readonly canvas: HTMLCanvasElement;
 	private mapWindow: { width: number; height: number };
-	private gameEngine: PixelGameEngine;
+	private readonly gameEngine: PixelGameEngine;
 	private mainView: MapView;
 	private isGameActive: boolean;
 	private seed: string | undefined;
@@ -38,7 +38,7 @@ export default class Game extends EventEmitter {
 	private map: GameMap | undefined;
 	private player: Entity | undefined;
 	private entities: Entity[];
-	private fovCache: { playerPos: Point; fov: fov.Intersect[] | null };
+	private readonly fovCache: { playerPos: Point; fov: fov.Intersect[] | null };
 	private readonly debugFlags: DebugFlags;
 	previousViewArea: Area = new Area(0, 0, 0, 0);
 	private updateHandler: { (gameStats: TimeStats): void; (gameStats: TimeStats): void };

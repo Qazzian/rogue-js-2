@@ -36,7 +36,7 @@ export default class AdvancedHeroquestGenerator extends GameMap {
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	getTilesInRange(range: Area): Grid<MapTile> {
-		throw new Error("Method not implemented.");
+		return new Grid<MapTile>([]);
 	}
 
 	generateMap(randomGenerator: Random) {

@@ -16,6 +16,11 @@ const theme = {
 		empty: { char: undefined, dark: COLOURS.BLACK, light: COLOURS.BLACK }, // for showing out-of-bounds areas
 		ground: { char: undefined, dark: COLOURS.BLACK, light: COLOURS.BLACK },
 		wall: { char: undefined, dark: COLOURS.VERY_DARK_BLUE, light: COLOURS.DARK_BLUE },
+		stairs: { char: ">", dark: COLOURS.DARK_YELLOW, light: COLOURS.YELLOW },
+		STAIRS_IN: { char: ">", dark: COLOURS.DARK_GREY, light: COLOURS.YELLOW },
+		STAIRS_DOWN: { char: ">", dark: COLOURS.DARK_YELLOW, light: COLOURS.YELLOW },
+		STAIRS_OUT: { char: ">", dark: COLOURS.DARK_GREEN, light: COLOURS.GREEN },
+		DEAD_END: { char: undefined, dark: COLOURS.BLACK, light: COLOURS.DARK_GREY },
 	} as unknown as { [key: string]: EntityTheme },
 
 	getTile: (tileType: string) => {
