@@ -1,5 +1,5 @@
 import { MapNode } from "./MapNode";
-import { DIRS } from "../AdvancedHeroquestGenerator";
+import { DIRS } from "./AdvancedHeroquestGenerator";
 import { Random } from "@Qazzian/pixel-game-engine";
 import { MapSection } from "./MapSection";
 

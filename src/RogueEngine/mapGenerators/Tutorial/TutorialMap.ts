@@ -1,6 +1,6 @@
-import GameMap, { MapOptions } from "./GameMap";
-import Room from "../Room";
-import MapTile from "../MapTile";
+import GameMap, { MapOptions } from "../GameMap";
+import Room from "../../Room";
+import MapTile from "../../MapTile";
 import { Area, Grid, Random } from "@Qazzian/pixel-game-engine";
 
 export interface TutorialMapOptions extends MapOptions {

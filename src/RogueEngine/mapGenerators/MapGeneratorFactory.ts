@@ -1,6 +1,6 @@
-import AdvancedHeroquestGenerator from "./AdvancedHeroquestGenerator";
+import AdvancedHeroquestGenerator from "./AHQ/AdvancedHeroquestGenerator";
 import { EmptyMap } from "./EmptyMap";
-import TutorialMap from "./TutorialMap";
+import TutorialMap from "./Tutorial/TutorialMap";
 
 export const mapGeneratorList = [
 	{ name: "Empty", id: "empty" },

@@ -1,9 +1,9 @@
-import GameMap from "./GameMap";
-import MapTile from "../MapTile";
+import GameMap from "../GameMap";
+import MapTile from "../../MapTile";
 import { Area, Grid, Point, Random } from "@Qazzian/pixel-game-engine";
-import { genPassageLength, Passage, rollPassageEnd } from "./AHQ/Passage";
-import { MapNode } from "./AHQ/MapNode";
-import { MapSection } from "./AHQ/MapSection";
+import { genPassageLength, Passage, rollPassageEnd } from "./Passage";
+import { MapNode } from "./MapNode";
+import { MapSection } from "./MapSection";
 
 export enum DIRS {
 	"n",
