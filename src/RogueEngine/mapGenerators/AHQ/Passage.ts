@@ -53,6 +53,22 @@ export enum END_TYPES {
 	STAIRS_DOWN,
 }
 
+export function generateStairsIn(random: Random) {
+	const startDir = random.intBetween(0, 4);
+	const entrance: MapSection = Passage.STAIRS_IN(startDir, 0, 0);
+	const start = new MapNode({ section: entrance });
+	const passageStart = { x: 0, y: 0 };
+	if (startDir === DIRS.n) {
+		passageStart.x = entrance.x1;
+		passageStart.y = entrance.y1;
+	}
+
+	const passageLength = genPassageLength(random);
+	const passage1 = Passage.PASSAGE(start, passageLength, passageStart.x, passageStart.y, startDir);
+	start.exits.push(new MapNode({ section: passage1, entrance: start }));
+	return start;
+}
+
 export function rollPassageEnd(random: Random) {
 	const roll = random.intBetween(2, 24);
 	if (roll <= 4) return rollTJunction(random);

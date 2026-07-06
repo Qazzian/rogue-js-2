@@ -1,7 +1,7 @@
 import GameMap from "../GameMap";
 import MapTile from "../../MapTile";
 import { Area, Grid, Point, Random } from "@Qazzian/pixel-game-engine";
-import { genPassageLength, Passage, rollPassageEnd } from "./Passage";
+import { generateStairsIn, genPassageLength, Passage, rollPassageEnd } from "./Passage";
 import { MapNode } from "./MapNode";
 import { MapSection } from "./MapSection";
 
@@ -41,21 +41,7 @@ export default class AdvancedHeroquestGenerator extends GameMap {
 
 	generateMap(randomGenerator: Random) {
 		this.random = randomGenerator;
-
-		const startDir = this.random.intBetween(0, 4);
-		const entrance: MapSection = Passage.STAIRS_IN(this.newId(), startDir, 0, 0);
-		const start = (this.dungeonGraph = new MapNode({ section: entrance }));
-		const passageStart = { x: 0, y: 0 };
-		if (startDir === DIRS.n) {
-			passageStart.x = entrance.x1;
-			passageStart.y = entrance.y1;
-		}
-
-		const passageLength = genPassageLength(this.random);
-		const passage1 = Passage.PASSAGE(this.newId(), start, passageLength, passageStart.x, passageStart.y, startDir);
-		start.exits.push(new MapNode({ section: passage1, entrance: start }));
-
-		const endType = rollPassageEnd(this.random);
+		this.dungeonGraph = generateStairsIn(this.random);
 	}
 
 	generateNextPiece(previousPiece: MapNode) {
