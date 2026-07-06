@@ -5,9 +5,8 @@ import { MapSection } from "./MapSection";
 
 export const Passage = {
 	// Start of the level
-	STAIRS_IN: function (id: number, direction: DIRS, x: number, y: number) {
+	STAIRS_IN: function (direction: DIRS, x: number, y: number) {
 		return new MapSection({
-			id,
 			type: "STAIRS_IN",
 			x,
 			y,
@@ -23,9 +22,8 @@ export const Passage = {
 	STAIRS_OUT: {},
 	END_PASSAGE: {},
 	// length here means the number of passage segments not total number of tiles. Each segment is 5 tiles.
-	PASSAGE: function (id: number, entrance: MapNode, length: number, x: number, y: number, direction: DIRS) {
+	PASSAGE: function (entrance: MapNode, length: number, x: number, y: number, direction: DIRS) {
 		return new MapSection({
-			id,
 			type: "PASSAGE",
 			x: direction === DIRS.n ? x + 5 * length : x,
 			y: direction === DIRS.n ? y : y,

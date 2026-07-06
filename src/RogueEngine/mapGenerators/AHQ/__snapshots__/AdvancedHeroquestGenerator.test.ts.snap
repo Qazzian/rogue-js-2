@@ -8,7 +8,6 @@ MapNode {
       "exits": [],
       "mapSection": MapSection {
         "height": 2,
-        "id": 1,
         "meta": {},
         "type": "PASSAGE",
         "width": 2,
@@ -21,7 +20,6 @@ MapNode {
   ],
   "mapSection": MapSection {
     "height": 2,
-    "id": 0,
     "meta": {
       "direction": "0",
     },
@@ -43,7 +41,6 @@ MapNode {
       "exits": [],
       "mapSection": MapSection {
         "height": 5,
-        "id": 1,
         "meta": {},
         "type": "PASSAGE",
         "width": 5,
@@ -56,7 +53,6 @@ MapNode {
   ],
   "mapSection": MapSection {
     "height": 2,
-    "id": 0,
     "meta": {
       "direction": "1",
     },
@@ -78,7 +74,6 @@ MapNode {
       "exits": [],
       "mapSection": MapSection {
         "height": 2,
-        "id": 1,
         "meta": {},
         "type": "PASSAGE",
         "width": 2,
@@ -91,7 +86,6 @@ MapNode {
   ],
   "mapSection": MapSection {
     "height": 2,
-    "id": 0,
     "meta": {
       "direction": "2",
     },
@@ -113,7 +107,6 @@ MapNode {
       "exits": [],
       "mapSection": MapSection {
         "height": 5,
-        "id": 1,
         "meta": {},
         "type": "PASSAGE",
         "width": 5,
@@ -126,7 +119,6 @@ MapNode {
   ],
   "mapSection": MapSection {
     "height": 2,
-    "id": 0,
     "meta": {
       "direction": "3",
     },
@@ -148,7 +140,6 @@ MapNode {
       "exits": [],
       "mapSection": MapSection {
         "height": 2,
-        "id": 1,
         "meta": {},
         "type": "PASSAGE",
         "width": 2,
@@ -161,7 +152,6 @@ MapNode {
   ],
   "mapSection": MapSection {
     "height": 2,
-    "id": 0,
     "meta": {
       "direction": 0,
     },

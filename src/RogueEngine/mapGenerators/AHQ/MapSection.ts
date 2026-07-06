@@ -1,7 +1,6 @@
 import Room from "../../Room";
 
 export interface MapSectionParams {
-	id: number;
 	type: string;
 	x: number;
 	y: number;
@@ -11,13 +10,11 @@ export interface MapSectionParams {
 }
 
 export class MapSection extends Room {
-	private id: number;
 	private type: string;
 	private meta: object;
 
 	constructor(props: MapSectionParams) {
 		super(props.x, props.y, props.width, props.height);
-		this.id = props.id;
 		this.type = props.type;
 		this.meta = props?.meta ?? {};
 	}
