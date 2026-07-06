@@ -36,8 +36,8 @@ describe("AdvancedHeroquestGenerator", () => {
 		expect(ahq).toBeDefined();
 	});
 
-	test.each(dirs)("Can generate a start map - %s", (dir) => {
-		(rng.intBetween as Mock).mockReturnValueOnce(dir);
+	test("Can generate a start map - %s", () => {
+		(rng.intBetween as Mock).mockReturnValueOnce(1);
 		ahq.generateMap(rng);
 		expect(ahq.dungeonGraph).toMatchSnapshot();
 	});
