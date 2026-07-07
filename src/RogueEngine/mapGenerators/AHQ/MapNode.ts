@@ -1,4 +1,5 @@
 import { MapSection } from "./MapSection";
+import error from "eslint-plugin-react/lib/util/error";
 
 export interface MapNodeOptions {
 	section: MapSection;
@@ -7,7 +8,7 @@ export interface MapNodeOptions {
 }
 
 export class MapNode {
-	private mapSection: MapSection;
+	public mapSection: MapSection;
 	public entrance: MapNode | undefined;
 	public exits: MapNode[];
 
@@ -18,4 +19,9 @@ export class MapNode {
 			this.entrance = entrance;
 		}
 	}
+}
+
+export function traverseMapGraph(startNode: MapNode, callback: (node: MapNode) => void) {
+	callback(startNode);
+	return startNode.exits.forEach((exit) => traverseMapGraph(exit, callback));
 }

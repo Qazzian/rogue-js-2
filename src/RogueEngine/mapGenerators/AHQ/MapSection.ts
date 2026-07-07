@@ -10,8 +10,8 @@ export interface MapSectionParams {
 }
 
 export class MapSection extends Room {
-	private type: string;
-	private meta: object;
+	public type: string;
+	public meta: object;
 
 	constructor(props: MapSectionParams) {
 		super(props.x, props.y, props.width, props.height);
