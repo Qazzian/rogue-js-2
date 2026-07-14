@@ -6,20 +6,20 @@ import { MapSection } from "./MapSection";
 export enum PASSAGE_TYPES {
 	STAIRS_IN,
 	PASSAGE,
-	T_JUNCTION,
 	DEAD_END,
-	RIGHT_TURN,
-	LEFT_TURN,
-	CROSS_JUNCTION,
-	T_LEFT,
-	T_RIGHT,
+	// T_JUNCTION,
+	// RIGHT_TURN,
+	// LEFT_TURN,
+	// CROSS_JUNCTION,
+	// T_LEFT,
+	// T_RIGHT,
 	// STAIRS_OUT,
 	// STAIRS_DOWN,
 }
 
 export interface PassageOptions {
 	entrance?: MapNode; // optional for the starting piece, otherwise expected
-	length: number;
+	length?: number;
 	x: number;
 	y: number;
 	direction: DIRS;
@@ -41,12 +41,24 @@ export const Passage: {
 			},
 		});
 	},
-	// End of the level
+	DEAD_END: ({ x, y, direction }) => {
+		return new MapSection({
+			type: "DEAD_END",
+			x,
+			y,
+			width: 2,
+			height: 2,
+			meta: {
+				direction,
+			},
+		});
+	},
 	// STAIRS_DOWN: (o) => {},
 	// STAIRS_OUT: (o) => {},
 	// END_PASSAGE: {},
 	// length here means the number of passage segments not total number of tiles. Each segment is 5 tiles.
 	PASSAGE: function ({ length, x, y, direction }) {
+		length ||= 5;
 		return new MapSection({
 			type: "PASSAGE",
 			x: direction === DIRS.n ? x + 5 * length : x,
@@ -75,36 +87,42 @@ export function generateStairsIn(random: Random) {
 	}
 
 	const passageLength = genPassageLength(random);
-	const passage1 = Passage.PASSAGE(start, passageLength, passageStart.x, passageStart.y, startDir);
+	const passage1 = Passage.PASSAGE({
+		entrance: start,
+		length: passageLength,
+		x: passageStart.x,
+		y: passageStart.y,
+		direction: startDir,
+	});
 	const passageNode = new MapNode({ section: passage1, entrance: start });
 	start.exits.push(passageNode);
-	const passageEndType: PASSAGE_TYPES = rollPassageEnd(random);
-	const passageEnd = Passage[passageEndType](startDir, passage1.x2, passage1.y2);
-	passageNode.exits.push(new MapNode({ section: passageEnd, entrance: passage1 }));
+	const passageEndType = rollPassageEnd(random);
+	const passageEnd = Passage[passageEndType]({ direction: startDir, x: passage1.x2, y: passage1.y2 });
+	passageNode.exits.push(new MapNode({ section: passageEnd, entrance: passageNode }));
 	return start;
 }
 
-export function rollPassageEnd(random: Random): PASSAGE_TYPES {
+export function rollPassageEnd(random: Random): keyof typeof Passage {
 	const roll = random.intBetween(2, 24);
-	if (roll <= 4) return rollTJunction(random);
-	if (roll <= 8) return PASSAGE_TYPES.DEAD_END;
-	if (roll <= 11) return PASSAGE_TYPES.RIGHT_TURN;
-	if (roll <= 14) return rollTJunction(random);
-	if (roll <= 17) return PASSAGE_TYPES.LEFT_TURN;
-	if (roll <= 22) return rollStairs(random);
-	if (roll <= 24) return PASSAGE_TYPES.CROSS_JUNCTION;
-	return PASSAGE_TYPES.DEAD_END;
+	// if (roll <= 4) return rollTJunction(random);
+	if (roll <= 8) return "DEAD_END";
+	// if (roll <= 11) return PASSAGE_TYPES.RIGHT_TURN;
+	// if (roll <= 14) return rollTJunction(random);
+	// if (roll <= 17) return PASSAGE_TYPES.LEFT_TURN;
+	// if (roll <= 22) return rollStairs(random);
+	// if (roll <= 24) return PASSAGE_TYPES.CROSS_JUNCTION;
+	return "DEAD_END";
 }
 
-export function rollTJunction(random: Random): PASSAGE_TYPES {
-	const roll = random.intBetween(1, 12);
-	if (roll <= 6) return PASSAGE_TYPES.T_JUNCTION;
-	if (roll <= 9) return PASSAGE_TYPES.T_LEFT;
-	return PASSAGE_TYPES.T_RIGHT;
-}
+// export function rollTJunction(random: Random): PASSAGE_TYPES {
+// 	const roll = random.intBetween(1, 12);
+// 	// if (roll <= 6) return PASSAGE_TYPES.T_JUNCTION;
+// 	// if (roll <= 9) return PASSAGE_TYPES.T_LEFT;
+// 	// return PASSAGE_TYPES.T_RIGHT;
+// }
 
-export function rollStairs(rand: Random, modifier = 0): PASSAGE_TYPES {
-	const roll = rand.intBetween(2, 24) + modifier;
-	// if (roll <= 15) return PASSAGE_TYPES.STAIRS_OUT;
-	// return PASSAGE_TYPES.STAIRS_DOWN;
-}
+// export function rollStairs(rand: Random, modifier = 0): PASSAGE_TYPES {
+// 	const roll = rand.intBetween(2, 24) + modifier;
+// 	// if (roll <= 15) return PASSAGE_TYPES.STAIRS_OUT;
+// 	// return PASSAGE_TYPES.STAIRS_DOWN;
+// }
