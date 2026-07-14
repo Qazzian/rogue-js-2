@@ -3,9 +3,33 @@ import { DIRS } from "./AdvancedHeroquestGenerator";
 import { Random } from "@Qazzian/pixel-game-engine";
 import { MapSection } from "./MapSection";
 
-export const Passage = {
+export enum PASSAGE_TYPES {
+	STAIRS_IN,
+	PASSAGE,
+	T_JUNCTION,
+	DEAD_END,
+	RIGHT_TURN,
+	LEFT_TURN,
+	CROSS_JUNCTION,
+	T_LEFT,
+	T_RIGHT,
+	// STAIRS_OUT,
+	// STAIRS_DOWN,
+}
+
+export interface PassageOptions {
+	entrance?: MapNode; // optional for the starting piece, otherwise expected
+	length: number;
+	x: number;
+	y: number;
+	direction: DIRS;
+}
+
+export const Passage: {
+	[Property in keyof typeof PASSAGE_TYPES]: (o: PassageOptions) => MapSection;
+} = {
 	// Start of the level
-	STAIRS_IN: function (direction: DIRS, x: number, y: number) {
+	STAIRS_IN: function ({ direction, x, y }) {
 		return new MapSection({
 			type: "STAIRS_IN",
 			x,
@@ -18,11 +42,11 @@ export const Passage = {
 		});
 	},
 	// End of the level
-	STAIRS_DOWN: {},
-	STAIRS_OUT: {},
-	END_PASSAGE: {},
+	// STAIRS_DOWN: (o) => {},
+	// STAIRS_OUT: (o) => {},
+	// END_PASSAGE: {},
 	// length here means the number of passage segments not total number of tiles. Each segment is 5 tiles.
-	PASSAGE: function (entrance: MapNode, length: number, x: number, y: number, direction: DIRS) {
+	PASSAGE: function ({ length, x, y, direction }) {
 		return new MapSection({
 			type: "PASSAGE",
 			x: direction === DIRS.n ? x + 5 * length : x,
@@ -40,22 +64,9 @@ export function genPassageLength(random: Random) {
 	return 3;
 }
 
-export enum END_TYPES {
-	STAIRS_IN,
-	T_JUNCTION,
-	DEAD_END,
-	RIGHT_TURN,
-	LEFT_TURN,
-	CROSS_JUNCTION,
-	T_LEFT,
-	T_RIGHT,
-	STAIRS_OUT,
-	STAIRS_DOWN,
-}
-
 export function generateStairsIn(random: Random) {
 	const startDir = random.intBetween(0, 4);
-	const entrance: MapSection = Passage.STAIRS_IN(startDir, 0, 0);
+	const entrance: MapSection = Passage.STAIRS_IN({ direction: startDir, x: 0, y: 0, length: 2 });
 	const start = new MapNode({ section: entrance });
 	const passageStart = { x: 0, y: 0 };
 	if (startDir === DIRS.n) {
@@ -65,30 +76,35 @@ export function generateStairsIn(random: Random) {
 
 	const passageLength = genPassageLength(random);
 	const passage1 = Passage.PASSAGE(start, passageLength, passageStart.x, passageStart.y, startDir);
-	start.exits.push(new MapNode({ section: passage1, entrance: start }));
+	const passageNode = new MapNode({ section: passage1, entrance: start });
+	start.exits.push(passageNode);
+	const passageEndType: PASSAGE_TYPES = rollPassageEnd(random);
+	const passageEnd = Passage[passageEndType](startDir, passage1.x2, passage1.y2);
+	passageNode.exits.push(new MapNode({ section: passageEnd, entrance: passage1 }));
 	return start;
 }
 
-export function rollPassageEnd(random: Random) {
+export function rollPassageEnd(random: Random): PASSAGE_TYPES {
 	const roll = random.intBetween(2, 24);
 	if (roll <= 4) return rollTJunction(random);
-	if (roll <= 8) return END_TYPES.DEAD_END;
-	if (roll <= 11) return END_TYPES.RIGHT_TURN;
+	if (roll <= 8) return PASSAGE_TYPES.DEAD_END;
+	if (roll <= 11) return PASSAGE_TYPES.RIGHT_TURN;
 	if (roll <= 14) return rollTJunction(random);
-	if (roll <= 17) return END_TYPES.LEFT_TURN;
+	if (roll <= 17) return PASSAGE_TYPES.LEFT_TURN;
 	if (roll <= 22) return rollStairs(random);
-	if (roll <= 24) return END_TYPES.CROSS_JUNCTION;
+	if (roll <= 24) return PASSAGE_TYPES.CROSS_JUNCTION;
+	return PASSAGE_TYPES.DEAD_END;
 }
 
-export function rollTJunction(random: Random) {
+export function rollTJunction(random: Random): PASSAGE_TYPES {
 	const roll = random.intBetween(1, 12);
-	if (roll <= 6) return END_TYPES.T_JUNCTION;
-	if (roll <= 9) return END_TYPES.T_LEFT;
-	if (roll <= 12) return END_TYPES.T_RIGHT;
+	if (roll <= 6) return PASSAGE_TYPES.T_JUNCTION;
+	if (roll <= 9) return PASSAGE_TYPES.T_LEFT;
+	return PASSAGE_TYPES.T_RIGHT;
 }
 
-export function rollStairs(rand: Random, modifier = 0) {
+export function rollStairs(rand: Random, modifier = 0): PASSAGE_TYPES {
 	const roll = rand.intBetween(2, 24) + modifier;
-	if (roll <= 15) return END_TYPES.STAIRS_OUT;
-	return END_TYPES.STAIRS_DOWN;
+	// if (roll <= 15) return PASSAGE_TYPES.STAIRS_OUT;
+	// return PASSAGE_TYPES.STAIRS_DOWN;
 }
