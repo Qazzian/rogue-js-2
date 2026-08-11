@@ -1,4 +1,5 @@
 import Entity from "./Entity";
+import { Area, Grid } from "@Qazzian/pixel-game-engine";
 
 export default class MapTile {
 	tileType: string;
@@ -30,4 +31,15 @@ export default class MapTile {
 	canSeeThrough() {
 		return this.allowsSight;
 	}
+}
+
+export function generateEmptyArea(width: number, height: number): MapTile[][] {
+	const tiles: MapTile[][] = [];
+	for (let x = 0; x < width; x++) {
+		tiles[x] = [];
+		for (let y = 0; y < height; y++) {
+			tiles[x][y] = new MapTile("ground", true, true);
+		}
+	}
+	return tiles;
 }
