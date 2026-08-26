@@ -1,0 +1,196 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[` 1`] = `
+[
+  [
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+  ],
+  [
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+  ],
+  [
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+  ],
+  [
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+  ],
+  [
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+    MapTile {
+      "allowsMovement": true,
+      "allowsSight": true,
+      "entities": [],
+      "tileType": "ground",
+    },
+  ],
+]
+`;

@@ -1,5 +1,4 @@
 import Entity from "./Entity";
-import { Area, Grid } from "@Qazzian/pixel-game-engine";
 
 export default class MapTile {
 	tileType: string;
@@ -12,7 +11,7 @@ export default class MapTile {
 	 * @param {String} tileType - THe type of tile represented (e.g. wall, floor, water, door)
 	 * @param {boolean} [allowsMovement=true] - Does the tile stop allow entities to move over it?
 	 * @param {boolean} [allowsSight]  - Does the tile allow LOS over it.
-	 * 		By default this is the same as allowsMovement
+	 * 		By default, this is the same as allowsMovement
 	 */
 	constructor(tileType: string, allowsMovement: boolean = true, allowsSight?: boolean) {
 		this.tileType = tileType;
