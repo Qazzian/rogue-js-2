@@ -1,4 +1,4 @@
-import { Position } from "@Qazzian/pixel-game-engine";
+import { Area, Position } from "@Qazzian/pixel-game-engine";
 
 export default class Room {
 	x1: number;
@@ -23,7 +23,7 @@ export default class Room {
 		return new Position(xc, yc);
 	}
 
-	hasIntersect(other: Room): boolean {
+	hasIntersect(other: Area | Room): boolean {
 		return this.x1 <= other.x2 && this.x2 >= other.x1 && this.y1 <= other.y2 && this.y2 >= other.y1;
 	}
 }

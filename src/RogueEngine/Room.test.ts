@@ -1,4 +1,5 @@
 import Room from "./Room";
+import { Area } from "@Qazzian/pixel-game-engine";
 
 describe("Room Tests", () => {
 	test("Create Rooms", () => {
@@ -17,5 +18,11 @@ describe("Room Tests", () => {
 		expect(room1.hasIntersect(new Room(21, 10, 4, 4))).toBe(false);
 		expect(room1.hasIntersect(new Room(10, 5, 4, 4))).toBe(false);
 		expect(room1.hasIntersect(new Room(10, 21, 4, 4))).toBe(false);
+	});
+
+	test("Area intersection", () => {
+		const room1 = new Room(10, 10, 10, 10);
+		const area = new Area(10, 10, 10, 10);
+		expect(room1.hasIntersect(area)).toBe(true);
 	});
 });
