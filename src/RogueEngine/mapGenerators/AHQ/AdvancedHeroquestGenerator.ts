@@ -4,6 +4,7 @@ import { Area, Grid, Point, Random } from "@Qazzian/pixel-game-engine";
 import { generateStairsIn, genPassageLength, Passage, rollPassageEnd } from "./Passage";
 import { MapNode } from "./MapNode";
 import { MapSection } from "./MapSection";
+import { Render } from "./Renderer";
 
 export enum DIRS {
 	"n",
@@ -34,9 +35,9 @@ export default class AdvancedHeroquestGenerator extends GameMap {
 		return id;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	getTilesInRange(range: Area): Grid<MapTile> {
-		return new Grid<MapTile>([]);
+		const mapTiles = Render(this.dungeonGraph, range);
+		return new Grid(mapTiles);
 	}
 
 	generateMap(randomGenerator: Random) {
