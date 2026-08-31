@@ -42,7 +42,11 @@ export default abstract class GameMap {
 	}
 
 	canMoveTo(x: number, y: number) {
-		return this.getTile(x, y).canMoveTo();
+		try {
+			return this.getTile(x, y).canMoveTo();
+		} catch (e) {
+			return false;
+		}
 	}
 
 	canSeeThrough(x: number, y: number) {

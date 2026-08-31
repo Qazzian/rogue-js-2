@@ -1,10 +1,10 @@
 import GameMap from "../GameMap";
-import MapTile from "../../MapTile";
+import MapTile, { generateEmptyArea } from "../../MapTile";
 import { Area, Grid, Point, Random } from "@Qazzian/pixel-game-engine";
-import { generateStairsIn, genPassageLength, Passage, rollPassageEnd } from "./Passage";
-import { MapNode } from "./MapNode";
-import { MapSection } from "./MapSection";
+import { generateStairsIn } from "./Passage";
+import { MapNode, traverseMapGraph } from "./MapNode";
 import { Render } from "./Renderer";
+import { MapSection, MapSectionParams } from "./MapSection";
 
 export enum DIRS {
 	"n",
@@ -35,14 +35,48 @@ export default class AdvancedHeroquestGenerator extends GameMap {
 		return id;
 	}
 
-	getTilesInRange(range: Area): Grid<MapTile> {
-		const mapTiles = Render(this.dungeonGraph, range);
-		return new Grid(mapTiles);
-	}
-
 	generateMap(randomGenerator: Random) {
 		this.random = randomGenerator;
 		this.dungeonGraph = generateStairsIn(this.random);
+		// TODO the dimensions need to grow with the dungeonGraph
+		traverseMapGraph(this.dungeonGraph, (node) => this.extendDimensions(node));
+		this._tiles = Render(this.dungeonGraph, this.dimensions);
+	}
+
+	extendDimensions(mapNode: MapNode) {
+		const mapSection = mapNode.mapSection;
+		if (mapSection.x1 < this.dimensions.x1) {
+			this.dimensions.x1 = mapSection.x1;
+		}
+		if (mapSection.x2 > this.dimensions.x2) {
+			this.dimensions.x2 = mapSection.x2;
+		}
+		if (mapSection.y1 < this.dimensions.y1) {
+			this.dimensions.y1 = mapSection.y1;
+		}
+		if (mapSection.y2 > this.dimensions.y2) {
+			this.dimensions.y2 = mapSection.y2;
+		}
+	}
+
+	getTilesInRange(range: Area): Grid<MapTile> {
+		const tiles: MapTile[][] = generateEmptyArea(range.width, range.height);
+		if (!this._tiles) {
+			return new Grid(tiles);
+		}
+		for (let x = range.x1; x < range.x2; x++) {
+			for (let y = range.y1; y < range.y2; y++) {
+				tiles[x - range.x1][y - range.y1] = this.getTile(x, y);
+			}
+		}
+		return new Grid(tiles);
+	}
+
+	getTile(x: number, y: number): MapTile {
+		if (this._tiles[x] && this._tiles[x][y]) {
+			return this._tiles[x][y];
+		}
+		return new MapTile("ground", true);
 	}
 
 	generateNextPiece(previousPiece: MapNode) {
