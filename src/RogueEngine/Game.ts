@@ -128,19 +128,28 @@ export default class Game extends EventEmitter {
 		if (!this.isGameActive || !this.player) {
 			return;
 		}
+		let beenHandled = false;
 		switch (event.key) {
 			case "ArrowUp":
 				this.movePlayer(0, -1);
+				beenHandled = true;
 				break;
 			case "ArrowDown":
 				this.movePlayer(0, +1);
+				beenHandled = true;
 				break;
 			case "ArrowLeft":
 				this.movePlayer(-1, 0);
+				beenHandled = true;
 				break;
 			case "ArrowRight":
 				this.movePlayer(+1, 0);
+				beenHandled = true;
 				break;
+		}
+		if (beenHandled && event instanceof KeyboardEvent) {
+			event.preventDefault();
+			event.stopPropagation();
 		}
 	}
 
