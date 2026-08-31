@@ -13,9 +13,10 @@ const theme = {
 	},
 
 	tiles: {
-		empty: { char: undefined, dark: COLOURS.BLACK, light: COLOURS.BLACK }, // for showing out-of-bounds areas
-		ground: { char: undefined, dark: COLOURS.BLACK, light: COLOURS.BLACK },
-		wall: { char: undefined, dark: COLOURS.VERY_DARK_BLUE, light: COLOURS.DARK_BLUE },
+		empty: { char: "_", dark: COLOURS.BLACK, light: COLOURS.BLACK }, // for showing out-of-bounds areas
+		floor: { char: "_", dark: COLOURS.BLACK, light: COLOURS.BLACK }, // for showing out-of-bounds areas
+		ground: { char: "░", dark: COLOURS.BLACK, light: COLOURS.BLACK },
+		wall: { char: "▓", dark: COLOURS.VERY_DARK_BLUE, light: COLOURS.DARK_BLUE },
 		stairs: { char: ">", dark: COLOURS.DARK_YELLOW, light: COLOURS.YELLOW },
 		STAIRS_IN: { char: ">", dark: COLOURS.DARK_GREY, light: COLOURS.YELLOW },
 		STAIRS_DOWN: { char: ">", dark: COLOURS.DARK_YELLOW, light: COLOURS.YELLOW },

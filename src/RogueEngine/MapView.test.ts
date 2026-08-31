@@ -51,7 +51,7 @@ describe("MapView", () => {
 		expect(testMap.getTilesInRange).toHaveBeenCalledTimes(1);
 		expect(testMap.getTilesInRange).toHaveBeenCalledWith(new Area(0, 0, 10, 10));
 		expect(mockDisplay.clear).toHaveBeenCalledTimes(1);
-		expect(mockDisplay.draw).toHaveBeenCalledWith(1, 1, COLORS.DARK_BLUE);
+		expect(mockDisplay.drawCharacter).toHaveBeenCalledWith(1, 1, "▓", COLORS.DARK_BLUE);
 	});
 
 	test("Move the focus point", () => {
@@ -67,6 +67,6 @@ describe("MapView", () => {
 		expect(testMap.getTilesInRange).toHaveBeenNthCalledWith(1, new Area(0, 0, 10, 10));
 		expect(testMap.getTilesInRange).toHaveBeenNthCalledWith(2, new Area(1, 1, 10, 10));
 		expect(mockDisplay.clear).toHaveBeenCalledTimes(1);
-		expect(mockDisplay.draw).toHaveBeenCalledWith(0, 0, COLORS.DARK_BLUE);
+		expect(mockDisplay.drawCharacter).toHaveBeenCalledWith(0, 0, "▓", COLORS.DARK_BLUE);
 	});
 });
