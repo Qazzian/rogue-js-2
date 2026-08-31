@@ -3,7 +3,7 @@
 	.Controller div {
 		display: flex;
 		justify-content: space-between;
-		width: calc(100% - 1rem);
+		width:100%;
 	}
 
 
