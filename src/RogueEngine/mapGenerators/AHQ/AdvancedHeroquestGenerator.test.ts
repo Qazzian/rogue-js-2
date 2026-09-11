@@ -1,6 +1,7 @@
 import AdvancedHeroquestGenerator, { DIRS } from "./AdvancedHeroquestGenerator";
 import { Area, Random } from "@Qazzian/pixel-game-engine";
 import Mock = jest.Mock;
+import PrintMap from "../../tools/PrintMap";
 jest.mock("@Qazzian/pixel-game-engine", () => {
 	const originalModule = jest.requireActual("@Qazzian/pixel-game-engine");
 	return {
@@ -46,6 +47,9 @@ describe("AdvancedHeroquestGenerator", () => {
 		(rng.intBetween as Mock).mockReturnValueOnce(0);
 		ahq.generateMap(rng);
 		expect(ahq.dungeonGraph).toMatchSnapshot();
-		expect(ahq.getTilesInRange(new Area(-5, -5, 10, 10))).toMatchSnapshot();
+		const tiles = ahq.getTilesInRange(new Area(-5, -5, 10, 10));
+		const printedMap = PrintMap(tiles.tiles);
+		console.log(printedMap);
+		expect(printedMap).toMatchSnapshot();
 	});
 });

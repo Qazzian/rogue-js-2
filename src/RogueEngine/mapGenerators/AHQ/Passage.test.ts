@@ -33,7 +33,6 @@ describe("AHQ Passage", () => {
 	test("Start passage should have stairs, corridor and an end piece", () => {
 		(rng.intBetween as Mock).mockReturnValueOnce(1);
 		const startNode = generateStairsIn(rng);
-		console.log("RNG call count:", (rng.intBetween as Mock).mock.calls.length);
 		expect(startNode.mapSection.type).toEqual("STAIRS_IN");
 		expect(startNode.exits).toHaveLength(1);
 		const startPassage = startNode.exits[0];
@@ -41,6 +40,5 @@ describe("AHQ Passage", () => {
 		expect(startPassage.exits).toHaveLength(1);
 		const passageEnd = startPassage.exits[0];
 		expect(passageEnd.mapSection.type).toEqual("DEAD_END");
-
 	});
 });

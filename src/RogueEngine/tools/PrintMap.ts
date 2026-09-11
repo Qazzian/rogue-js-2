@@ -2,7 +2,7 @@ import MapTile from "../MapTile";
 import theme from "../GameTheme";
 
 export default function PrintMap(map: MapTile[][]) {
-	let output = "╔" + "═".repeat(map.length) + "╗\n";
+	let output = "╔" + "═".repeat(map.length - 2) + "╗\n";
 	for (let x = 0; x < map.length; x++) {
 		output += "║";
 		for (let y = 0; y < map[x].length; y++) {
@@ -11,6 +11,6 @@ export default function PrintMap(map: MapTile[][]) {
 		}
 		output += "║\n";
 	}
-	output += "╚" + "═".repeat(map.length) + "╝";
+	output += "╚" + "═".repeat(map.length - 2) + "╝";
 	return output;
 }

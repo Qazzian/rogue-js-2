@@ -17,8 +17,9 @@ describe("Render", () => {
 		const view = Render(node, new Area(0, 0, VIEW_WIDTH, VIEW_HEIGHT));
 		expect(view.length).toBe(VIEW_WIDTH);
 		expect(view[0].length).toBe(VIEW_HEIGHT);
-		console.log(PrintMap(view));
-		// expect(view).toMatchSnapshot();
+		const printedMap = PrintMap(view);
+		console.log(printedMap);
+		expect(printedMap).toMatchSnapshot();
 	});
 
 	test("Render the stairs", () => {
@@ -27,7 +28,8 @@ describe("Render", () => {
 		const passage = new MapSection({ height: 2, type: "STAIRS_IN", width: 2, x: 2, y: 2 });
 		const node = new MapNode({ section: passage });
 		const view = Render(node, new Area(0, 0, VIEW_WIDTH, VIEW_HEIGHT));
-		console.log(PrintMap(view));
+		const printedMap = PrintMap(view);
+		console.log(printedMap);
 		expect(view.length).toBe(VIEW_WIDTH);
 	});
 });

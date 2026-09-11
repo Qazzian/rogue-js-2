@@ -4,7 +4,6 @@ import { Area, Grid, Point, Random } from "@Qazzian/pixel-game-engine";
 import { generateStairsIn } from "./Passage";
 import { MapNode, traverseMapGraph } from "./MapNode";
 import { Render } from "./Renderer";
-import { MapSection, MapSectionParams } from "./MapSection";
 
 export enum DIRS {
 	"n",
