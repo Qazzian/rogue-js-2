@@ -22,20 +22,20 @@ export function Render(map: MapNode | null, area: Area) {
 }
 
 export function addRoom(view: RenderSection, node: MapNode) {
-	const xOffset = node.mapSection.x1 - view.area.x1;
-	const yOffset = node.mapSection.y1 - view.area.y1;
-	for (let x = -1; x < node.mapSection.width + 1; x++) {
-		for (let y = -1; y < node.mapSection.height + 1; y++) {
-			const xPos = x + xOffset;
-			const yPos = y + yOffset;
-			if (isInsideView(x, y)) {
-				if (!Array.isArray(view.tiles[x])) {
-					view.tiles[x] = [];
+	const xOffset = view.area.x1;
+	const yOffset = view.area.y1;
+	for (let x = node.mapSection.x1 - 1; x < node.mapSection.x2 + 1; x++) {
+		for (let y = node.mapSection.y1 - 1; y < node.mapSection.y2 + 1; y++) {
+			const viewXPos = x - xOffset;
+			const viewYPos = y - yOffset;
+			if (isInsideView(viewXPos, viewYPos)) {
+				if (!Array.isArray(view.tiles[viewXPos])) {
+					view.tiles[viewXPos] = [];
 				}
 				if (isInsideRoom(x, y)) {
-					view.tiles[xPos][yPos] = new MapTile("floor", true);
+					view.tiles[viewXPos][viewYPos] = new MapTile("floor", true);
 				} else {
-					view.tiles[xPos][yPos] = new MapTile("wall", false);
+					view.tiles[viewXPos][viewYPos] = new MapTile("wall", false);
 				}
 			}
 		}

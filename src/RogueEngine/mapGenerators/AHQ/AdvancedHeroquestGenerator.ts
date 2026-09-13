@@ -39,23 +39,25 @@ export default class AdvancedHeroquestGenerator extends GameMap {
 		this.dungeonGraph = generateStairsIn(this.random);
 		// TODO the dimensions need to grow with the dungeonGraph
 		traverseMapGraph(this.dungeonGraph, (node) => this.extendDimensions(node));
+
 		this._tiles = Render(this.dungeonGraph, this.dimensions);
 	}
 
 	extendDimensions(mapNode: MapNode) {
 		const mapSection = mapNode.mapSection;
-		if (mapSection.x1 < this.dimensions.x1) {
-			this.dimensions.x1 = mapSection.x1;
+		if (mapSection.x1 - 1 < this.dimensions.x1) {
+			this.dimensions.x1 = mapSection.x1 - 1;
 		}
-		if (mapSection.x2 > this.dimensions.x2) {
-			this.dimensions.x2 = mapSection.x2;
+		if (mapSection.x2 + 1 > this.dimensions.x2) {
+			this.dimensions.x2 = mapSection.x2 + 1;
 		}
-		if (mapSection.y1 < this.dimensions.y1) {
-			this.dimensions.y1 = mapSection.y1;
+		if (mapSection.y1 - 1 < this.dimensions.y1) {
+			this.dimensions.y1 = mapSection.y1 - 1;
 		}
-		if (mapSection.y2 > this.dimensions.y2) {
-			this.dimensions.y2 = mapSection.y2;
+		if (mapSection.y2 + 1 > this.dimensions.y2) {
+			this.dimensions.y2 = mapSection.y2 + 1;
 		}
+		this.dimensions.recalculateDimensions();
 	}
 
 	getTilesInRange(range: Area): Grid<MapTile> {
